@@ -24,7 +24,7 @@ This project is a website designed to showcase logistics information and allow t
 
 ### Prerequisites
 
-- Python 3.7 or higher
+- Python 3.10 or higher
 - Node.js and npm (or yarn)
 
 ### Backend Setup (Django)
