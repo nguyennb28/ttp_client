@@ -33,3 +33,11 @@ class User(AbstractUser):
         related_name="api_user_permissions",  # Đặt tên khác với mặc định
         related_query_name="user",
     )
+    
+    class Meta:
+        verbose_name = 'Người dùng'
+        verbose_name_plural = 'Người dùng'
+    
+    def __str__(self):
+        return f"{self.full_name}"
+
