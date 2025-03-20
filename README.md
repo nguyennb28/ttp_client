@@ -28,22 +28,42 @@ This project is a website designed to showcase logistics information and allow t
 - Node.js and npm (or yarn)
 
 ### Backend Setup (Django)
-Create and Activate a Virtual Environment:
+**Create and Activate a Virtual Environment:** 
+``` bash
 python -m venv env
 source env/bin/activate  # On Windows: env\Scripts\activate
+```
 
-Install Dependencies: 
+***Install Dependencies:**
+``` bash
 pip install -r requirements.txt
-
-Apply Migrations:
+```
+**Apply Migrations:**
+``` bash
 python manage.py makemigrations
 python manage.py migrate
+```
 
-Create a Superuser:
+**Create a Superuser:**
+``` bash
 python manage.py createsuperuser
+```
 
-Run the Development Server:
+**Run the Development Server:**
+```bash
 python manage.py runserver
+```
 
-
-Frontend Setup (ReactJS)
+**Frontend Setup (ReactJS):**
+Navigate to 'front-client'
+```bash
+cd frontend-client
+```
+And install dependencies:
+```bash
+npm install
+```
+**Run the React developement Server:**
+```bash
+npm run dev
+```
