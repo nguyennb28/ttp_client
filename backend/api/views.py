@@ -22,3 +22,9 @@ class UserViewSet(viewsets.ModelViewSet):
         else:
             permission_classes = [IsRoleAdmin]  # fallback
         return [permission() for permission in permission_classes]
+    
+    @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated])
+    def me(self, request):
+        print(request)
+        serializer = self.get_serializer(request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
