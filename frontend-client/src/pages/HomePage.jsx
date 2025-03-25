@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import CustomSwiper from "../components/Swiper";
 import SectionTwo from "../elements/HomePage/SectionTwo";
+import SectionThree from "../elements/HomePage/SectionThree";
 
 const HomePage = () => {
   return (
@@ -10,6 +11,9 @@ const HomePage = () => {
       {/* Second section */}
       <div className="mt-10 w-full text-center">
         <SectionTwo />
+      </div>
+      <div className="mt-10 w-full text-center">
+        <SectionThree />
       </div>
     </div>
   );

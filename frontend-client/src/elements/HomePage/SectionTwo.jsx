@@ -5,6 +5,7 @@ const SectionTwo = () => {
   const services = [
     // 1
     {
+      id: 1,
       img: "https://ttplogistics.vn/wp-content/uploads/2020/03/boat_icon.png",
       title: "OCEAN FREIGHT",
       description:
@@ -12,6 +13,7 @@ const SectionTwo = () => {
     },
     // 2
     {
+      id: 2,
       img: "https://ttplogistics.vn/wp-content/uploads/2020/03/aroplan.png",
       title: "AIR FREIGHT",
       description:
@@ -19,6 +21,7 @@ const SectionTwo = () => {
     },
     // 3
     {
+      id: 3,
       img: "https://ttplogistics.vn/wp-content/uploads/2020/03/asset_2.png",
       title: "FREIGHT MANAGEMENT SOFTWARE",
       description:
@@ -26,6 +29,7 @@ const SectionTwo = () => {
     },
     // 4
     {
+      id: 4,
       img: "https://ttplogistics.vn/wp-content/uploads/2020/03/contra_icon.png",
       title: "CONTAINER SERVICES",
       description: `
@@ -37,6 +41,7 @@ const SectionTwo = () => {
     },
     // 5
     {
+      id: 5,
       img: "https://ttplogistics.vn/wp-content/uploads/2020/03/wrehousing_icon.png",
       title: "WAREHOUSING",
       description:
@@ -44,6 +49,7 @@ const SectionTwo = () => {
     },
     // 6
     {
+      id: 6,
       img: "https://ttplogistics.vn/wp-content/uploads/2020/03/end_solution_icon.png",
       title: "END TO END SOLUTIONS",
       description:
@@ -51,6 +57,7 @@ const SectionTwo = () => {
     },
     // 7
     {
+      id: 7,
       img: "https://ttplogistics.vn/wp-content/uploads/2020/03/customs.png",
       title: "CUSTOMS CLEARANCE",
       description:
@@ -58,6 +65,7 @@ const SectionTwo = () => {
     },
     // 8
     {
+      id: 8,
       img: "https://ttplogistics.vn/wp-content/uploads/2020/03/3xe2_0.png",
       title: "MULTI-TRANSPORT",
       description:
@@ -75,10 +83,12 @@ const SectionTwo = () => {
           </span>
         </p>
       </div>
-      <div className="grid justify-center lg:grid-cols-4 lg:grid-rows-2 gap-6">
+      <div className="grid justify-center lg:grid-cols-4 lg:grid-rows-2">
         {services &&
           services.map((item) => (
             <Card
+              key={item.id}
+              id={item.id}
               img={item.img}
               title={item.title}
               description={item.description}

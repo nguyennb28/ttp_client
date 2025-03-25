@@ -1,10 +1,24 @@
 import React from "react";
 import DefaultImage from "../assets/default/default.png";
 
-const Card = ({ img, title, description }) => {
+const Card = ({ id, img, title, description }) => {
+  const classForParent = () => {
+    console.log(id);
+    if (id == 1) {
+      return "flex flex-col items-center hover:shadow-2xl border border border-dashed p-5 rounded-tl-lg";
+    } else if (id == 4) {
+      return "flex flex-col items-center hover:shadow-2xl border border border-dashed p-5 rounded-tr-lg";
+    } else if (id == 5) {
+      return "flex flex-col items-center hover:shadow-2xl border border border-dashed p-5 rounded-bl-lg";
+    } else if (id == 8) {
+      return "flex flex-col items-center hover:shadow-2xl border border border-dashed p-5 rounded-br-lg";
+    }
+    return "flex flex-col items-center hover:shadow-2xl border border-dashed p-5";
+  };
+
   return (
     <>
-      <div className="flex flex-col items-center hover:shadow-2xl border rounded-lg border-dashed p-5">
+      <div className={classForParent()}>
         {/* img */}
         <div className="mb-3">
           {img ? (
@@ -15,11 +29,15 @@ const Card = ({ img, title, description }) => {
         </div>
         {/* title */}
         <div className="mb-3">
-          <h2 className="text-xl font-bold">{title ? title : "Default title"}</h2>
+          <h2 className="text-xl font-bold">
+            {title ? title : "Default title"}
+          </h2>
         </div>
         {/* description */}
         <div>
-          <p className="">{description ? description : "Default description"}</p>
+          <p className="">
+            {description ? description : "Default description"}
+          </p>
         </div>
       </div>
     </>
