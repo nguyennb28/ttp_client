@@ -3,7 +3,6 @@ import DefaultImage from "../assets/default/default.png";
 
 const Card = ({ id, img, title, description }) => {
   const classForParent = () => {
-    console.log(id);
     if (id == 1) {
       return "flex flex-col items-center hover:shadow-2xl border border border-dashed p-5 rounded-tl-lg";
     } else if (id == 4) {
