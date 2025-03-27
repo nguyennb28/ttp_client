@@ -14,7 +14,7 @@ const MapSection = () => {
     <>
       <MapContainer
         center={position}
-        zoom={13}
+        zoom={16}
         style={mapStyle}
         scrollWheelZoom={true}
       >
