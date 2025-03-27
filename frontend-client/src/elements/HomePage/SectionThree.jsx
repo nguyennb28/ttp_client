@@ -1,6 +1,7 @@
 import React from "react";
 import CardNews from "../../components/CardNews";
 
+// News Section
 const SectionThree = () => {
   const news = [
     {

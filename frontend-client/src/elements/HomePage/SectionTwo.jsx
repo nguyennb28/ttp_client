@@ -1,6 +1,7 @@
 import React from "react";
 import Card from "../../components/Card";
 
+// Our services Section
 const SectionTwo = () => {
   const services = [
     // 1
