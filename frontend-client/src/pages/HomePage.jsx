@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import CustomSwiper from "../components/Swiper";
 import SectionTwo from "../elements/HomePage/SectionTwo";
 import SectionThree from "../elements/HomePage/SectionThree";
