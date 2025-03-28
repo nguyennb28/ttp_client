@@ -17,7 +17,7 @@ createRoot(document.getElementById("root")).render(
       <LoadingProvider>
         <Router>
           <GlobalLoading />
-          <Header />
+          {/* <Header /> */}
           <Routes>
             <Route element={<Layout />}>
               <Route path="/" element={<HomePage />} />
