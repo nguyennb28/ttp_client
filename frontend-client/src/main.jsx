@@ -6,7 +6,6 @@ import { AuthProvider } from "./AuthContext";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
-// import App from './App.jsx'
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
