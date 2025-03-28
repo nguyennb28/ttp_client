@@ -27,12 +27,16 @@
   font-family: "Courier New", Courier, monospace;
   font-size: 1em;
   padding: 1.5em 1em;
-  width: 12em;
+  /* width: 12em; */
+  width: 100vw;
+  height: 100vh;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 4px;
-  position: relative;
+  /* position: relative; */
+  position: fixed;
   overflow: hidden;
   box-sizing: border-box;
+  z-index: 9999;
 }
 
 .terminal-header {
