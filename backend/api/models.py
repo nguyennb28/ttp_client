@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 class User(AbstractUser):
     ROLE_CHOICES = [
         ('user', 'Người dùng'),
+        ('employee', 'Nhân viên'),
         ('admin', 'Quản trị viên')
     ]
     role = models.CharField(
