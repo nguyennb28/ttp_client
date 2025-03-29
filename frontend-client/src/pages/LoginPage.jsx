@@ -4,9 +4,25 @@ import Gif4 from "../assets/login/4.gif";
 import LoginForm from "../elements/LoginPage/LoginForm";
 import { HomeIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
+import { useAuth } from "../AuthContext";
 
 const LoginPage = () => {
+  const { login } = useAuth();
   const { showLoading, hideLoading } = useLoading();
+
+  const onSubmit = async (username, password) => {
+    try {
+      showLoading();
+      const response = await login(username, password);
+      if (response) {
+        console.log(response);
+      }
+    } catch(err) {
+      console.error(err)
+    } finally {
+      hideLoading();
+    }
+  };
 
   useEffect(() => {
     showLoading();
@@ -28,13 +44,13 @@ const LoginPage = () => {
           <div>
             <h1 className="font-bold text-2xl text-center">Login</h1>
           </div>
-          <LoginForm />
+          <LoginForm onSubmit={onSubmit} />
           <div className="px-10 flex items-center text-gray-500">
-            <div className="border-t-2 w-full">
-            </div>
-            <Link to="/" className="px-3"><HomeIcon className="size-7"/></Link>
-            <div className="border-t-2 w-full">
-            </div>
+            <div className="border-t-2 w-full"></div>
+            <Link to="/" className="px-3">
+              <HomeIcon className="size-7" />
+            </Link>
+            <div className="border-t-2 w-full"></div>
           </div>
         </div>
       </div>
