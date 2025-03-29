@@ -3,19 +3,27 @@ import Input from "../../components/Input";
 const LoginForm = () => {
   return (
     <>
-      <form action="#" className="flex flex-col px-1">
+      <form action="#">
         <Input
-          label="Tài khoản"
+          label="Username"
           id="username"
           type="text"
-          placeholder="Nhập tài khoản"
+          placeholder="Enter username"
         />
         <Input
-          label="Mật khẩu"
+          label="Password"
           id="password"
           type="password"
-          placeholder="Nhập mật khẩu"
+          placeholder="Enter password"
         />
+        <div className="px-10 my-5">
+          <button
+            type="submit"
+            className="border bg-sky-950 w-full text-white p-3 rounded-2xl font-bold"
+          >
+            Login
+          </button>
+        </div>
       </form>
     </>
   );

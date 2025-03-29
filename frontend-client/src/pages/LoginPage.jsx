@@ -22,23 +22,13 @@ const LoginPage = () => {
 
   return (
     <>
-      {/* <div className="mx-auto flex flex-col max-w-7xl items-center justify-between p-6 lg:px-8">
-        <div className="grid lg:grid-cols-2">
-          <div>
-          <img src={ImageLogin} alt="" className="w-md h-md"/>
-        </div>
-      </div>
-      </div> */}
-      {/* <div className="grid lg:grid-cols-2 items-center justify-items-center w-screen h-screen"> */}
       <div className="grid lg:grid-cols-3 w-screen h-screen gap-3">
         <div className="col-span-2 p-10 bg-gray-800 flex items-center justify-center">
-          <img src={Gif4} alt="" className="w-md h-md" loading="lazy"/>
-          {/* <img src={FirstGif} alt="" className="w-md h-md" loading="lazy"/> */}
-          {/* <img src={FirstGif} alt="" className="w-md h-md" loading="lazy"/> */}
+          <img src={Gif4} alt="" className="w-md h-md" loading="lazy" />
         </div>
-        <div className="self-center flex flex-col items-center">
+        <div className="self-center">
           <div>
-            <h1 className="font-bold text-2xl">Đăng nhập</h1>
+            <h1 className="font-bold text-2xl text-center">Login</h1>
           </div>
           <LoginForm />
         </div>
