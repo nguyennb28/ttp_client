@@ -17,7 +17,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action in ['create', 'update', 'partial_update', 'destroy', 'list']:
             permission_classes = [IsRoleAdmin]
-        elif self.action in ['retrieve']:
+        elif self.action in ['retrieve', 'me']:
             permission_classes = [IsRoleAdminOrUser]
         else:
             permission_classes = [IsRoleAdmin]  # fallback
