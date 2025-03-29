@@ -8,6 +8,8 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
 import GlobalLoading from "./pages/GlobalLoading";
+import LoginPage from "./pages/LoginPage";
+import Layout from "./pages/Layout";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -15,11 +17,14 @@ createRoot(document.getElementById("root")).render(
       <LoadingProvider>
         <Router>
           <GlobalLoading />
-          <Header />
+          {/* <Header /> */}
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route element={<Layout />}>
+              <Route path="/" element={<HomePage />} />
+            </Route>
+            <Route path="/login" element={<LoginPage />} />
           </Routes>
-          <Footer />
+          {/* <Footer /> */}
         </Router>
       </LoadingProvider>
     </AuthProvider>
