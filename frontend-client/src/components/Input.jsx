@@ -29,9 +29,12 @@ const Input = ({ label = "Tiêu đề", id, type = "text", placeholder = "" }) =
               type="checkbox"
               id="passwordVisible"
               onClick={() => togglePasswordVisibility()}
-              className="flex text-gray-500 mr-2"
+              className="flex text-gray-500 mr-2 cursor-pointer"
             />
-            <label htmlFor="passwordVisible" className="block text-gray-500">
+            <label
+              htmlFor="passwordVisible"
+              className="block text-gray-500 cursor-pointer"
+            >
               {passwordVisible ? "Hide password" : "Show password"}
             </label>
           </div>

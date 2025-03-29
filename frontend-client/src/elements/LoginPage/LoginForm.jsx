@@ -18,8 +18,8 @@ const LoginForm = () => {
         />
         <div className="px-10 my-5">
           <button
-            type="submit"
-            className="border bg-sky-950 w-full text-white p-3 rounded-2xl font-bold"
+            type="button"
+            className="cursor-pointer border bg-sky-950 w-full text-white p-3 rounded-2xl font-bold"
           >
             Login
           </button>

@@ -1,11 +1,9 @@
 import React, { useEffect } from "react";
 import { useLoading } from "../provider/LoadingProvider";
-import Gif1 from "../assets/login/1.gif";
-import Gif2 from "../assets/login/2.gif";
-import Gif3 from "../assets/login/3.gif";
 import Gif4 from "../assets/login/4.gif";
-import Gif5 from "../assets/login/5.gif";
 import LoginForm from "../elements/LoginPage/LoginForm";
+import { HomeIcon } from "@heroicons/react/24/outline";
+import { Link } from "react-router-dom";
 
 const LoginPage = () => {
   const { showLoading, hideLoading } = useLoading();
@@ -31,6 +29,13 @@ const LoginPage = () => {
             <h1 className="font-bold text-2xl text-center">Login</h1>
           </div>
           <LoginForm />
+          <div className="px-10 flex items-center text-gray-500">
+            <div className="border-t-2 w-full">
+            </div>
+            <Link to="/" className="px-3"><HomeIcon className="size-7"/></Link>
+            <div className="border-t-2 w-full">
+            </div>
+          </div>
         </div>
       </div>
     </>
