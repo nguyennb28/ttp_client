@@ -24,15 +24,15 @@ const Input = ({ label = "Tiêu đề", id, type = "text", placeholder = "" }) =
             className="block w-full p-2.5 rounded-xl bg-gray-50 border focus:ring-primary-600 border-gray-300"
             placeholder={placeholder}
           />
-          <div className="flex mt-5">
+          <div className="flex mt-5 items-center">
             <input
               type="checkbox"
               id="passwordVisible"
               onClick={() => togglePasswordVisibility()}
               className="flex text-gray-500 mr-2"
             />
-            <label htmlFor="passwordVisible text-gray-500">
-              {passwordVisible ? "Show password" : "Hide password"}
+            <label htmlFor="passwordVisible" className="block text-gray-500">
+              {passwordVisible ? "Hide password" : "Show password"}
             </label>
           </div>
         </div>

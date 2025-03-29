@@ -23,7 +23,7 @@ const LoginPage = () => {
   return (
     <>
       <div className="grid lg:grid-cols-3 w-screen h-screen gap-3">
-        <div className="col-span-2 p-10 bg-gray-800 flex items-center justify-center">
+        <div className="col-span-2 p-10 bg-gray-800 hidden lg:flex items-center justify-center">
           <img src={Gif4} alt="" className="w-md h-md" loading="lazy" />
         </div>
         <div className="self-center">
