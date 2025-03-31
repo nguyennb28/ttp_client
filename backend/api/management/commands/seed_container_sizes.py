@@ -22,7 +22,6 @@ class Command(BaseCommand):
             )
             container_sizes_create.append(containerSize)
 
-        print(container_sizes_create)
 
         if ContainerSize.objects.bulk_create(container_sizes_create):
             self.stdout.write(
