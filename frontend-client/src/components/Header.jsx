@@ -20,6 +20,7 @@ import {
   FingerPrintIcon,
   SquaresPlusIcon,
   XMarkIcon,
+  ArrowRightStartOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 import {
   ChevronDownIcon,
@@ -27,6 +28,7 @@ import {
   PlayCircleIcon,
 } from "@heroicons/react/20/solid";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../AuthContext";
 
 const products = [
   {
@@ -68,6 +70,7 @@ const callsToAction = [
 export default function Header() {
   const { pathname } = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
 
   const showMobileMenu = useCallback(() => {
     setMobileMenuOpen(true);
@@ -166,7 +169,7 @@ export default function Header() {
           </a>
         </PopoverGroup>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          {pathname !== "/login" ? (
+          {pathname !== "/login" && !user ? (
             <Link
               to="/login"
               className="text-sm/6 font-semibold text-gray-900"
@@ -175,6 +178,18 @@ export default function Header() {
               Log in <span aria-hidden="true">&rarr;</span>
             </Link>
           ) : null}
+          {user && (
+            <Link
+              to="/login"
+              className="text-sm/6 font-semibold text-gray-900"
+              onClick={() => logout()}
+            >
+              <ArrowRightStartOnRectangleIcon
+                className="size-6"
+                title="Logout"
+              />
+            </Link>
+          )}
         </div>
       </nav>
       <Dialog
@@ -246,7 +261,7 @@ export default function Header() {
                 </a>
               </div>
               <div className="py-6">
-                {pathname !== "/login" ? (
+                {pathname !== "/login" && !user ? (
                   <Link
                     to="/login"
                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
@@ -255,6 +270,15 @@ export default function Header() {
                     Log in
                   </Link>
                 ) : null}
+                {user && (
+                  <Link
+                    to="/login"
+                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
+                    onClick={() => logout()}
+                  >
+                    <ArrowRightStartOnRectangleIcon className="size-6" />
+                  </Link>
+                )}
               </div>
             </div>
           </div>

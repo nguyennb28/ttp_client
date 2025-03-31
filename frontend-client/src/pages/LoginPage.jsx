@@ -3,23 +3,24 @@ import { useLoading } from "../provider/LoadingProvider";
 import Gif4 from "../assets/login/4.gif";
 import LoginForm from "../elements/LoginPage/LoginForm";
 import { HomeIcon } from "@heroicons/react/24/outline";
-import { Link } from "react-router-dom";
+import { Link, replace } from "react-router-dom";
 import { useAuth } from "../AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
-  const { login } = useAuth();
+  const { user, login, checkAuth, logout } = useAuth();
   const { showLoading, hideLoading } = useLoading();
+  const navigate = useNavigate();
 
   const onSubmit = async (username, password) => {
     try {
       showLoading();
       const response = await login(username, password);
       if (response) {
-        console.log(response);
+        navigate("/", { replace: true });
       }
-    } catch(err) {
-      console.error(err)
-    } finally {
+    } catch (err) {
+      console.error(err);
       hideLoading();
     }
   };
@@ -33,6 +34,14 @@ const LoginPage = () => {
 
     return () => clearTimeout(timerId);
   }, [showLoading, hideLoading]);
+
+  useEffect(() => {
+    checkAuth();
+    const access = localStorage.getItem("access");
+    if (access) {
+      navigate("/", { replace: true });
+    }
+  }, []);
 
   return (
     <>
