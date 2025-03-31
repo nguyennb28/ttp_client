@@ -1,10 +1,21 @@
 import React, { useState } from "react";
 
-const Input = ({ label = "Tiêu đề", id, type = "text", placeholder = "" }) => {
+const Input = ({
+  label = "Tiêu đề",
+  id,
+  type = "text",
+  placeholder = "",
+  onChange,
+  value,
+}) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const togglePasswordVisibility = () => {
     setPasswordVisible((prev) => !prev);
+  };
+
+  const handleChangeValue = (e) => {
+    onChange(e.target.value);
   };
 
   if (type === "password") {
@@ -23,6 +34,8 @@ const Input = ({ label = "Tiêu đề", id, type = "text", placeholder = "" }) =
             id={id}
             className="block w-full p-2.5 rounded-xl bg-gray-50 border focus:ring-primary-600 border-gray-300"
             placeholder={placeholder}
+            value={value}
+            onChange={handleChangeValue}
           />
           <div className="flex mt-5 items-center">
             <input
@@ -58,6 +71,8 @@ const Input = ({ label = "Tiêu đề", id, type = "text", placeholder = "" }) =
           id={id}
           className="block w-full p-2.5 rounded-xl bg-gray-50 border focus:ring-primary-600 border-gray-300"
           placeholder={placeholder}
+          value={value}
+          onChange={handleChangeValue}
         />
       </div>
     </>

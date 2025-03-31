@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("access", access);
       localStorage.setItem("refresh", refresh);
 
-      const { data: userData } = await axiosInstance.get("/me/");
+      const { data: userData } = await axiosInstance.get("/users/me/");
       setUser(userData);
       return { access, refresh, user: userData };
     } catch (err) {
@@ -86,7 +86,7 @@ export const AuthProvider = ({ children }) => {
     initializeAuth();
   }, []);
 
-  const value = { user, login, logout, userLoading, setUser };
+  const value = { user, login, logout, checkAuth, userLoading, setUser };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
