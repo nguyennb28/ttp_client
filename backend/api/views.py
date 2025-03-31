@@ -5,7 +5,7 @@ from .serializers import (
 )
 
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .permissions import IsRoleAdmin, IsRoleUser, IsRoleAdminOrUser
+from .permissions import IsRoleAdmin, IsRoleUser, IsRoleAdminOrUserOrEmployee
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
@@ -18,7 +18,7 @@ class UserViewSet(viewsets.ModelViewSet):
         if self.action in ['create', 'update', 'partial_update', 'destroy', 'list']:
             permission_classes = [IsRoleAdmin]
         elif self.action in ['retrieve', 'me']:
-            permission_classes = [IsRoleAdminOrUser]
+            permission_classes = [IsRoleAdminOrUserOrEmployee]
         else:
             permission_classes = [IsRoleAdmin]  # fallback
         return [permission() for permission in permission_classes]
