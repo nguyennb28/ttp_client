@@ -2,21 +2,18 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.core.exceptions import ValidationError
 
+
 class User(AbstractUser):
     ROLE_CHOICES = [
-        ('user', 'Người dùng'),
-        ('employee', 'Nhân viên'),
-        ('admin', 'Quản trị viên')
+        ("user", "Người dùng"),
+        ("employee", "Nhân viên"),
+        ("admin", "Quản trị viên"),
     ]
     role = models.CharField(
-        max_length=10, choices=ROLE_CHOICES, default='user', verbose_name='Vai trò'
+        max_length=10, choices=ROLE_CHOICES, default="user", verbose_name="Vai trò"
     )
-    phone = models.CharField(
-        max_length=10, verbose_name='Số điện thoại'
-    )
-    mst = models.CharField(
-        max_length=13, verbose_name='Mã số thuế' 
-    )
+    phone = models.CharField(max_length=10, verbose_name="Số điện thoại")
+    mst = models.CharField(max_length=13, verbose_name="Mã số thuế")
     full_name = models.CharField(max_length=150)
     groups = models.ManyToManyField(
         Group,
@@ -34,11 +31,46 @@ class User(AbstractUser):
         related_name="api_user_permissions",  # Đặt tên khác với mặc định
         related_query_name="user",
     )
-    
+
     class Meta:
-        verbose_name = 'Người dùng'
-        verbose_name_plural = 'Người dùng'
-    
+        verbose_name = "Người dùng"
+        verbose_name_plural = "Người dùng"
+
     def __str__(self):
         return f"{self.full_name}"
 
+
+class Port(models.Model):
+    country = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
+    code = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+
+class ContainerSize(models.Model):
+    name = models.CharField(max_length=100)
+    size = models.CharField(max_length=10)
+    abbreviation = models.CharField(max_length=10, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    def __str__(self):
+        return self.size + " " + self.name
+
+
+class VAT_INFO(models.Model):
+    company_name = models.TextField(null=True)
+    address = models.TextField(null=True)
+    company_tax_code = models.TextField(null=True, unique=True)
+    ward_or_commune = models.TextField(null=True)
+    district = models.TextField(null=True)
+    province_or_city = models.TextField(null=True)
+    country = models.TextField(null=True)
+    einvoice_contact_name = models.TextField(null=True)
+    einvoice_contact_email = models.TextField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
