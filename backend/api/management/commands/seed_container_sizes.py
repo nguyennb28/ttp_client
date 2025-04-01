@@ -25,5 +25,5 @@ class Command(BaseCommand):
 
         if ContainerSize.objects.bulk_create(container_sizes_create):
             self.stdout.write(
-                self.style.SUCCESS(f"Successfully seed: {len(container_sizes_create)}")
+                self.style.SUCCESS(f"Successfully seed: {len(container_sizes_create)} records")
             )

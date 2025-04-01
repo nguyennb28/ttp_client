@@ -23,5 +23,5 @@ class Command(BaseCommand):
         
         if ports_create:
             if Port.objects.bulk_create(ports_create):
-                self.stdout.write(self.style.SUCCESS(f"Successfully seed: {len(ports_create)}"))
+                self.stdout.write(self.style.SUCCESS(f"Successfully seed: {len(ports_create)} records"))
             
