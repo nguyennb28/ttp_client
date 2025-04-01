@@ -4,4 +4,7 @@ from . import views
 
 router = DefaultRouter()
 router.register(r"users", views.UserViewSet)
+router.register(r"ports", views.PortViewSet)
+router.register(r"container-sizes", views.ContainerSizeViewSet)
+router.register(r"vat-infos", views.VatInfoViewSet)
 urlpatterns = [path("", include(router.urls))]

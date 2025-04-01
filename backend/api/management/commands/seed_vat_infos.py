@@ -70,14 +70,6 @@ class Command(BaseCommand):
                 else row["company_tax_code"].strip()
             )
 
-            # Check for duplicates: existing in DB or already added in the current run
-            # if tax_code:
-            #     if (
-            #         VAT_INFO.objects.filter(company_tax_code=tax_code).exists()
-            #         or tax_code in seen_tax_codes
-            #     ):
-            #         continue
-            #     seen_tax_codes.add(tax_code)
             if tax_code:
                 if (
                     VAT_INFO.objects.filter(company_tax_code=tax_code).exists()
@@ -102,7 +94,9 @@ class Command(BaseCommand):
         if vat_info_create:
             VAT_INFO.objects.bulk_create(vat_info_create)
             self.stdout.write(
-                self.style.SUCCESS(f"Successfully seeded: {len(vat_info_create)}")
+                self.style.SUCCESS(
+                    f"Successfully seeded: {len(vat_info_create)} records"
+                )
             )
         else:
             self.stdout.write(self.style.WARNING("No new records to import."))

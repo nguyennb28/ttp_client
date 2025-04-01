@@ -1,15 +1,16 @@
 from rest_framework import serializers
-from .models import User
+from .models import User, Port, VAT_INFO, ContainerSize
 import re
+
 
 class UserSerializer(serializers.ModelSerializer):
 
-    # remove validator default 
+    # remove validator default
     phone = serializers.CharField(validators=[], max_length=10)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'phone', 'mst', 'role', 'password']
+        fields = ["id", "username", "phone", "mst", "role", "password"]
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
@@ -19,7 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
             user.set_password(password)
         user.save()
         return user
-    
+
     def update(self, instance, validated_data):
         password = validated_data.pop("password", None)
         instance = super().update(instance, validated_data)
@@ -27,7 +28,7 @@ class UserSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
-    
+
     # Check phone is valid
     def validate_phone(self, value):
         value = value.strip()
@@ -36,3 +37,32 @@ class UserSerializer(serializers.ModelSerializer):
         if self.instance and self.instance.phone == value:
             return value
         return value
+
+
+class PortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Port
+        fields = ["id", "country", "name", "code"]
+
+
+class ContainerSizeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContainerSize
+        fields = ["id", "name", "size", "abbreviation"]
+
+
+class VatInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VAT_INFO
+        fields = [
+            "id",
+            "company_name",
+            "address",
+            "company_tax_code",
+            "ward_or_commune",
+            "district",
+            "province_or_city",
+            "country",
+            "einvoice_contact_name",
+            "einvoice_contact_email",
+        ]
