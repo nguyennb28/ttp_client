@@ -74,3 +74,6 @@ class VAT_INFO(models.Model):
     einvoice_contact_email = models.TextField(null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    def __str__(self):
+        return f"{self.company_tax_code} - {self.company_name}"
