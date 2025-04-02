@@ -36,7 +36,8 @@ interface IAuthProviderProps {
   children: ReactNode;
 }
 
-const AuthContext = createContext<IAuthContext | undefined>(undefined);
+// const AuthContext = createContext<IAuthContext | undefined>(undefined);
+const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 
 export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<IUser | null>(null);

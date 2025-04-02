@@ -1,8 +1,22 @@
 import PageMeta from "../../components/common/PageMeta";
 import AuthLayout from "./AuthPageLayout";
 import SignUpForm from "../../components/auth/SignUpForm";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router";
+import { useEffect } from "react";
 
 export default function SignUp() {
+  const { checkAuth } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    checkAuth();
+    const access = localStorage.getItem("access");
+    if (access) {
+      navigate("/", { replace: true });
+    }
+  });
+
   return (
     <>
       <PageMeta
