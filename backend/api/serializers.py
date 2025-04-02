@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Port, VAT_INFO, ContainerSize
+from .models import User, Port, VAT_INFO, ContainerSize, Agency
 import re
 
 
@@ -66,3 +66,9 @@ class VatInfoSerializer(serializers.ModelSerializer):
             "einvoice_contact_name",
             "einvoice_contact_email",
         ]
+
+
+class AgencySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Agency
+        fields = ["id", "name", "address", "phone", "abbreviation"]

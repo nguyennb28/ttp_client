@@ -1,14 +1,21 @@
-from .models import User, Port, ContainerSize, VAT_INFO
+from .models import User, Port, ContainerSize, VAT_INFO, Agency
 from .serializers import (
     UserSerializer,
     PortSerializer,
     ContainerSizeSerializer,
     VatInfoSerializer,
+    AgencySerializer,
 )
 
 from django.db.models import Q
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .permissions import IsRoleAdmin, IsRoleUser, IsRoleAdminOrUserOrEmployee
+from .permissions import (
+    IsRoleAdmin,
+    IsRoleUser,
+    IsRoleAdminOrUserOrEmployee,
+    IsRoleEmployee,
+    IsRoleAdminOrEmployee,
+)
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status, viewsets
@@ -107,5 +114,23 @@ class VatInfoViewSet(viewsets.ModelViewSet):
                 | Q(country__icontains=param)
                 | Q(einvoice_contact_name__icontains=param)
                 | Q(einvoice_contact_email__icontains=param)
+            )
+        return queryset
+
+
+class AgencyViewSet(viewsets.ModelViewSet):
+    queryset = Agency.objects.all().order_by("id")
+    serializer_class = AgencySerializer
+    permission_classes = [IsRoleAdminOrEmployee]
+
+    def get_queryset(self):
+        queryset = Agency.objects.all().order_by("id")
+        param = self.request.query_params.get("q")
+        if param:
+            queryset = queryset.filter(
+                Q(name__icontains=param)
+                | Q(address__icontains=param)
+                | Q(phone__icontains=param)
+                | Q(abbreviation__icontains=param)
             )
         return queryset
