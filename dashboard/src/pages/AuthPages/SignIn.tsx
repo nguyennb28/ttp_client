@@ -1,8 +1,24 @@
 import PageMeta from "../../components/common/PageMeta";
 import AuthLayout from "./AuthPageLayout";
 import SignInForm from "../../components/auth/SignInForm";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router";
 
 export default function SignIn() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const onSubmit = async (username: string, password: string) => {
+    try {
+      const response = await login(username, password);
+      if (response) {
+        navigate("/", { replace: true });
+      }
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
+
   return (
     <>
       <PageMeta
@@ -10,7 +26,7 @@ export default function SignIn() {
         description="This is React.js SignIn Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
       <AuthLayout>
-        <SignInForm />
+        <SignInForm onSubmit={onSubmit}/>
       </AuthLayout>
     </>
   );
