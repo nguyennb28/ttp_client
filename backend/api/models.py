@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 
 
 class User(AbstractUser):
@@ -77,3 +78,21 @@ class VAT_INFO(models.Model):
 
     def __str__(self):
         return f"{self.company_tax_code} - {self.company_name}"
+
+
+class Agency(models.Model):
+    name = models.CharField(max_length=100)
+    address = models.TextField(null=True)
+    phone = models.CharField(
+        max_length=10,
+        validators=[
+            RegexValidator(r"^\d{10}$", "Enter a valid phone number (10 digits).")
+        ],
+        null=True,
+    )
+    abbreviation = models.CharField(max_length=10, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.address} - {self.phone} - {self.abbreviation}"
