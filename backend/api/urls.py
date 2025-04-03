@@ -8,4 +8,5 @@ router.register(r"ports", views.PortViewSet)
 router.register(r"container-sizes", views.ContainerSizeViewSet)
 router.register(r"vat-infos", views.VatInfoViewSet)
 router.register(r"agencies", views.AgencyViewSet)
+router.register(r"cfss", views.CFSViewSet)
 urlpatterns = [path("", include(router.urls))]

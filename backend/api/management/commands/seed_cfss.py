@@ -42,16 +42,12 @@ class Command(BaseCommand):
                 ship_name=row["ship_name"],
                 mbl=row["mbl"],
                 container_number=row["container_number"],
-                cbm=None if pd.isna(row["cbm"]) else row["cbm"],
+                cbm=row["cbm"],
                 eta=row["eta"],
                 actual_date=row["actual_date"],
                 note=row["note"],
-                delivery_order_fee=(
-                    None
-                    if pd.isna(row["delivery_order_fee"])
-                    else row["delivery_order_fee"]
-                ),
-                cleaning=None if pd.isna(row["cleaning"]) else row["cleaning"],
+                delivery_order_fee=row["delivery_order_fee"],
+                cleaning=row["cleaning"],
                 agency=Agency(row["agency_id"]),
                 container_size=ContainerSize(row["container_size_id"]),
                 port=Port(row["port_id"]),

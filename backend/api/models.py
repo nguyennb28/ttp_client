@@ -138,6 +138,3 @@ class CFS(models.Model):
 
     def __str__(self):
         return f"{self.mbl} - {self.ship_name}"
-
-    class Meta:
-        ordering = ["-created_at"]
