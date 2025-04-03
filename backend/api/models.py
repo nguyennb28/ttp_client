@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 
 
 class User(AbstractUser):
@@ -77,3 +78,63 @@ class VAT_INFO(models.Model):
 
     def __str__(self):
         return f"{self.company_tax_code} - {self.company_name}"
+
+
+class Agency(models.Model):
+    name = models.CharField(max_length=100)
+    address = models.TextField(null=True)
+    phone = models.CharField(
+        max_length=10,
+        validators=[
+            RegexValidator(r"^\d{10}$", "Enter a valid phone number (10 digits).")
+        ],
+        null=True,
+    )
+    abbreviation = models.CharField(max_length=10, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.address} - {self.phone} - {self.abbreviation}"
+
+
+class CFS(models.Model):
+    ship_name = models.CharField(max_length=100)
+    mbl = models.CharField(max_length=100)
+    container_number = models.CharField(
+        max_length=100,
+        unique=True,
+        help_text="Mã số container, đặt unique nếu cần đảm bảo không trùng",
+    )
+    agency = models.ForeignKey(Agency, on_delete=models.PROTECT)
+    container_size = models.ForeignKey(ContainerSize, on_delete=models.PROTECT)
+    cbm = models.DecimalField(
+        max_digits=10,
+        decimal_places=3,
+        blank=True,
+        null=True,
+        help_text="Thể tích, tính theo khối mét",
+    )
+    eta = models.DateField(help_text="Ngày dự kiến đến")
+    port = models.ForeignKey(Port, on_delete=models.PROTECT)
+    actual_date = models.DateField(
+        blank=True, null=True, help_text="Ngày tàu thực sự đến hoặc rời đi"
+    )
+    end_date = models.DateField(
+        blank=True, null=True, help_text="Ngày kết thúc giao dịch hoặc xử lý thực tế"
+    )
+    note = models.TextField(
+        blank=True, null=True, help_text="Các thông tin bổ sung nếu cần"
+    )
+    # TASA
+    delivery_order_fee = models.DecimalField(
+        max_digits=15, decimal_places=0, blank=True, null=True
+    )
+    cleaning = models.DecimalField(
+        max_digits=15, decimal_places=0, blank=True, null=True
+    )
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    def __str__(self):
+        return f"{self.mbl} - {self.ship_name}"

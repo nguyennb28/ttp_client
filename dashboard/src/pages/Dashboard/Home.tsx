@@ -10,13 +10,17 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router";
 
 export default function Home() {
-  const { checkAuth } = useAuth();
+  const { user, checkAuth, logout } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     checkAuth();
     const access = localStorage.getItem("access");
     if (!access) {
+      navigate("/signin", { replace: true });
+    }
+    if (user && user.role === "user") {
+      logout();
       navigate("/signin", { replace: true });
     }
   }, []);

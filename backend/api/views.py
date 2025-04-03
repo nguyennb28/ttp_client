@@ -1,14 +1,22 @@
-from .models import User, Port, ContainerSize, VAT_INFO
+from .models import User, Port, ContainerSize, VAT_INFO, Agency, CFS
 from .serializers import (
     UserSerializer,
     PortSerializer,
     ContainerSizeSerializer,
     VatInfoSerializer,
+    AgencySerializer,
+    CFSSerizalier,
 )
 
 from django.db.models import Q
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .permissions import IsRoleAdmin, IsRoleUser, IsRoleAdminOrUserOrEmployee
+from .permissions import (
+    IsRoleAdmin,
+    IsRoleUser,
+    IsRoleAdminOrUserOrEmployee,
+    IsRoleEmployee,
+    IsRoleAdminOrEmployee,
+)
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status, viewsets
@@ -107,5 +115,52 @@ class VatInfoViewSet(viewsets.ModelViewSet):
                 | Q(country__icontains=param)
                 | Q(einvoice_contact_name__icontains=param)
                 | Q(einvoice_contact_email__icontains=param)
+            )
+        return queryset
+
+
+class AgencyViewSet(viewsets.ModelViewSet):
+    queryset = Agency.objects.all().order_by("id")
+    serializer_class = AgencySerializer
+    permission_classes = [IsRoleAdminOrEmployee]
+
+    def get_queryset(self):
+        queryset = Agency.objects.all().order_by("id")
+        param = self.request.query_params.get("q")
+        if param:
+            queryset = queryset.filter(
+                Q(name__icontains=param)
+                | Q(address__icontains=param)
+                | Q(phone__icontains=param)
+                | Q(abbreviation__icontains=param)
+            )
+        return queryset
+
+
+class CFSViewSet(viewsets.ModelViewSet):
+    queryset = CFS.objects.all().order_by("-eta")
+    serializer_class = CFSSerizalier
+    permission_classes = [IsRoleAdminOrEmployee]
+
+    def get_queryset(self):
+        queryset = CFS.objects.all().order_by("-eta")
+        param = self.request.query_params.get("q")
+        if param:
+            queryset = queryset.filter(
+                Q(ship_name__icontains=param)
+                | Q(mbl__icontains=param)
+                | Q(container_number__icontains=param)
+                | Q(cbm__icontains=param)
+                | Q(eta__icontains=param)
+                | Q(actual_date__icontains=param)
+                | Q(note__icontains=param)
+                | Q(delivery_order_fee__icontains=param)
+                | Q(cleaning__icontains=param)
+                | Q(agency__name__icontains=param)
+                | Q(container_size__name__icontains=param)
+                | Q(port__name__icontains=param)
+                | Q(created_at__icontains=param)
+                | Q(updated_at__icontains=param)
+                | Q(end_date__icontains=param)
             )
         return queryset
