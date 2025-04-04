@@ -15,13 +15,25 @@ const CFS = () => {
   const [headers, setHeaders] = useState<string[]>([]);
   const { loading, showLoading, hideLoading } = useLoading();
 
+  const header = [
+    "id",
+    "mbl",
+    "container number",
+    "agency",
+    "container type",
+    "size",
+    "port",
+    "eta",
+  ];
+
   const getList = async () => {
     try {
       showLoading();
       const response = await axiosInstance.get("/cfss/");
       if (response.data) {
         setCfss(response.data.results);
-        setHeaders(Object.keys(response.data.results[0]));
+        // setHeaders(Object.keys(response.data.results[0]));
+        setHeaders(header);
       }
     } catch (err: any) {
       console.error(err);
