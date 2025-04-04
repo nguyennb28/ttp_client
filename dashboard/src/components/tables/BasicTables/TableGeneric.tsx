@@ -11,10 +11,6 @@ interface Record {
   [key: string]: any;
 }
 
-interface Header {
-  [key: string]: any;
-}
-
 interface TableGenericProps {
   records: Record[];
   headers: string[];
