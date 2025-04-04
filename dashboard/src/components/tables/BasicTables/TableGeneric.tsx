@@ -17,8 +17,6 @@ interface TableGenericProps {
 }
 
 const TableGeneric: React.FC<TableGenericProps> = ({ records, headers }) => {
-  console.table(headers);
-
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="max-w-full overflow-x-auto">
@@ -93,7 +91,7 @@ const TableGeneric: React.FC<TableGenericProps> = ({ records, headers }) => {
                 <TableCell
                   key={index}
                   isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 uppercase"
                 >
                   {item}
                 </TableCell>

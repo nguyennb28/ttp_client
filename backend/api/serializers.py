@@ -73,7 +73,16 @@ class AgencySerializer(serializers.ModelSerializer):
         model = Agency
         fields = ["id", "name", "address", "phone", "abbreviation"]
 
+
 class CFSSerizalier(serializers.ModelSerializer):
     class Meta:
         model = CFS
-        fields = "__all__"
+        fields = [
+            "id",
+            "mbl",
+            "container_number",
+            "agency",
+            "container_size",
+            "port",
+            "eta",
+        ]
