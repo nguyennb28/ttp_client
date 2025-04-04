@@ -10,6 +10,7 @@ import React, {
 } from "react";
 import axiosInstance from "../instance/axiosInstance";
 import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router";
 
 interface IUser {
   [key: string]: any;
@@ -30,6 +31,7 @@ interface IAuthContext {
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
   setUser: Dispatch<SetStateAction<IUser | null>>;
+  checkRole: () => void;
 }
 
 interface IAuthProviderProps {
@@ -42,6 +44,7 @@ const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<IUser | null>(null);
   const [userLoading, setUserLoading] = useState<boolean>(true);
+  const navigate = useNavigate();
   const login = async (username: string, password: string) => {
     try {
       const { data: tokenData } = await axiosInstance.post("/token/", {
@@ -101,6 +104,17 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
     }
   };
 
+  const checkRole = () => {
+    const access = localStorage.getItem("access");
+    if (!access) {
+      navigate("/signin", { replace: true });
+    }
+    if (user && user.role === "user") {
+      logout();
+      navigate("/signin", { replace: true });
+    }
+  };
+
   useEffect(() => {
     const initializeAuth = async () => {
       try {
@@ -121,7 +135,15 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
     initializeAuth();
   }, []);
 
-  const value = { user, userLoading, login, logout, checkAuth, setUser };
+  const value = {
+    user,
+    userLoading,
+    login,
+    logout,
+    checkAuth,
+    setUser,
+    checkRole,
+  };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

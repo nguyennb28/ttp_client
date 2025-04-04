@@ -15,6 +15,7 @@ import {
   TableIcon,
   UserCircleIcon,
 } from "../icons";
+import { PiShippingContainerDuotone } from "react-icons/pi";
 import { useSidebar } from "../context/SidebarContext";
 import SidebarWidget from "./SidebarWidget";
 
@@ -35,6 +36,11 @@ const navItems: NavItem[] = [
     icon: <CalenderIcon />,
     name: "Calendar",
     path: "/calendar",
+  },
+  {
+    icon: <PiShippingContainerDuotone />,
+    name: "CFS",
+    path: "/cfs",
   },
   {
     icon: <UserCircleIcon />,
