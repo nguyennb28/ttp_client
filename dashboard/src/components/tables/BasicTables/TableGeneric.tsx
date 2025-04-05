@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../ui/table";
+import Pagination from "../../pagination/Pagination";
 
 interface Record {
   [key: string]: any;
@@ -17,6 +18,13 @@ interface TableGenericProps {
 }
 
 const TableGeneric: React.FC<TableGenericProps> = ({ records, headers }) => {
+  const [perPage, setPerPage] = useState<number>(10);
+  const [q, setQ] = useState<string | null>(null);
+
+  const onPerPage = () => {};
+
+  // Q is query
+  const onQ = () => {};
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="max-w-full overflow-x-auto">
@@ -84,7 +92,7 @@ const TableGeneric: React.FC<TableGenericProps> = ({ records, headers }) => {
             />
           </div>
         </div>
-        <Table>
+        <Table className="overflow-scroll h-100">
           <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
             <TableRow>
               {headers.map((item, index) => (
@@ -98,17 +106,6 @@ const TableGeneric: React.FC<TableGenericProps> = ({ records, headers }) => {
               ))}
             </TableRow>
           </TableHeader>
-          {/* <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]"> */}
-          {/* {records.map((item, index) => (
-                <TableRow key={index}>
-                  {headers.map((header, i) => (
-                    <TableCell key={i} className="px-5 py-4 sm:px-6 text-start">
-                      {item[header]}
-                    </TableCell>
-                  ))}
-                </TableRow>
-            ))} */}
-          {/* </TableBody> */}
           <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
             {records.map((item, index) => (
               <TableRow key={index}>
@@ -122,6 +119,7 @@ const TableGeneric: React.FC<TableGenericProps> = ({ records, headers }) => {
           </TableBody>
         </Table>
       </div>
+      <Pagination />
     </div>
   );
 };

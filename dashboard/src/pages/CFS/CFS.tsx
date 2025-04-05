@@ -32,8 +32,8 @@ const CFS = () => {
       showLoading();
       const response = await axiosInstance.get("/cfss/");
       if (response.data) {
+        console.table(response.data);
         setCfss(response.data.results);
-        // setHeaders(Object.keys(response.data.results[0]));
         setHeaders(header);
       }
     } catch (err: any) {
@@ -56,10 +56,10 @@ const CFS = () => {
 
   return (
     <>
-    <PageMeta 
-      title="CFS Table"
-      description="This is CFS Table for T.T.P Logistics"
-    />
+      <PageMeta
+        title="CFS Table"
+        description="This is CFS Table for T.T.P Logistics"
+      />
       <PageBreadcrumb pageTitle="CFS" />
       <div className="space-y-6">
         <ComponentCard title="CFS Table">
