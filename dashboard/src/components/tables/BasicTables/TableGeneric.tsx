@@ -17,13 +17,6 @@ interface TableGenericProps {
 }
 
 const TableGeneric: React.FC<TableGenericProps> = ({ records, headers }) => {
-  //   const keys = Object.keys(records[0]);
-  // records.forEach(element => {
-  //   console.log(typeof element)
-  // });
-  // records.map((item) => {
-  //   console.log(Object.keys(item))
-  // })
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="max-w-full overflow-x-auto">
