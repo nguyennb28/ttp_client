@@ -15,9 +15,11 @@ interface Record {
 interface TableGenericProps {
   records: Record[];
   headers: string[];
+  previous: boolean;
+  next: boolean;
 }
 
-const TableGeneric: React.FC<TableGenericProps> = ({ records, headers }) => {
+const TableGeneric: React.FC<TableGenericProps> = ({ records, headers, previous, next }) => {
   const [perPage, setPerPage] = useState<number>(10);
   const [q, setQ] = useState<string | null>(null);
 
@@ -119,7 +121,7 @@ const TableGeneric: React.FC<TableGenericProps> = ({ records, headers }) => {
           </TableBody>
         </Table>
       </div>
-      <Pagination />
+      <Pagination previous={previous} next={next} />
     </div>
   );
 };

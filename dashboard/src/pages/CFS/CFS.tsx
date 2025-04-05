@@ -14,6 +14,9 @@ interface Record {
 const CFS = () => {
   const [cfss, setCfss] = useState<Record[]>([]);
   const [headers, setHeaders] = useState<string[]>([]);
+  const [isNext, setIsNext] = useState<string | null>(null);
+  const [previous, setPrevious] = useState<string | null>(null);
+
   const { loading, showLoading, hideLoading } = useLoading();
 
   const header = [
@@ -35,6 +38,10 @@ const CFS = () => {
         console.table(response.data);
         setCfss(response.data.results);
         setHeaders(header);
+        if (response.data.previous !== null) {
+
+          setPrevious(true)
+        }
       }
     } catch (err: any) {
       console.error(err);

@@ -1,9 +1,15 @@
+import React from "react";
 import {
   MdOutlineKeyboardDoubleArrowLeft,
   MdOutlineKeyboardDoubleArrowRight,
 } from "react-icons/md";
 
-const Pagination = () => {
+interface PaginationProps {
+  previous: boolean;
+  next: boolean;
+}
+
+const Pagination: React.FC<PaginationProps> = ({ previous, next }) => {
   return (
     <>
       <div className="flex w-full border-t-1 p-5 justify-end">
@@ -11,6 +17,7 @@ const Pagination = () => {
         <button
           type="button"
           className="flex items-center justify-center px-4 h-10 text-base font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+          disabled={previous}
         >
           <MdOutlineKeyboardDoubleArrowLeft />
         </button>
@@ -19,6 +26,7 @@ const Pagination = () => {
         <button
           type="button"
           className="flex items-center justify-center px-4 h-10 ms-3 text-base font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+          disabled={next}
         >
           <MdOutlineKeyboardDoubleArrowRight />
         </button>
