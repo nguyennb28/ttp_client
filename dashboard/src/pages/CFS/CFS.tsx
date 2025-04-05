@@ -1,6 +1,7 @@
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import ComponentCard from "../../components/common/ComponentCard";
 import TableGeneric from "../../components/tables/BasicTables/TableGeneric";
+import PageMeta from "../../components/common/PageMeta";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import axiosInstance from "../../instance/axiosInstance";
@@ -55,6 +56,10 @@ const CFS = () => {
 
   return (
     <>
+    <PageMeta 
+      title="CFS Table"
+      description="This is CFS Table for T.T.P Logistics"
+    />
       <PageBreadcrumb pageTitle="CFS" />
       <div className="space-y-6">
         <ComponentCard title="CFS Table">
