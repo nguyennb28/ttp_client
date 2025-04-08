@@ -46,12 +46,13 @@ const TableGeneric: React.FC<TableGenericProps> = ({
                 name=""
                 id=""
                 className="dark:bg-dark-900 h-9 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none py-2 pl-3 pr-8 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                disabled
               >
                 <option
                   value="10"
                   className="text-gray-500 dark:bg-gray-900 dark:text-gray-400"
                 >
-                  10
+                  20
                 </option>
               </select>
               <span className="absolute right-2 top-1/2 z-30 -translate-y-1/2 text-gray-500 dark:text-gray-400">
