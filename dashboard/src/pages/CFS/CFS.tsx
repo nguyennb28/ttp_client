@@ -14,8 +14,8 @@ interface Record {
 const CFS = () => {
   const [cfss, setCfss] = useState<Record[]>([]);
   const [headers, setHeaders] = useState<string[]>([]);
-  const [isNext, setIsNext] = useState<string | null>(null);
-  const [previous, setPrevious] = useState<string | null>(null);
+  const [isNext, setIsNext] = useState<boolean>(false);
+  const [isPrevious, setIsPrevious] = useState<boolean>(false);
 
   const { loading, showLoading, hideLoading } = useLoading();
 
@@ -39,8 +39,10 @@ const CFS = () => {
         setCfss(response.data.results);
         setHeaders(header);
         if (response.data.previous !== null) {
-
-          setPrevious(true)
+          setIsPrevious(true);
+        }
+        if (response.data.next !== null) {
+          setIsNext(true);
         }
       }
     } catch (err: any) {
@@ -70,7 +72,12 @@ const CFS = () => {
       <PageBreadcrumb pageTitle="CFS" />
       <div className="space-y-6">
         <ComponentCard title="CFS Table">
-          <TableGeneric records={cfss} headers={headers} />
+          <TableGeneric
+            records={cfss}
+            headers={headers}
+            previous={isPrevious}
+            next={isNext}
+          />
         </ComponentCard>
       </div>
     </>

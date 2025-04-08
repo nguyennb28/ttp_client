@@ -19,7 +19,12 @@ interface TableGenericProps {
   next: boolean;
 }
 
-const TableGeneric: React.FC<TableGenericProps> = ({ records, headers, previous, next }) => {
+const TableGeneric: React.FC<TableGenericProps> = ({
+  records,
+  headers,
+  previous,
+  next,
+}) => {
   const [perPage, setPerPage] = useState<number>(10);
   const [q, setQ] = useState<string | null>(null);
 
