@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../ui/table";
+import { FiBox } from "react-icons/fi";
 import Pagination from "../../pagination/Pagination";
 
 interface Record {
@@ -105,35 +106,59 @@ const TableGeneric: React.FC<TableGenericProps> = ({
           </div>
         </div>
         <Table className="overflow-scroll h-100">
-          <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
-            <TableRow>
-              {headers.map((item, index) => (
-                <TableCell
-                  key={index}
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 uppercase"
-                >
-                  {item}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-            {records.map((item, index) => (
-              <TableRow key={index}>
-                {Object.keys(item).map((header, i) => (
-                  <TableCell key={i} className="px-5 py-4 sm:px-6 text-start">
-                    {item[header]}
-                  </TableCell>
+          {quantity > 0 ? (
+            <>
+              <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
+                <TableRow>
+                  {headers.map((item, index) => (
+                    <TableCell
+                      key={index}
+                      isHeader
+                      className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 uppercase"
+                    >
+                      {item}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHeader>
+              <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+                {records.map((item, index) => (
+                  <TableRow key={index}>
+                    {Object.keys(item).map((header, i) => (
+                      <TableCell
+                        key={i}
+                        className="px-5 py-4 sm:px-6 text-start"
+                      >
+                        {item[header]}
+                      </TableCell>
+                    ))}
+                  </TableRow>
                 ))}
-              </TableRow>
-            ))}
-          </TableBody>
+              </TableBody>
+            </>
+          ) : (
+            <>
+              <TableBody className="">
+                <TableRow>
+                  <TableCell className="">
+                    <div className="flex flex-col w-full items-center">
+                      <FiBox className="size-20 block" />
+                      <p>No records</p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </>
+          )}
         </Table>
       </div>
       <div className="flex items-center justify-between border-t-1">
         {/* Quantity */}
-        <div className="p-5"><p className="text-gray-500">Number of records: <span>{quantity}</span></p></div>
+        <div className="p-5">
+          <p className="text-gray-500">
+            Number of records: <span>{quantity}</span>
+          </p>
+        </div>
         {/* Pagination */}
         <Pagination previous={previous} next={next} changePage={changePage} />
       </div>

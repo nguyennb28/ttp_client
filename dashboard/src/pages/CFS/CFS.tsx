@@ -14,7 +14,6 @@ interface Record {
 const CFS = () => {
   // State
   const [cfss, setCfss] = useState<Record[]>([]);
-  const [headers, setHeaders] = useState<string[]>([]);
   const [isNext, setIsNext] = useState<string | null>(null);
   const [isPrevious, setIsPrevious] = useState<string | null>(null);
   const [statusChangePage, setStatusChangePage] = useState<string | null>(null);
@@ -47,7 +46,6 @@ const CFS = () => {
       const response = await axiosInstance.get(url);
       if (response.data) {
         setCfss(response.data.results);
-        setHeaders(header);
         setIsPrevious(response.data.previous);
         setIsNext(response.data.next);
         setQuantity(response.data.count);
@@ -129,7 +127,7 @@ const CFS = () => {
         <ComponentCard title="CFS Table">
           <TableGeneric
             records={cfss}
-            headers={headers}
+            headers={header}
             previous={isPrevious}
             next={isNext}
             quantity={quantity}
