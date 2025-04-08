@@ -14,10 +14,14 @@ interface Record {
 const CFS = () => {
   const [cfss, setCfss] = useState<Record[]>([]);
   const [headers, setHeaders] = useState<string[]>([]);
-  const [isNext, setIsNext] = useState<boolean>(false);
-  const [isPrevious, setIsPrevious] = useState<boolean>(false);
+  const [isNext, setIsNext] = useState<string | null>(null);
+  const [isPrevious, setIsPrevious] = useState<string | null>(null);
+  const [statusChangePage, setStatusChangePage] = useState<string | null>(null);
 
   const { loading, showLoading, hideLoading } = useLoading();
+
+  const NEXT = "next";
+  const PREVIOUS = "previous";
 
   const header = [
     "id",
@@ -35,20 +39,57 @@ const CFS = () => {
       showLoading();
       const response = await axiosInstance.get("/cfss/");
       if (response.data) {
-        console.table(response.data);
         setCfss(response.data.results);
         setHeaders(header);
-        if (response.data.previous !== null) {
-          setIsPrevious(true);
-        }
-        if (response.data.next !== null) {
-          setIsNext(true);
-        }
+        setIsPrevious(response.data.previous);
+        setIsNext(response.data.next);
       }
     } catch (err: any) {
       console.error(err);
     } finally {
       hideLoading();
+    }
+  };
+
+  const onstatusChangePage = (value: string | any) => {
+    setStatusChangePage(value);
+  };
+
+  const changePage = async (url: string) => {
+    try {
+      showLoading();
+      const response = await axiosInstance.get(`/cfss/?${url}`);
+      if (response.data) {
+        setCfss(response.data.results);
+        setHeaders(header);
+        setIsPrevious(response.data.previous);
+        setIsNext(response.data.next);
+      }
+    } catch (err: any) {
+      console.error(err);
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const onChangePage = () => {
+    if (statusChangePage) {
+      let url = "";
+      if (statusChangePage == NEXT) {
+        if (isNext) {
+          url = isNext.split("?")[1];
+        }
+      } else {
+        if (isPrevious) {
+          url = isPrevious.split("?")[1];
+          if (url == undefined) {
+            url = "";
+          }
+        }
+      }
+      console.log(url);
+      setStatusChangePage(null);
+      changePage(url);
     }
   };
 
@@ -58,6 +99,10 @@ const CFS = () => {
     checkRole();
     getList();
   }, []);
+
+  useEffect(() => {
+    onChangePage();
+  }, [statusChangePage]);
 
   if (loading) {
     return <div>Loading</div>;
@@ -77,6 +122,7 @@ const CFS = () => {
             headers={headers}
             previous={isPrevious}
             next={isNext}
+            changePage={onstatusChangePage}
           />
         </ComponentCard>
       </div>
