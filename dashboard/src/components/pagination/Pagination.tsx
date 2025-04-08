@@ -21,7 +21,7 @@ const Pagination: React.FC<PaginationProps> = ({
 
   return (
     <>
-      <div className="flex w-full border-t-1 p-5 justify-end">
+      <div className="flex p-5">
         {/* Previous Button */}
         <button
           type="button"

@@ -17,6 +17,7 @@ interface TableGenericProps {
   headers: string[];
   previous: string | null;
   next: string | null;
+  quantity: number;
   changePage: (e: string | null) => void;
   handleSearch: (e: string | null) => void;
 }
@@ -26,14 +27,10 @@ const TableGeneric: React.FC<TableGenericProps> = ({
   headers,
   previous,
   next,
+  quantity,
   changePage,
   handleSearch,
 }) => {
-  const [perPage, setPerPage] = useState<number>(10);
-  const [q, setQ] = useState<string | null>(null);
-
-  const onPerPage = () => {};
-
   // Q is query
   const onQ = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleSearch(e.currentTarget.value);
@@ -134,7 +131,12 @@ const TableGeneric: React.FC<TableGenericProps> = ({
           </TableBody>
         </Table>
       </div>
-      <Pagination previous={previous} next={next} changePage={changePage} />
+      <div className="flex items-center justify-between border-t-1">
+        {/* Quantity */}
+        <div className="p-5"><p className="text-gray-500">Number of records: <span>{quantity}</span></p></div>
+        {/* Pagination */}
+        <Pagination previous={previous} next={next} changePage={changePage} />
+      </div>
     </div>
   );
 };

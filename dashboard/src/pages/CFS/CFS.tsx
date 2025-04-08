@@ -2,7 +2,7 @@ import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import ComponentCard from "../../components/common/ComponentCard";
 import TableGeneric from "../../components/tables/BasicTables/TableGeneric";
 import PageMeta from "../../components/common/PageMeta";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import axiosInstance from "../../instance/axiosInstance";
 import { useLoading } from "../../context/LoadingContext";
@@ -19,13 +19,11 @@ const CFS = () => {
   const [isPrevious, setIsPrevious] = useState<string | null>(null);
   const [statusChangePage, setStatusChangePage] = useState<string | null>(null);
   const [search, setSearch] = useState<string | null>(null);
+  const [quantity, setQuantity] = useState<number>(0);
 
   // Context
   const { loading, showLoading, hideLoading } = useLoading();
   const { checkRole } = useAuth();
-
-  // Ref
-  const debounceTimeout = useRef<number | undefined>(undefined);
 
   // Constant
   const NEXT = "next";
@@ -52,6 +50,7 @@ const CFS = () => {
         setHeaders(header);
         setIsPrevious(response.data.previous);
         setIsNext(response.data.next);
+        setQuantity(response.data.count);
       }
     } catch (err: any) {
       console.error(err);
@@ -133,6 +132,7 @@ const CFS = () => {
             headers={headers}
             previous={isPrevious}
             next={isNext}
+            quantity={quantity}
             changePage={onstatusChangePage}
             handleSearch={handleSearch}
           />
