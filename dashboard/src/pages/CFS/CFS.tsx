@@ -19,6 +19,7 @@ const CFS = () => {
   const [statusChangePage, setStatusChangePage] = useState<string | null>(null);
 
   const { loading, showLoading, hideLoading } = useLoading();
+  const { checkRole } = useAuth();
 
   const NEXT = "next";
   const PREVIOUS = "previous";
@@ -34,10 +35,11 @@ const CFS = () => {
     "eta",
   ];
 
-  const getList = async () => {
+  const getList = async (query: string = ""): Promise<void> => {
+    showLoading();
     try {
-      showLoading();
-      const response = await axiosInstance.get("/cfss/");
+      const url = query ? `/cfss/?${query}` : `/cfss/`;
+      const response = await axiosInstance.get(url);
       if (response.data) {
         setCfss(response.data.results);
         setHeaders(header);
@@ -55,46 +57,22 @@ const CFS = () => {
     setStatusChangePage(value);
   };
 
-  const changePage = async (url: string) => {
-    try {
-      showLoading();
-      const response = await axiosInstance.get(`/cfss/?${url}`);
-      if (response.data) {
-        setCfss(response.data.results);
-        setHeaders(header);
-        setIsPrevious(response.data.previous);
-        setIsNext(response.data.next);
-      }
-    } catch (err: any) {
-      console.error(err);
-    } finally {
-      hideLoading();
-    }
-  };
-
-  const onChangePage = () => {
+  const onChangePage = async () => {
     if (statusChangePage) {
       let url = "";
-      if (statusChangePage == NEXT) {
-        if (isNext) {
-          url = isNext.split("?")[1];
-        }
+      if (statusChangePage == NEXT && isNext) {
+        url = isNext.split("?")[1] || "";
       } else {
         if (isPrevious) {
-          url = isPrevious.split("?")[1];
-          if (url == undefined) {
-            url = "";
-          }
+          url = isPrevious.split("?")[1] || "";
         }
       }
-      console.log(url);
       setStatusChangePage(null);
-      changePage(url);
+      await getList(url);
     }
   };
 
   useEffect(() => {}, []);
-  const { checkRole } = useAuth();
   useEffect(() => {
     checkRole();
     getList();
