@@ -2,7 +2,7 @@ import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import ComponentCard from "../../components/common/ComponentCard";
 import TableGeneric from "../../components/tables/BasicTables/TableGeneric";
 import PageMeta from "../../components/common/PageMeta";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../../context/AuthContext";
 import axiosInstance from "../../instance/axiosInstance";
 import { useLoading } from "../../context/LoadingContext";
@@ -12,15 +12,22 @@ interface Record {
 }
 
 const CFS = () => {
+  // State
   const [cfss, setCfss] = useState<Record[]>([]);
   const [headers, setHeaders] = useState<string[]>([]);
   const [isNext, setIsNext] = useState<string | null>(null);
   const [isPrevious, setIsPrevious] = useState<string | null>(null);
   const [statusChangePage, setStatusChangePage] = useState<string | null>(null);
+  const [search, setSearch] = useState<string | null>(null);
 
+  // Context
   const { loading, showLoading, hideLoading } = useLoading();
   const { checkRole } = useAuth();
 
+  // Ref
+  const debounceTimeout = useRef<number | undefined>(undefined);
+
+  // Constant
   const NEXT = "next";
   const PREVIOUS = "previous";
 
@@ -72,6 +79,23 @@ const CFS = () => {
     }
   };
 
+  const handleSearch = (e: string | null) => {
+    setSearch(e);
+  };
+
+  const onSearch = async () => {
+    if (search) {
+      try {
+        showLoading();
+        await getList(`q=${search}`);
+      } catch (err: any) {
+        console.error(err);
+      } finally {
+        hideLoading();
+      }
+    }
+  };
+
   useEffect(() => {}, []);
   useEffect(() => {
     checkRole();
@@ -81,6 +105,15 @@ const CFS = () => {
   useEffect(() => {
     onChangePage();
   }, [statusChangePage]);
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      onSearch();
+    }, 500);
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [search]);
 
   if (loading) {
     return <div>Loading</div>;
@@ -101,6 +134,7 @@ const CFS = () => {
             previous={isPrevious}
             next={isNext}
             changePage={onstatusChangePage}
+            handleSearch={handleSearch}
           />
         </ComponentCard>
       </div>

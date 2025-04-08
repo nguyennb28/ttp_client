@@ -18,6 +18,7 @@ interface TableGenericProps {
   previous: string | null;
   next: string | null;
   changePage: (e: string | null) => void;
+  handleSearch: (e: string | null) => void;
 }
 
 const TableGeneric: React.FC<TableGenericProps> = ({
@@ -26,6 +27,7 @@ const TableGeneric: React.FC<TableGenericProps> = ({
   previous,
   next,
   changePage,
+  handleSearch,
 }) => {
   const [perPage, setPerPage] = useState<number>(10);
   const [q, setQ] = useState<string | null>(null);
@@ -33,7 +35,9 @@ const TableGeneric: React.FC<TableGenericProps> = ({
   const onPerPage = () => {};
 
   // Q is query
-  const onQ = () => {};
+  const onQ = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleSearch(e.currentTarget.value);
+  };
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="max-w-full overflow-x-auto">
@@ -99,6 +103,7 @@ const TableGeneric: React.FC<TableGenericProps> = ({
               type="text"
               placeholder="Search..."
               className="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent py-2.5 pl-11 pr-4 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800 xl:w-[300px]"
+              onChange={onQ}
             />
           </div>
         </div>
