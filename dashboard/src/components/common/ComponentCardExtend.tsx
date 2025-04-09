@@ -19,6 +19,9 @@ const ComponentCardExtend: React.FC<ComponentCardProps> = ({
   const refresh = (e: React.MouseEvent<HTMLButtonElement>) => {
     features(e.currentTarget.value);
   };
+  const create = (e: React.MouseEvent<HTMLButtonElement>) => {
+    features(e.currentTarget.value);
+  };
 
   return (
     <div
@@ -43,6 +46,7 @@ const ComponentCardExtend: React.FC<ComponentCardProps> = ({
             className="block rounded-lg bg-cyan-500 mr-5 p-3"
             type="button"
             value="create"
+            onClick={create}
           >
             <MdAddCircleOutline className="size-6 text-white" />
           </button>
