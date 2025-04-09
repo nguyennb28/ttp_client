@@ -6,6 +6,10 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import axiosInstance from "../../instance/axiosInstance";
 import { useLoading } from "../../context/LoadingContext";
+import { useModal } from "../../hooks/useModal";
+import { Modal } from "../../components/ui/modal";
+import GenericForm from "../Forms/GenericForm";
+import { IFormField } from "../../interfaces/interfaces";
 
 interface Record {
   [key: string]: any;
@@ -19,6 +23,7 @@ const CFS = () => {
   const [statusChangePage, setStatusChangePage] = useState<string | null>(null);
   const [search, setSearch] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<number>(0);
+  const { isOpen, openModal, closeModal } = useModal();
 
   // Context
   const { loading, showLoading, hideLoading } = useLoading();
@@ -37,6 +42,14 @@ const CFS = () => {
     "size",
     "port",
     "eta",
+  ];
+
+  const formField: IFormField[] = [
+    {
+      name: "name",
+      label: "Your name",
+      type: "text",
+    },
   ];
 
   const getList = async (query: string = ""): Promise<void> => {
@@ -104,6 +117,9 @@ const CFS = () => {
         hideLoading();
       }
     }
+    if (e == "create") {
+      openModal();
+    }
   };
 
   useEffect(() => {}, []);
@@ -136,6 +152,19 @@ const CFS = () => {
         description="This is CFS Table for T.T.P Logistics"
       />
       <PageBreadcrumb pageTitle="CFS" />
+      <Modal isOpen={isOpen} onClose={closeModal} className="max-w-[700px] m-4">
+        <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
+          <div className="px-2 pr-14">
+            <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
+              Add CFS
+            </h4>
+          </div>
+          <div>
+            <GenericForm fields={formField} onSubmit={() => {}}/>
+          </div>
+        </div>
+        {/* Form at here */}
+      </Modal>
       <div className="space-y-6">
         <ComponentCardExtend title="CFS Table" features={features}>
           <TableGeneric
