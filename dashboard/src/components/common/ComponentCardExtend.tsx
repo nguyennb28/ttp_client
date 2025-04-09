@@ -1,4 +1,5 @@
 import { MdOutlineRefresh } from "react-icons/md";
+import { MdAddCircleOutline } from "react-icons/md";
 
 interface ComponentCardProps {
   title: string;
@@ -36,15 +37,23 @@ const ComponentCardExtend: React.FC<ComponentCardProps> = ({
           )}
         </div>
         {/* Features: CREATE & REFRESH */}
-        <div className="features">
+        <div className="features flex">
+          {/* create */}
+          <button
+            className="block rounded-lg bg-cyan-500 mr-5 p-3"
+            type="button"
+            value="create"
+          >
+            <MdAddCircleOutline className="size-6 text-white" />
+          </button>
           {/* refresh */}
           <button
-            className="block"
+            className="block rounded-lg bg-gray-700 p-3"
             type="button"
             value="refresh"
             onClick={refresh}
           >
-            <MdOutlineRefresh className="size-6" />
+            <MdOutlineRefresh className="size-6 text-white" />
           </button>
         </div>
       </div>
