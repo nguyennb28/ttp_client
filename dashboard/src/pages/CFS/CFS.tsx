@@ -1,5 +1,5 @@
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
-import ComponentCard from "../../components/common/ComponentCard";
+import ComponentCardExtend from "../../components/common/ComponentCardExtend";
 import TableGeneric from "../../components/tables/BasicTables/TableGeneric";
 import PageMeta from "../../components/common/PageMeta";
 import { useState, useEffect } from "react";
@@ -93,6 +93,19 @@ const CFS = () => {
     }
   };
 
+  const features = async (e: string) => {
+    if (e == "refresh") {
+      try {
+        showLoading();
+        await getList();
+      } catch (err: any) {
+        console.error(err);
+      } finally {
+        hideLoading();
+      }
+    }
+  };
+
   useEffect(() => {}, []);
   useEffect(() => {
     checkRole();
@@ -124,7 +137,7 @@ const CFS = () => {
       />
       <PageBreadcrumb pageTitle="CFS" />
       <div className="space-y-6">
-        <ComponentCard title="CFS Table">
+        <ComponentCardExtend title="CFS Table" features={features}>
           <TableGeneric
             records={cfss}
             headers={header}
@@ -134,7 +147,7 @@ const CFS = () => {
             changePage={onstatusChangePage}
             handleSearch={handleSearch}
           />
-        </ComponentCard>
+        </ComponentCardExtend>
       </div>
     </>
   );
