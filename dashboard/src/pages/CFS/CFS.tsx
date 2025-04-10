@@ -11,13 +11,13 @@ import { Modal } from "../../components/ui/modal";
 import GenericForm from "../Forms/GenericForm";
 import { IFormField } from "../../interfaces/interfaces";
 
-interface Record {
+interface IRecord {
   [key: string]: any;
 }
 
 const CFS = () => {
   // State
-  const [cfss, setCfss] = useState<Record[]>([]);
+  const [cfss, setCfss] = useState<IRecord[]>([]);
   const [isNext, setIsNext] = useState<string | null>(null);
   const [isPrevious, setIsPrevious] = useState<string | null>(null);
   const [statusChangePage, setStatusChangePage] = useState<string | null>(null);
@@ -44,14 +44,9 @@ const CFS = () => {
     "eta",
   ];
 
-  const formField: IFormField[] = [
-    {
-      name: "name",
-      label: "Your name",
-      type: "text",
-    },
-  ];
-
+  const handleFormSubmit = (formData: Record<string, any>) => {
+    console.log("Form Data Submitted:", formData);
+  };
   const getList = async (query: string = ""): Promise<void> => {
     showLoading();
     try {
@@ -122,7 +117,108 @@ const CFS = () => {
     }
   };
 
-  useEffect(() => {}, []);
+  const searchAgency = async (value: string) => {
+    try {
+      if (value) {
+        const response = await axiosInstance.get(`/agencies/?q=${value}`);
+        if (response.status == 200) {
+          return response.data;
+        }
+        return null;
+      }
+    } catch (err: any) {
+      console.error(err);
+      return null;
+    }
+  };
+
+  const searchPort = async (value: string) => {
+    try {
+      if (value) {
+      }
+      const response = await axiosInstance.get(`/ports/?q=${value}`);
+      if (response.status == 200) {
+        return response.data;
+      }
+      return null;
+    } catch (err: any) {
+      console.error(err);
+      return null;
+    }
+  };
+
+  // Cs is Container size
+  const searchCs = async (value: string) => {
+    try {
+      if (value) {
+        const response = await axiosInstance.get(
+          `/container-sizes/?q=${value}`
+        );
+        if (response.status == 200) {
+          return response.data;
+        }
+        return null;
+      }
+    } catch (err: any) {
+      console.error(err);
+      return null;
+    }
+  };
+
+  const formField: IFormField[] = [
+    {
+      name: "ship_name",
+      label: "Ship name",
+      type: "text",
+    },
+    {
+      name: "mbl",
+      label: "MBL",
+      type: "text",
+    },
+    {
+      name: "agency",
+      label: "Agency",
+      type: "select",
+    },
+    {
+      name: "container_size",
+      label: "Container size",
+      type: "select",
+    },
+    {
+      name: "cbm",
+      label: "CBM",
+      type: "number",
+    },
+    {
+      name: "eta",
+      label: "ETA",
+      type: "date",
+    },
+    {
+      name: "port",
+      label: "Port",
+      type: "select",
+    },
+    {
+      name: "actual_date",
+      label: "Actual date",
+      type: "date",
+    },
+    {
+      name: "end_date",
+      label: "End date",
+      type: "date",
+    },
+    {
+      name: "note",
+      label: "Note",
+      type: "text",
+      placeholder: "Enter your note",
+    },
+  ];
+
   useEffect(() => {
     checkRole();
     getList();
@@ -160,7 +256,7 @@ const CFS = () => {
             </h4>
           </div>
           <div>
-            <GenericForm fields={formField} onSubmit={() => {}}/>
+            <GenericForm fields={formField} onSubmit={handleFormSubmit} />
           </div>
         </div>
         {/* Form at here */}
