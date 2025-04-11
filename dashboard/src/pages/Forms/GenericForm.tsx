@@ -5,9 +5,14 @@ import axiosInstance from "../../instance/axiosInstance";
 interface GenericFormProps {
   fields: IFormField[];
   onSubmit: (formData: Record<string, any>) => void;
+  validationForm: (formData: Record<string, any>) => object;
 }
 
-const GenericForm: React.FC<GenericFormProps> = ({ fields, onSubmit }) => {
+const GenericForm: React.FC<GenericFormProps> = ({
+  fields,
+  onSubmit,
+  validationForm,
+}) => {
   const initialValues = fields.reduce(
     (acc: { [key: string]: string | boolean }, field: IFormField) => {
       acc[field.name] = field.type === "checkbox" ? false : "";
@@ -204,7 +209,10 @@ const GenericForm: React.FC<GenericFormProps> = ({ fields, onSubmit }) => {
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    onSubmit(formData);
+    const isValid = validationForm(formData);
+    if (Object.keys(isValid).length === 0) {
+      onSubmit(formData);
+    }
   };
 
   return (
