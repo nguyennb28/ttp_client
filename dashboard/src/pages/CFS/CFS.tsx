@@ -23,6 +23,12 @@ const CFS = () => {
   const [statusChangePage, setStatusChangePage] = useState<string | null>(null);
   const [search, setSearch] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<number>(0);
+  // const [isAgency, setIsAgency] = useState<string | null>(null);
+  // const [isPort, setIsPort] = useState<string | null>(null);
+  // const [isCS, setIsCS] = useState<string | null>(null);
+  // const [agency, setAgency] = useState<[]>([]);
+  // const [port, setPort] = useState<[]>([]);
+  // const [cs, setCS] = useState<[]>([]);
   const { isOpen, openModal, closeModal } = useModal();
 
   // Context
@@ -117,54 +123,6 @@ const CFS = () => {
     }
   };
 
-  const searchAgency = async (value: string) => {
-    try {
-      if (value) {
-        const response = await axiosInstance.get(`/agencies/?q=${value}`);
-        if (response.status == 200) {
-          return response.data;
-        }
-        return null;
-      }
-    } catch (err: any) {
-      console.error(err);
-      return null;
-    }
-  };
-
-  const searchPort = async (value: string) => {
-    try {
-      if (value) {
-      }
-      const response = await axiosInstance.get(`/ports/?q=${value}`);
-      if (response.status == 200) {
-        return response.data;
-      }
-      return null;
-    } catch (err: any) {
-      console.error(err);
-      return null;
-    }
-  };
-
-  // Cs is Container size
-  const searchCs = async (value: string) => {
-    try {
-      if (value) {
-        const response = await axiosInstance.get(
-          `/container-sizes/?q=${value}`
-        );
-        if (response.status == 200) {
-          return response.data;
-        }
-        return null;
-      }
-    } catch (err: any) {
-      console.error(err);
-      return null;
-    }
-  };
-
   const formField: IFormField[] = [
     {
       name: "ship_name",
@@ -180,11 +138,13 @@ const CFS = () => {
       name: "agency",
       label: "Agency",
       type: "select",
+      apiSearch: "/agencies/?q=",
     },
     {
       name: "container_size",
       label: "Container size",
       type: "select",
+      apiSearch: "/container-sizes/?q=",
     },
     {
       name: "cbm",
@@ -200,6 +160,7 @@ const CFS = () => {
       name: "port",
       label: "Port",
       type: "select",
+      apiSearch: "/ports/?q=",
     },
     {
       name: "actual_date",

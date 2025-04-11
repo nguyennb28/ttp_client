@@ -38,4 +38,7 @@ export interface IFormField {
     | "checkbox";
   placeholder?: string;
   options?: { value: string; label: string }[];
+  // search?: boolean
+  // onSearch?: (value: string) => void;
+  apiSearch?: string
 }
