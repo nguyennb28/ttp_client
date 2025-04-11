@@ -99,11 +99,13 @@ const GenericForm: React.FC<GenericFormProps> = ({ fields, onSubmit }) => {
                 onChange={handleSearchInputChange}
                 placeholder={`Enter ${field.label}`}
                 data-api={field.apiSearch}
+                className={inputClasses}
               />
               <select
                 name={field.name}
                 id={field.name}
                 value={formData[field.name]}
+                className={inputClasses}
                 onChange={handleChange}
               >
                 <option value="">--- Select an option ----</option>
