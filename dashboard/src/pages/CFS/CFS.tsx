@@ -35,12 +35,23 @@ const CFS = () => {
 
   const header = [
     "id",
+    "ship name",
     "mbl",
     "container number",
     "agency",
-    "container type",
     "size",
     "port",
+    "eta",
+  ];
+
+  const header_visible = [
+    "id",
+    "ship_name",
+    "mbl",
+    "container_number",
+    "agency_name",
+    "size",
+    "port_name",
     "eta",
   ];
 
@@ -277,6 +288,7 @@ const CFS = () => {
           <TableGeneric
             records={cfss}
             headers={header}
+            header_visible={header_visible}
             previous={isPrevious}
             next={isNext}
             quantity={quantity}

@@ -16,6 +16,7 @@ interface Record {
 interface TableGenericProps {
   records: Record[];
   headers: string[];
+  header_visible: string[];
   previous: string | null;
   next: string | null;
   quantity: number;
@@ -26,6 +27,7 @@ interface TableGenericProps {
 const TableGeneric: React.FC<TableGenericProps> = ({
   records,
   headers,
+  header_visible,
   previous,
   next,
   quantity,
@@ -36,6 +38,8 @@ const TableGeneric: React.FC<TableGenericProps> = ({
   const onQ = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleSearch(e.currentTarget.value);
   };
+  console.log(headers)
+  console.log(header_visible)
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="max-w-full overflow-x-auto">
@@ -124,7 +128,7 @@ const TableGeneric: React.FC<TableGenericProps> = ({
               <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
                 {records.map((item, index) => (
                   <TableRow key={index}>
-                    {Object.keys(item).map((header, i) => (
+                    {header_visible.map((header, i) => (
                       <TableCell
                         key={i}
                         className="px-5 py-4 sm:px-6 text-start"
