@@ -89,6 +89,7 @@ class CFSSerizalier(serializers.ModelSerializer):
             "mbl",
             "container_number",
             "agency",
+            "container_size",
             "cbm",
             "eta",
             "port",
