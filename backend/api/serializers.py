@@ -87,16 +87,17 @@ class CFSSerizalier(serializers.ModelSerializer):
 
     class Meta:
         model = CFS
-        fields = [
-            "id",
-            "mbl",
-            "container_number",
-            "agency_name",
-            "container_type",
-            "size",
-            "port_name",
-            # "agency",
-            # "container_size",
-            # "port",
-            "eta",
-        ]
+        # fields = [
+        #     "id",
+        #     "mbl",
+        #     "container_number",
+        #     "agency_name",
+        #     "container_type",
+        #     "size",
+        #     "port_name",
+        #     # "agency",
+        #     # "container_size",
+        #     # "port",
+        #     "eta",
+        # ]
+        fields = "__all__"

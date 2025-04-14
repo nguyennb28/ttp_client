@@ -23,12 +23,6 @@ const CFS = () => {
   const [statusChangePage, setStatusChangePage] = useState<string | null>(null);
   const [search, setSearch] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<number>(0);
-  // const [isAgency, setIsAgency] = useState<string | null>(null);
-  // const [isPort, setIsPort] = useState<string | null>(null);
-  // const [isCS, setIsCS] = useState<string | null>(null);
-  // const [agency, setAgency] = useState<[]>([]);
-  // const [port, setPort] = useState<[]>([]);
-  // const [cs, setCS] = useState<[]>([]);
   const { isOpen, openModal, closeModal } = useModal();
 
   // Context
@@ -50,8 +44,23 @@ const CFS = () => {
     "eta",
   ];
 
-  const handleFormSubmit = (formData: Record<string, any>) => {
-    console.log("Form Data Submitted:", formData);
+  const handleFormSubmit = async (formData: Record<string, any>) => {
+    const validate = handleValidation(formData);
+    formData.end_date = checkDateEmpty(formData.end_date);
+    formData.actual_date = checkDateEmpty(formData.actual_date);
+    if (Object.keys(validate).length === 0) {
+      try {
+        showLoading();
+        const response = await axiosInstance.post("/cfss/", formData);
+        if (response.status == 201) {
+          alert("Successfully");
+        }
+      } catch (err: any) {
+        console.error(err);
+      } finally {
+        hideLoading();
+      }
+    }
   };
   const getList = async (query: string = ""): Promise<void> => {
     showLoading();
@@ -107,6 +116,38 @@ const CFS = () => {
     }
   };
 
+  const handleValidation = (formData: Record<string, any>) => {
+    const errors: Record<string, any> = {};
+    if (!formData.ship_name) {
+      errors.ship_name = "Ship name is empty";
+    }
+    if (!formData.mbl) {
+      errors.mbl = "MBL is empty";
+    }
+    if (!formData.container_number) {
+      errors.container_number = "Container number is empty";
+    }
+    if (!formData.container_size) {
+      errors.container_size = "Container size is empty";
+    }
+    if (!formData.eta) {
+      errors.eta = "ETA is empty";
+    }
+    if (!formData.port) {
+      errors.port = "Port is empty";
+    }
+    if (!formData.agency) {
+      errors.agency = "Agency is empty";
+    }
+    return errors;
+  };
+
+  const checkDateEmpty = (value: Date) => {
+    if (!value) {
+      return null;
+    }
+  };
+
   const features = async (e: string) => {
     if (e == "refresh") {
       try {
@@ -132,6 +173,11 @@ const CFS = () => {
     {
       name: "mbl",
       label: "MBL",
+      type: "text",
+    },
+    {
+      name: "container_number",
+      label: "Container number",
       type: "text",
     },
     {
@@ -217,7 +263,11 @@ const CFS = () => {
             </h4>
           </div>
           <div>
-            <GenericForm fields={formField} onSubmit={handleFormSubmit} />
+            <GenericForm
+              fields={formField}
+              onSubmit={handleFormSubmit}
+              validationForm={handleValidation}
+            />
           </div>
         </div>
         {/* Form at here */}
