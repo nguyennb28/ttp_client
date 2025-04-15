@@ -38,8 +38,12 @@ const DetailCFS: React.FC<DetailCFSProps> = ({ detail, setTrigger }) => {
                   Ship name:{" "}
                   {detail["ship_name"] ? detail["ship_name"] : "Unknow"}
                 </div>
+                <div>MBL: {detail["mbl"] ? detail["mbl"] : "Unknow"}</div>
                 <div>
-                  Cotainer number: {detail["mbl"] ? detail["mbl"] : "Unknow"}
+                  Cotainer number:{" "}
+                  {detail["container_number"]
+                    ? detail["container_number"]
+                    : "Unknow"}
                 </div>
                 <div>
                   Agency:{" "}
