@@ -22,6 +22,7 @@ interface TableGenericProps {
   quantity: number;
   changePage: (e: string | null) => void;
   handleSearch: (e: string | null) => void;
+  recordDetail?: (e: string) => void;
 }
 
 const TableGeneric: React.FC<TableGenericProps> = ({
@@ -33,10 +34,14 @@ const TableGeneric: React.FC<TableGenericProps> = ({
   quantity,
   changePage,
   handleSearch,
+  recordDetail,
 }) => {
   // Q is query
   const onQ = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleSearch(e.currentTarget.value);
+  };
+  const onDetail = (value: string) => {
+    recordDetail?.(value);
   };
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
@@ -125,7 +130,11 @@ const TableGeneric: React.FC<TableGenericProps> = ({
               </TableHeader>
               <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
                 {records.map((item, index) => (
-                  <TableRow key={index}>
+                  <TableRow
+                    key={index}
+                    className="cursor-pointer hover:shadow-2xl"
+                    handleClick={() => onDetail(item["id"])}
+                  >
                     {header_visible.map((header, i) => (
                       <TableCell
                         key={i}

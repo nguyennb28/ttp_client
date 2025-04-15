@@ -10,6 +10,7 @@ import { useModal } from "../../hooks/useModal";
 import { Modal } from "../../components/ui/modal";
 import GenericForm from "../Forms/GenericForm";
 import { IFormField } from "../../interfaces/interfaces";
+import DetailCFS from "./DetailCFS";
 
 interface IRecord {
   [key: string]: any;
@@ -23,6 +24,8 @@ const CFS = () => {
   const [statusChangePage, setStatusChangePage] = useState<string | null>(null);
   const [search, setSearch] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<number>(0);
+  const [cfs, setCFS] = useState(null);
+  const [trigger, setTrigger] = useState<boolean>(false);
   const { isOpen, openModal, closeModal } = useModal();
 
   // Context
@@ -176,6 +179,24 @@ const CFS = () => {
     }
   };
 
+  const detailCFS = async (value: string) => {
+    if (value) {
+      try {
+        showLoading();
+        const response = await axiosInstance.get(`/cfss/${value}/`);
+        if (response.status == 200) {
+          setCFS(response.data);
+          setTrigger(true);
+        }
+      } catch (err: any) {
+        console.error(err);
+      } finally {
+        hideLoading();
+      }
+    } else {
+      alert(`There is no data to display information for this CFS.`);
+    }
+  };
   const formField: IFormField[] = [
     {
       name: "ship_name",
@@ -267,7 +288,11 @@ const CFS = () => {
         description="This is CFS Table for T.T.P Logistics"
       />
       <PageBreadcrumb pageTitle="CFS" />
-      <Modal isOpen={isOpen} onClose={closeModal} className="h-screen max-w-[700px] m-4">
+      <Modal
+        isOpen={isOpen}
+        onClose={closeModal}
+        className="h-screen max-w-[700px] m-4"
+      >
         <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
           <div className="px-2 pr-14">
             <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
@@ -295,9 +320,11 @@ const CFS = () => {
             quantity={quantity}
             changePage={onstatusChangePage}
             handleSearch={handleSearch}
+            recordDetail={detailCFS}
           />
         </ComponentCardExtend>
       </div>
+      <DetailCFS trigger={trigger} detail={cfs!} setTrigger={setTrigger} />
     </>
   );
 };
