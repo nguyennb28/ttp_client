@@ -15,8 +15,6 @@ const DetailCFS: React.FC<DetailCFSProps> = ({
 }) => {
   const { isOpen, openModal, closeModal } = useModal();
 
-  console.log(detail);
-
   useEffect(() => {
     if (trigger) {
       openModal();
