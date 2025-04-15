@@ -1,13 +1,21 @@
 import { useEffect } from "react";
 import { Modal } from "../../components/ui/modal";
 import { useModal } from "../../hooks/useModal";
+import { MdTipsAndUpdates } from "react-icons/md";
 
 interface DetailCFSProps {
   detail: Record<string, any>;
+  isUpdate: boolean;
   setTrigger: (value: boolean) => void;
+  setTriggerUpdate?: (value: boolean) => void;
 }
 
-const DetailCFS: React.FC<DetailCFSProps> = ({ detail, setTrigger }) => {
+const DetailCFS: React.FC<DetailCFSProps> = ({
+  detail,
+  isUpdate,
+  setTrigger,
+  setTriggerUpdate,
+}) => {
   const { isOpen, openModal, closeModal } = useModal();
 
   useEffect(() => {
@@ -25,12 +33,11 @@ const DetailCFS: React.FC<DetailCFSProps> = ({ detail, setTrigger }) => {
         className="h-[700px] max-h-screen max-w-[1000px] m-4"
       >
         <div className="no-scrollbar relative w-full max-w-[1000px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
-          <div className="px-2 pr-14 border-b-1">
+          <div className="px-2 pr-14 border-b-3">
             <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90 uppercase">
               cfs
             </h4>
           </div>
-          <div className="border-b-2"></div>
           <div className="w-full mt-5 px-2 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-8 justify-between">
             {detail && (
               <>
@@ -72,6 +79,26 @@ const DetailCFS: React.FC<DetailCFSProps> = ({ detail, setTrigger }) => {
               </>
             )}
           </div>
+          <div className="mt-10 border-b-3"></div>
+          {isUpdate && (
+            <div className="mt-10 flex content-center items-center">
+              <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90 uppercase">
+                Feature
+              </h4>
+              <button
+                type="button"
+                className="ml-10"
+                onClick={() => {
+                  closeModal();
+                  setTrigger(false);
+                  setTriggerUpdate?.(true);
+                }}
+                title="Update CFS"
+              >
+                <MdTipsAndUpdates className="size-10 text-yellow-400" />
+              </button>
+            </div>
+          )}
         </div>
       </Modal>
     </>

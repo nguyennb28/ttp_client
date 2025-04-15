@@ -11,6 +11,7 @@ import { Modal } from "../../components/ui/modal";
 import GenericForm from "../Forms/GenericForm";
 import { IFormField } from "../../interfaces/interfaces";
 import DetailCFS from "./DetailCFS";
+import UpdateCFS from "./UpdateCFS";
 
 interface IRecord {
   [key: string]: any;
@@ -24,8 +25,9 @@ const CFS = () => {
   const [statusChangePage, setStatusChangePage] = useState<string | null>(null);
   const [search, setSearch] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<number>(0);
-  const [cfs, setCFS] = useState(null);
-  const [trigger, setTrigger] = useState<boolean>(false);
+  const [cfs, setCFS] = useState<Record<string, any> | null>(null);
+  const [triggerDetail, setTriggerDetail] = useState<boolean>(false);
+  const [triggerUpdate, setTriggerUpdate] = useState<boolean>(false);
   const { isOpen, openModal, closeModal } = useModal();
 
   // Context
@@ -186,7 +188,7 @@ const CFS = () => {
         const response = await axiosInstance.get(`/cfss/${value}/`);
         if (response.status == 200) {
           setCFS(response.data);
-          setTrigger(true);
+          setTriggerDetail(true);
         }
       } catch (err: any) {
         console.error(err);
@@ -324,7 +326,15 @@ const CFS = () => {
           />
         </ComponentCardExtend>
       </div>
-      {trigger && <DetailCFS detail={cfs!} setTrigger={setTrigger} />}
+      {triggerDetail && (
+        <DetailCFS
+          detail={cfs!}
+          setTrigger={setTriggerDetail}
+          isUpdate={true}
+          setTriggerUpdate={setTriggerUpdate}
+        />
+      )}
+      {triggerUpdate && <UpdateCFS cfs={cfs!} setTrigger={setTriggerUpdate} />}
     </>
   );
 };
