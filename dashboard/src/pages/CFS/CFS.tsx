@@ -324,7 +324,8 @@ const CFS = () => {
           />
         </ComponentCardExtend>
       </div>
-      <DetailCFS trigger={trigger} detail={cfs!} setTrigger={setTrigger} />
+      {trigger && <DetailCFS detail={cfs!} setTrigger={setTrigger} />}
+      {/* <DetailCFS trigger={trigger} detail={cfs!} setTrigger={setTrigger} /> */}
     </>
   );
 };

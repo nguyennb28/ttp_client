@@ -3,25 +3,16 @@ import { Modal } from "../../components/ui/modal";
 import { useModal } from "../../hooks/useModal";
 
 interface DetailCFSProps {
-  trigger: boolean;
   detail: Record<string, any>;
   setTrigger: (value: boolean) => void;
 }
 
-const DetailCFS: React.FC<DetailCFSProps> = ({
-  trigger,
-  detail,
-  setTrigger,
-}) => {
+const DetailCFS: React.FC<DetailCFSProps> = ({ detail, setTrigger }) => {
   const { isOpen, openModal, closeModal } = useModal();
 
   useEffect(() => {
-    if (trigger) {
-      openModal();
-    } else {
-      closeModal();
-    }
-  }, [trigger]);
+    openModal();
+  }, []);
 
   return (
     <>
