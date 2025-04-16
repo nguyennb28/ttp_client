@@ -36,9 +36,8 @@ export interface IFormField {
     | "date"
     | "select"
     | "checkbox";
+  value?: string;
   placeholder?: string;
   options?: { value: string; label: string }[];
-  // search?: boolean
-  // onSearch?: (value: string) => void;
-  apiSearch?: string
+  apiSearch?: string;
 }

@@ -199,6 +199,9 @@ const CFS = () => {
       alert(`There is no data to display information for this CFS.`);
     }
   };
+
+  const handleUpdate = (formData: Record<string, any>) => {};
+
   const formField: IFormField[] = [
     {
       name: "ship_name",
@@ -334,7 +337,14 @@ const CFS = () => {
           setTriggerUpdate={setTriggerUpdate}
         />
       )}
-      {triggerUpdate && <UpdateCFS cfs={cfs!} setTrigger={setTriggerUpdate} />}
+      {triggerUpdate && (
+        <UpdateCFS
+          cfs={cfs!}
+          setTrigger={setTriggerUpdate}
+          onUpdate={handleUpdate}
+          validationForm={handleValidation}
+        />
+      )}
     </>
   );
 };

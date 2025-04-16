@@ -13,9 +13,18 @@ const GenericForm: React.FC<GenericFormProps> = ({
   onSubmit,
   validationForm,
 }) => {
+  // const initialValues = fields.reduce(
+  //   (acc: { [key: string]: string | boolean }, field: IFormField) => {
+  //     acc[field.name] = field.type === "checkbox" ? false : "";
+  //     return acc;
+  //   },
+  //   {}
+  // );
+
   const initialValues = fields.reduce(
     (acc: { [key: string]: string | boolean }, field: IFormField) => {
-      acc[field.name] = field.type === "checkbox" ? false : "";
+      acc[field.name] =
+        field.type === "checkbox" ? false : field.value ? field.value! : "";
       return acc;
     },
     {}
@@ -260,10 +269,15 @@ const GenericForm: React.FC<GenericFormProps> = ({
   return (
     <>
       <form onSubmit={handleSubmit}>
-        {fields.map((field) => (
-          <div className="flex flex-col my-2" key={field.name}>
+        {fields.map((field, index) => (
+          <div key={index} className="flex flex-col my-2">
             <label htmlFor={field.name} className="mb-1">
-              {field.label}
+              {field.label}{" "}
+              {field.type == "date" ? (
+                <span className="italic">- (MM/DD/YYYY)</span>
+              ) : (
+                ""
+              )}
             </label>
             {renderFormField(field, formData, handleChange)}
           </div>
