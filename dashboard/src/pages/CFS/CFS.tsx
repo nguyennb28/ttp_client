@@ -200,7 +200,29 @@ const CFS = () => {
     }
   };
 
-  const handleUpdate = (formData: Record<string, any>) => {};
+  const handleUpdate = async (formData: Record<string, any>) => {
+    const validate = handleValidation(formData);
+    formData.end_date = checkDateEmpty(formData.end_date);
+    formData.actual_date = checkDateEmpty(formData.actual_date);
+    if (Object.keys(validate).length === 0) {
+      const { id } = formData;
+      delete formData.id;
+
+      try {
+        showLoading();
+        const response = await axiosInstance.patch(`/cfss/${id}/`, formData);
+        if (response.status == 200) {
+          alert("Updated successfully");
+          await getList();
+        }
+      } catch (err: any) {
+        console.error(err);
+      } finally {
+        hideLoading();
+        setTriggerUpdate(false);
+      }
+    }
+  };
 
   const formField: IFormField[] = [
     {

@@ -129,11 +129,14 @@ const GenericForm: React.FC<GenericFormProps> = ({
               <select
                 name={field.name}
                 id={field.name}
-                value={formData[field.name]}
                 className={inputClasses}
                 onChange={handleChange}
               >
-                <option value="">--- Select an option ----</option>
+                <option value={field.value ? field.value : ""}>
+                  {field.tempValue
+                    ? field.tempValue
+                    : `--- Select an option ----`}
+                </option>
                 {searchResults[field.name]?.map(
                   (result: any, index: number) => (
                     <option key={result.id} value={result.id}>

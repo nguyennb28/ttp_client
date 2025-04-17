@@ -37,6 +37,7 @@ export interface IFormField {
     | "select"
     | "checkbox";
   value?: string;
+  tempValue?: string;
   placeholder?: string;
   options?: { value: string; label: string }[];
   apiSearch?: string;
