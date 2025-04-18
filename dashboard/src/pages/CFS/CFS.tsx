@@ -28,6 +28,7 @@ const CFS = () => {
   const [cfs, setCFS] = useState<Record<string, any> | null>(null);
   const [triggerDetail, setTriggerDetail] = useState<boolean>(false);
   const [triggerUpdate, setTriggerUpdate] = useState<boolean>(false);
+  const [ids, setIds] = useState<string[]>([]);
   const { isOpen, openModal, closeModal } = useModal();
 
   // Context
@@ -39,6 +40,7 @@ const CFS = () => {
   const PREVIOUS = "previous";
 
   const header = [
+    "options",
     "id",
     "ship name",
     "mbl",
@@ -50,6 +52,7 @@ const CFS = () => {
   ];
 
   const header_visible = [
+    "options",
     "id",
     "ship_name",
     "mbl",
@@ -224,6 +227,11 @@ const CFS = () => {
     }
   };
 
+  const handleCheckbox = (value: string[]) => {
+    const list = [...new Set(value)];
+    setIds(list);
+  };
+
   const formField: IFormField[] = [
     {
       name: "ship_name",
@@ -348,6 +356,8 @@ const CFS = () => {
             changePage={onstatusChangePage}
             handleSearch={handleSearch}
             recordDetail={detailCFS}
+            ids={ids}
+            handleCheckbox={handleCheckbox}
           />
         </ComponentCardExtend>
       </div>

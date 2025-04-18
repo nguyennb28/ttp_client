@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect, ChangeEvent } from "react";
 import {
   Table,
   TableBody,
@@ -23,6 +23,8 @@ interface TableGenericProps {
   changePage: (e: string | null) => void;
   handleSearch: (e: string | null) => void;
   recordDetail?: (e: string) => void;
+  ids?: string[];
+  handleCheckbox?: (e: string[]) => void;
 }
 
 const TableGeneric: React.FC<TableGenericProps> = ({
@@ -35,7 +37,14 @@ const TableGeneric: React.FC<TableGenericProps> = ({
   changePage,
   handleSearch,
   recordDetail,
+  ids,
+  handleCheckbox,
 }) => {
+  const [listId, setListId] = useState<any[]>([]);
+  const [manualList, setManualList] = useState<any[]>([]);
+  const [selectAll, setSelectAll] = useState<boolean>(false);
+  const checkboxRef = useRef<HTMLTableElement>(null);
+
   // Q is query
   const onQ = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleSearch(e.currentTarget.value);
@@ -43,6 +52,89 @@ const TableGeneric: React.FC<TableGenericProps> = ({
   const onDetail = (value: string) => {
     recordDetail?.(value);
   };
+
+  //
+  // const onCheckboxRecords = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   let list: string[] = [];
+  //   if (e.currentTarget.checked) {
+  //     list.push(e.currentTarget.value);
+  //     setListId((prev) => [...prev!, ...list]);
+  //   } else {
+  //     listId.splice(listId.indexOf(e.currentTarget.value), 1);
+  //   }
+  //   handleCheckbox!(listId);
+  // };
+
+  const onCheckboxRecords = (e: ChangeEvent<HTMLInputElement>) => {
+    // let list: string[] = [];
+    let id = e.currentTarget.value;
+    let tempList = [...listId];
+    let tempManual = [...manualList];
+    if (selectAll) {
+      if (!e.currentTarget.checked) {
+        tempList.splice(tempList.indexOf(id), 1);
+      }
+    } else {
+      if (!e.currentTarget.checked) {
+        tempManual.splice(tempManual.indexOf(id), 1);
+      } else {
+        tempManual.push(id);
+      }
+      tempManual = [...new Set(tempManual)];
+    }
+    setManualList(tempManual);
+    if (tempManual) {
+      setListId(tempManual);
+      handleCheckbox!(tempManual);
+    } else {
+      setListId(tempList);
+      handleCheckbox!(tempList);
+    }
+  };
+
+  const handleSelectAll = () => {
+    setSelectAll(!selectAll);
+  };
+
+  const triggerActiveCheckbox = () => {
+    const checkboxes = checkboxRef.current?.querySelectorAll(".checkbox-cell");
+    checkboxes?.forEach((checkbox) => {
+      (checkbox as HTMLInputElement).checked = true;
+    });
+  };
+
+  const triggerDeactiveCheckbox = () => {
+    const checkboxes = checkboxRef.current?.querySelectorAll(".checkbox-cell");
+    checkboxes?.forEach((checkbox) => {
+      (checkbox as HTMLInputElement).checked = false;
+    });
+  };
+
+  useEffect(() => {
+    if (checkboxRef.current) {
+      const checkboxes = checkboxRef.current.querySelectorAll(".checkbox-cell");
+      const checkedValues: string[] = [];
+      checkboxes.forEach((checkbox) => {
+        checkedValues.push((checkbox as HTMLInputElement).value);
+      });
+      setListId(checkedValues);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (selectAll) {
+      triggerActiveCheckbox();
+      handleCheckbox!(listId);
+    } else {
+      triggerDeactiveCheckbox();
+      handleCheckbox!([]);
+    }
+  }, [selectAll]);
+
+  useEffect(() => {
+    console.table(manualList);
+  }, [manualList]);
+
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="max-w-full overflow-x-auto">
@@ -84,6 +176,14 @@ const TableGeneric: React.FC<TableGenericProps> = ({
               </span>
             </div>
             <span className="text-gray-500 dark:text-gray-400"> entries </span>
+            <div className="feature-delete pl-5">
+              <button
+                className="p-3 bg-pink-400 hover:bg-pink-600 text-white font-semibold rounded-lg"
+                onClick={handleSelectAll}
+              >
+                Delete
+              </button>
+            </div>
           </div>
           <div className="relative">
             <button className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
@@ -112,7 +212,7 @@ const TableGeneric: React.FC<TableGenericProps> = ({
             />
           </div>
         </div>
-        <Table className="overflow-scroll h-100">
+        <Table className="overflow-scroll h-100" ref={checkboxRef}>
           {quantity > 0 ? (
             <>
               <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
@@ -123,24 +223,44 @@ const TableGeneric: React.FC<TableGenericProps> = ({
                       isHeader
                       className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 uppercase"
                     >
-                      {item}
+                      {item == "options" ? (
+                        <input
+                          type="checkbox"
+                          onClick={handleSelectAll}
+                          id="checkbox-all"
+                        />
+                      ) : (
+                        item
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               </TableHeader>
               <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
                 {records.map((item, index) => (
-                  <TableRow
-                    key={index}
-                    className="cursor-pointer hover:shadow-2xl"
-                    handleClick={() => onDetail(item["id"])}
-                  >
+                  <TableRow key={index} className="hover:shadow-2xl">
                     {header_visible.map((header, i) => (
                       <TableCell
                         key={i}
                         className="px-5 py-4 sm:px-6 text-start"
                       >
-                        {item[header]}
+                        {header == "options" ? (
+                          <input
+                            type="checkbox"
+                            value={item["id"]}
+                            onChange={onCheckboxRecords}
+                            className="checkbox-cell"
+                          />
+                        ) : header == "id" ? (
+                          <a
+                            className="text-sky-500 underline cursor-pointer hover:text-pink-300"
+                            onClick={() => onDetail(item[header])}
+                          >
+                            {item[header]}
+                          </a>
+                        ) : (
+                          item[header]
+                        )}
                       </TableCell>
                     ))}
                   </TableRow>
