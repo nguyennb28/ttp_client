@@ -165,7 +165,7 @@ class CFSViewSet(viewsets.ModelViewSet):
             )
         return queryset
 
-    @action(detail=False, methods=["delete"])
+    @action(detail=False, methods=["post"])
     def delete_multiple(self, request):
         ids_to_delete = request.data.get("ids", [])
         if not ids_to_delete or not isinstance(ids_to_delete, list):

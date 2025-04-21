@@ -2,7 +2,7 @@ import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import ComponentCardExtend from "../../components/common/ComponentCardExtend";
 import TableGeneric from "../../components/tables/BasicTables/TableGeneric";
 import PageMeta from "../../components/common/PageMeta";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../../context/AuthContext";
 import axiosInstance from "../../instance/axiosInstance";
 import { useLoading } from "../../context/LoadingContext";
@@ -184,6 +184,27 @@ const CFS = () => {
     }
   };
 
+  const handleDeleteSelected = useCallback(async () => {
+    if (ids.length === 0) {
+      return;
+    }
+    try {
+      showLoading();
+      const response = await axiosInstance.post(`/cfss/delete_multiple/`, {
+        ids,
+      });
+      if (response.status == 204) {
+        await getList();
+        alert(`Delete successfuly`);
+      }
+    } catch (err) {
+      console.error(err);
+      alert(err);
+    } finally {
+      hideLoading();
+    }
+  }, [ids, cfss]);
+
   const detailCFS = async (value: string) => {
     if (value) {
       try {
@@ -358,6 +379,7 @@ const CFS = () => {
             recordDetail={detailCFS}
             ids={ids}
             handleCheckbox={handleCheckbox}
+            onDeleteRequest={handleDeleteSelected}
           />
         </ComponentCardExtend>
       </div>
