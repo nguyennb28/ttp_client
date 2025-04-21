@@ -161,7 +161,6 @@ const TableGeneric: React.FC<TableGenericProps> = ({
                       {item == "options" ? (
                         <input
                           type="checkbox"
-                          // onClick={handleSelectAll}
                           checked={isAllSelected}
                           onChange={handleSelectAllChange}
                           id="checkbox-all"
