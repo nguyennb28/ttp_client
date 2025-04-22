@@ -29,6 +29,7 @@ const CFS = () => {
   const [triggerDetail, setTriggerDetail] = useState<boolean>(false);
   const [triggerUpdate, setTriggerUpdate] = useState<boolean>(false);
   const [ids, setIds] = useState<string[]>([]);
+  const [perPage, setPerPage] = useState<number>(10);
   const { isOpen, openModal, closeModal } = useModal();
 
   // Context
@@ -85,7 +86,9 @@ const CFS = () => {
   const getList = async (query: string = ""): Promise<void> => {
     showLoading();
     try {
-      const url = query ? `/cfss/?${query}` : `/cfss/`;
+      const url = query
+        ? `/cfss/?${query}&page_size=${perPage}`
+        : `/cfss/?page_size=${perPage}`;
       const response = await axiosInstance.get(url);
       if (response.data) {
         setCfss(response.data.results);
@@ -433,6 +436,13 @@ const CFS = () => {
     };
   }, [search]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      await getList();
+    };
+    fetchData();
+  }, [perPage]);
+
   if (loading) {
     return <div>Loading</div>;
   }
@@ -474,13 +484,15 @@ const CFS = () => {
             previous={isPrevious}
             next={isNext}
             quantity={quantity}
+            ids={ids}
+            perPage={perPage}
             changePage={onstatusChangePage}
             handleSearch={handleSearch}
             recordDetail={detailCFS}
-            ids={ids}
             handleCheckbox={handleCheckbox}
             onDeleteRequest={handleDeleteSelected}
             onExportSheet={handleExportSheet}
+            setPerPage={setPerPage}
           />
         </ComponentCardExtend>
       </div>

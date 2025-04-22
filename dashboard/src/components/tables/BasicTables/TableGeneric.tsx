@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, ChangeEvent } from "react";
+import React, { ChangeEvent } from "react";
 import {
   Table,
   TableBody,
@@ -20,14 +20,16 @@ interface TableGenericProps {
   previous: string | null;
   next: string | null;
   quantity: number;
+  ids?: string[];
+  perPage?: number | null;
   changePage: (e: string | null) => void;
   handleSearch: (e: string | null) => void;
   recordDetail?: (e: string) => void;
-  ids?: string[];
   handleCheckbox?: (e: string[]) => void;
   onDeleteRequest?: () => void;
   onExportPDF?: () => void;
   onExportSheet?: () => void;
+  setPerPage?: (value: number) => void;
 }
 
 const TableGeneric: React.FC<TableGenericProps> = ({
@@ -37,14 +39,16 @@ const TableGeneric: React.FC<TableGenericProps> = ({
   previous,
   next,
   quantity,
+  ids,
+  perPage,
   changePage,
   handleSearch,
   recordDetail,
-  ids,
   handleCheckbox,
   onDeleteRequest,
   onExportPDF,
   onExportSheet,
+  setPerPage,
 }) => {
   const allIds = records.map((record) => record.id);
   const isAllSelected =
@@ -74,6 +78,13 @@ const TableGeneric: React.FC<TableGenericProps> = ({
     recordDetail?.(value);
   };
 
+  const PER_PAGE = [10, 25, 50, 100];
+
+  // Handle per page
+  const handlePerPage = (e: ChangeEvent<HTMLSelectElement>) => {
+    setPerPage!(parseInt(e.currentTarget.value));
+  };
+
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="max-w-full overflow-x-auto">
@@ -83,17 +94,21 @@ const TableGeneric: React.FC<TableGenericProps> = ({
             <span className="text-gray-500 dark:text-gray-400"> Show </span>
             <div className="relative z-20 bg-transparent">
               <select
-                name=""
-                id=""
+                name="perPage"
+                id="perPageSelectId"
                 className="dark:bg-dark-900 h-9 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none py-2 pl-3 pr-8 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
-                disabled
+                value={perPage!}
+                onChange={handlePerPage}
               >
-                <option
-                  value="10"
-                  className="text-gray-500 dark:bg-gray-900 dark:text-gray-400"
-                >
-                  20
-                </option>
+                {PER_PAGE.map((per, index) => (
+                  <option
+                    key={index}
+                    value={per}
+                    className="text-gray-500 dark:bg-gray-900 dark:text-gray-400"
+                  >
+                    {per}
+                  </option>
+                ))}
               </select>
               <span className="absolute right-2 top-1/2 z-30 -translate-y-1/2 text-gray-500 dark:text-gray-400">
                 <svg
@@ -123,7 +138,10 @@ const TableGeneric: React.FC<TableGenericProps> = ({
                 Delete
               </button>
               {onExportSheet && (
-                <button className="md:ml-2 p-3 bg-blue-light-950 hover:bg-blue-light-800 text-white font-semibold rounded-lg" onClick={onExportSheet}>
+                <button
+                  className="md:ml-2 p-3 bg-blue-light-950 hover:bg-blue-light-800 text-white font-semibold rounded-lg"
+                  onClick={onExportSheet}
+                >
                   Export XLSX
                 </button>
               )}
