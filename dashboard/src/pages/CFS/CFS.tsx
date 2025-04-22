@@ -12,7 +12,7 @@ import GenericForm from "../Forms/GenericForm";
 import { IFormField } from "../../interfaces/interfaces";
 import DetailCFS from "./DetailCFS";
 import UpdateCFS from "./UpdateCFS";
-
+import * as XLSX from "xlsx";
 interface IRecord {
   [key: string]: any;
 }
@@ -92,6 +92,7 @@ const CFS = () => {
         setIsPrevious(response.data.previous);
         setIsNext(response.data.next);
         setQuantity(response.data.count);
+        setIds([]);
       }
     } catch (err: any) {
       console.error(err);
@@ -204,6 +205,105 @@ const CFS = () => {
       hideLoading();
     }
   }, [ids, cfss]);
+
+  const handleExportSheet = useCallback(async () => {
+    if (ids.length === 0) {
+      alert(`Please select at least 1 record to export`);
+      return;
+    }
+    try {
+      showLoading();
+      // --------------- \\
+      const mainTitle = [["CFS"]];
+
+      const currentDate = new Date().toLocaleString("vi-VN");
+      const subHeader = [[`Export: ${currentDate}`]];
+
+      const tableHeaders = [
+        [
+          "ID",
+          "SHIP NAME",
+          "MBL",
+          "CONTAINER NUMBER",
+          "AGENCY",
+          "TYPE",
+          "PORT",
+          "ETA",
+        ],
+      ];
+
+      const tableData = cfss
+        .filter((cfs) => {
+          if (ids.includes(cfs.id)) {
+            return cfs;
+          }
+        })
+        .map((cfs) => [
+          cfs.id,
+          cfs.ship_name,
+          cfs.mbl,
+          cfs.container_number,
+          cfs.agency_name,
+          `${cfs.size} - ${cfs.container_type}`,
+          cfs.port_name,
+          new Date(cfs.eta).toLocaleDateString("vi-VN"),
+        ]);
+
+      const ws = XLSX.utils.aoa_to_sheet([]);
+
+      let currentRow = 0;
+
+      XLSX.utils.sheet_add_aoa(ws, mainTitle, { origin: `A${currentRow + 1}` });
+      currentRow += mainTitle.length;
+
+      XLSX.utils.sheet_add_aoa(ws, subHeader, { origin: `A${currentRow + 1}` });
+      currentRow += subHeader.length;
+      currentRow += 1;
+
+      XLSX.utils.sheet_add_aoa(ws, tableHeaders, {
+        origin: `A${currentRow + 1}`,
+      });
+      currentRow += tableHeaders.length;
+
+      XLSX.utils.sheet_add_aoa(ws, tableData, { origin: `A${currentRow + 1}` });
+
+      const numCols = tableHeaders[0].length;
+      if (numCols > 1) {
+        const mergeTitle = {
+          s: { r: 0, c: 0 },
+          e: { r: 0, c: numCols - 1 },
+        };
+        const mergeSubHeader = {
+          s: { r: 1, c: 0 },
+          e: { r: 1, c: numCols - 1 },
+        };
+
+        ws["!merges"] = ws["!merges"] || [];
+        ws["!merges"].push(mergeTitle);
+        ws["!merges"].push(mergeSubHeader);
+      }
+
+      const colWidths = [
+        { wch: 10 },
+        { wch: 10 },
+        { wch: 10 },
+        { wch: 10 },
+        { wch: 10 },
+        { wch: 10 },
+        { wch: 10 },
+        { wch: 10 },
+      ];
+      ws["!cols"] = colWidths;
+
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "CFS");
+      XLSX.writeFile(wb, "CFS.xlsx");
+    } catch (err) {
+      console.error(err);
+    } finally {
+      hideLoading();
+    }
+  }, [ids]);
 
   const detailCFS = async (value: string) => {
     if (value) {
@@ -380,6 +480,7 @@ const CFS = () => {
             ids={ids}
             handleCheckbox={handleCheckbox}
             onDeleteRequest={handleDeleteSelected}
+            onExportSheet={handleExportSheet}
           />
         </ComponentCardExtend>
       </div>

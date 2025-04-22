@@ -26,6 +26,8 @@ interface TableGenericProps {
   ids?: string[];
   handleCheckbox?: (e: string[]) => void;
   onDeleteRequest?: () => void;
+  onExportPDF?: () => void;
+  onExportSheet?: () => void;
 }
 
 const TableGeneric: React.FC<TableGenericProps> = ({
@@ -41,6 +43,8 @@ const TableGeneric: React.FC<TableGenericProps> = ({
   ids,
   handleCheckbox,
   onDeleteRequest,
+  onExportPDF,
+  onExportSheet,
 }) => {
   const allIds = records.map((record) => record.id);
   const isAllSelected =
@@ -118,6 +122,11 @@ const TableGeneric: React.FC<TableGenericProps> = ({
               >
                 Delete
               </button>
+              {onExportSheet && (
+                <button className="md:ml-2 p-3 bg-blue-light-950 hover:bg-blue-light-800 text-white font-semibold rounded-lg" onClick={onExportSheet}>
+                  Export XLSX
+                </button>
+              )}
             </div>
           </div>
           <div className="relative">
