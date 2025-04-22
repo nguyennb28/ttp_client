@@ -8,6 +8,8 @@ import {
 } from "../../ui/table";
 import { FiBox } from "react-icons/fi";
 import Pagination from "../../pagination/Pagination";
+import { FaFileExcel } from "react-icons/fa";
+import { BiSolidFilePdf } from "react-icons/bi";
 
 interface Record {
   [key: string]: any;
@@ -130,7 +132,7 @@ const TableGeneric: React.FC<TableGenericProps> = ({
               </span>
             </div>
             <span className="text-gray-500 dark:text-gray-400"> entries </span>
-            <div className="feature-delete pl-5">
+            <div className="feature-delete pl-5 flex md:flex-row">
               <button
                 className="p-3 bg-pink-400 hover:bg-pink-600 text-white font-semibold rounded-lg"
                 onClick={onDeleteRequest}
@@ -139,10 +141,18 @@ const TableGeneric: React.FC<TableGenericProps> = ({
               </button>
               {onExportSheet && (
                 <button
-                  className="md:ml-2 p-3 bg-blue-light-950 hover:bg-blue-light-800 text-white font-semibold rounded-lg"
+                  className="md:ml-2 p-3 bg-green-500 hover:bg-green-800 text-white font-semibold rounded-lg"
                   onClick={onExportSheet}
                 >
-                  Export XLSX
+                  <FaFileExcel className="size-6" />
+                </button>
+              )}
+              {onExportPDF && (
+                <button
+                  className="md:ml-2 p-3 bg-blue-light-950 hover:bg-blue-light-800 text-white font-semibold rounded-lg"
+                  onClick={onExportPDF}
+                >
+                  <BiSolidFilePdf className="size-6" />
                 </button>
               )}
             </div>

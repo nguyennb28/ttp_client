@@ -13,6 +13,8 @@ import { IFormField } from "../../interfaces/interfaces";
 import DetailCFS from "./DetailCFS";
 import UpdateCFS from "./UpdateCFS";
 import * as XLSX from "xlsx";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 interface IRecord {
   [key: string]: any;
 }
@@ -190,6 +192,7 @@ const CFS = () => {
 
   const handleDeleteSelected = useCallback(async () => {
     if (ids.length === 0) {
+      alert("Please select at least 1 record to export");
       return;
     }
     try {
@@ -301,6 +304,62 @@ const CFS = () => {
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "CFS");
       XLSX.writeFile(wb, "CFS.xlsx");
+    } catch (err) {
+      console.error(err);
+    } finally {
+      hideLoading();
+    }
+  }, [ids]);
+
+  const handleExportPDF = useCallback(async () => {
+    if (ids.length === 0) {
+      alert("Please select at least 1 record to export");
+      return;
+    }
+    try {
+      showLoading();
+      // init PDF instance
+      const doc = new jsPDF("p", "mm", "a4");
+
+      // setup data for table
+      const tableColumn = [
+        "ID",
+        "SHIP NAME",
+        "MBL",
+        "CONTAINER NUMBER",
+        "AGENCY",
+        "TYPE",
+        "PORT",
+        "ETA",
+      ];
+      const tableRows = cfss
+        .filter((cfs) => {
+          if (ids.includes(cfs.id)) {
+            return cfs;
+          }
+        })
+        .map((cfs) => [
+          cfs.id,
+          cfs.ship_name,
+          cfs.mbl,
+          cfs.container_number,
+          cfs.agency_name,
+          `${cfs.size} - ${cfs.container_type}`,
+          cfs.port_name,
+          new Date(cfs.eta).toLocaleDateString("vi-VN"),
+        ]);
+      // Main title
+      doc.setFontSize(18);
+      doc.text("CFS", 14, 20);
+      doc.setFontSize(11);
+
+      autoTable(doc, {
+        head: [tableColumn],
+        body: tableRows,
+        startY: 30,
+      });
+
+      doc.save("CFS.pdf");
     } catch (err) {
       console.error(err);
     } finally {
@@ -491,6 +550,7 @@ const CFS = () => {
             recordDetail={detailCFS}
             handleCheckbox={handleCheckbox}
             onDeleteRequest={handleDeleteSelected}
+            onExportPDF={handleExportPDF}
             onExportSheet={handleExportSheet}
             setPerPage={setPerPage}
           />
