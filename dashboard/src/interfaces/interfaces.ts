@@ -1,9 +1,4 @@
-import {
-    ReactNode,
-    Dispatch,
-    SetStateAction,
-    FC,
-  } from "react";
+import { ReactNode, Dispatch, SetStateAction, FC } from "react";
 
 export interface IUser {
   [key: string]: any;
@@ -28,4 +23,22 @@ export interface IAuthContext {
 
 export interface IAuthProviderProps {
   children: ReactNode;
+}
+
+export interface IFormField {
+  name: string;
+  label: string;
+  type:
+    | "text"
+    | "number"
+    | "email"
+    | "password"
+    | "date"
+    | "select"
+    | "checkbox";
+  value?: string;
+  tempValue?: string;
+  placeholder?: string;
+  options?: { value: string; label: string }[];
+  apiSearch?: string;
 }

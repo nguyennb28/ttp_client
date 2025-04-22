@@ -164,3 +164,32 @@ class CFSViewSet(viewsets.ModelViewSet):
                 | Q(end_date__icontains=param)
             )
         return queryset
+
+    @action(detail=False, methods=["post"])
+    def delete_multiple(self, request):
+        ids_to_delete = request.data.get("ids", [])
+        if not ids_to_delete or not isinstance(ids_to_delete, list):
+            return Response(
+                {"error": "Please provide a list of IDs to delete."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        try:
+            cfs_to_delete = CFS.objects.filter(id__in=ids_to_delete)
+
+            delete_count, _ = cfs_to_delete.delete()
+            return Response(
+                {
+                    "message": f"Successfully deleted {delete_count} records",
+                    "data": {"records": delete_count},
+                },
+                status=(
+                    status.HTTP_204_NO_CONTENT
+                    if delete_count > 0
+                    else status.HTTP_400_BAD_REQUEST
+                ),
+            )
+        except Exception as e:
+            return Response(
+                {"error": f"Error deleting books: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )

@@ -73,7 +73,31 @@ class AgencySerializer(serializers.ModelSerializer):
         model = Agency
         fields = ["id", "name", "address", "phone", "abbreviation"]
 
+
 class CFSSerizalier(serializers.ModelSerializer):
+
+    agency_name = serializers.CharField(source="agency.name", read_only=True)
+    container_type = serializers.CharField(source="container_size.name", read_only=True)
+    size = serializers.CharField(source="container_size.size", read_only=True)
+    port_name = serializers.CharField(source="port.name", read_only=True)
+
     class Meta:
         model = CFS
-        fields = "__all__"
+        fields = [
+            "id",
+            "ship_name",
+            "mbl",
+            "container_number",
+            "agency",
+            "container_size",
+            "cbm",
+            "eta",
+            "port",
+            "actual_date",
+            "end_date",
+            "note",
+            "agency_name",
+            "container_type",
+            "size",
+            "port_name",
+        ]
