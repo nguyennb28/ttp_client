@@ -163,6 +163,18 @@ class CFSViewSet(viewsets.ModelViewSet):
                 | Q(updated_at__icontains=param)
                 | Q(end_date__icontains=param)
             )
+        start_date = self.request.query_params.get("startDate", None)
+        end_date = self.request.query_params.get("endDate", None)
+        date_field_to_filter = "eta"
+
+        if start_date:
+            start_date_lookup = f"{date_field_to_filter}__gte"
+            queryset = queryset.filter(**{start_date_lookup: start_date})
+
+        if end_date:
+            end_date_lookup = f"{date_field_to_filter}__lte"
+            queryset = queryset.filter(**{end_date_lookup: end_date})
+
         return queryset
 
     @action(detail=False, methods=["post"])

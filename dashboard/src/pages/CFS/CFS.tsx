@@ -101,6 +101,8 @@ const CFS = () => {
         setIsNext(response.data.next);
         setQuantity(response.data.count);
         setIds([]);
+        setStartDate(null);
+        setEndDate(null);
       }
     } catch (err: any) {
       console.error(err);
@@ -380,13 +382,14 @@ const CFS = () => {
     }
   }, [ids]);
 
+  // Filter eta of cfs from start to end date
   const handleFilterByDateRange = useCallback(async () => {
     if (startDate && endDate) {
       try {
         showLoading();
         const query = `startDate=${startDate}&endDate=${endDate}`;
         console.log(query);
-        // await getList()
+        await getList(query);
       } catch (err) {
         console.error(err);
       } finally {
