@@ -15,6 +15,9 @@ import UpdateCFS from "./UpdateCFS";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { RobotoRegular } from "../../assets/fonts/RobotoRegular";
+import { RobotoBold } from "../../assets/fonts/RobotoBold";
+import { RobotoItalic } from "../../assets/fonts/RobotoItalic";
 interface IRecord {
   [key: string]: any;
 }
@@ -319,8 +322,15 @@ const CFS = () => {
     try {
       showLoading();
       // init PDF instance
-      const doc = new jsPDF("p", "mm", "a4");
-
+      const doc = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+      });
+      const font = "Roboto";
+      (doc as any).addFileToVFS("Roboto-Regular.ttf", RobotoRegular);
+      doc.addFont("Roboto-Regular.ttf", font, "normal");
+      doc.setFont(font);
       // setup data for table
       const tableColumn = [
         "ID",
@@ -357,6 +367,9 @@ const CFS = () => {
         head: [tableColumn],
         body: tableRows,
         startY: 30,
+        bodyStyles: {
+          font: font,
+        }
       });
 
       doc.save("CFS.pdf");
