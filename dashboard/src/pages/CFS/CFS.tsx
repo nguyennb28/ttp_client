@@ -16,8 +16,6 @@ import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { RobotoRegular } from "../../assets/fonts/RobotoRegular";
-import { RobotoBold } from "../../assets/fonts/RobotoBold";
-import { RobotoItalic } from "../../assets/fonts/RobotoItalic";
 interface IRecord {
   [key: string]: any;
 }
@@ -35,6 +33,8 @@ const CFS = () => {
   const [triggerUpdate, setTriggerUpdate] = useState<boolean>(false);
   const [ids, setIds] = useState<string[]>([]);
   const [perPage, setPerPage] = useState<number>(10);
+  const [startDate, setStartDate] = useState<string | null>(null);
+  const [endDate, setEndDate] = useState<string | null>(null);
   const { isOpen, openModal, closeModal } = useModal();
 
   // Context
@@ -101,6 +101,8 @@ const CFS = () => {
         setIsNext(response.data.next);
         setQuantity(response.data.count);
         setIds([]);
+        setStartDate(null);
+        setEndDate(null);
       }
     } catch (err: any) {
       console.error(err);
@@ -369,7 +371,7 @@ const CFS = () => {
         startY: 30,
         bodyStyles: {
           font: font,
-        }
+        },
       });
 
       doc.save("CFS.pdf");
@@ -379,6 +381,22 @@ const CFS = () => {
       hideLoading();
     }
   }, [ids]);
+
+  // Filter eta of cfs from start to end date
+  const handleFilterByDateRange = useCallback(async () => {
+    if (startDate && endDate) {
+      try {
+        showLoading();
+        const query = `startDate=${startDate}&endDate=${endDate}`;
+        console.log(query);
+        await getList(query);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        hideLoading();
+      }
+    }
+  }, [startDate, endDate]);
 
   const detailCFS = async (value: string) => {
     if (value) {
@@ -515,6 +533,15 @@ const CFS = () => {
     fetchData();
   }, [perPage]);
 
+  useEffect(() => {
+    const debounce = setTimeout(() => {
+      handleFilterByDateRange();
+    }, 500);
+    return () => {
+      clearTimeout(debounce);
+    };
+  }, [startDate, endDate, handleFilterByDateRange]);
+
   if (loading) {
     return <div>Loading</div>;
   }
@@ -566,6 +593,8 @@ const CFS = () => {
             onExportPDF={handleExportPDF}
             onExportSheet={handleExportSheet}
             setPerPage={setPerPage}
+            onStartDate={setStartDate}
+            onEndDate={setEndDate}
           />
         </ComponentCardExtend>
       </div>

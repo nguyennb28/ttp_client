@@ -16,6 +16,7 @@ import {
   UserCircleIcon,
 } from "../icons";
 import { PiShippingContainerDuotone } from "react-icons/pi";
+import { FaMapMarkedAlt } from "react-icons/fa";
 import { useSidebar } from "../context/SidebarContext";
 import SidebarWidget from "./SidebarWidget";
 
@@ -41,6 +42,11 @@ const navItems: NavItem[] = [
     icon: <PiShippingContainerDuotone />,
     name: "CFS",
     path: "/cfs",
+  },
+  {
+    icon: <FaMapMarkedAlt />,
+    name: "Tracking",
+    path: "/tracking",
   },
   {
     icon: <UserCircleIcon />,

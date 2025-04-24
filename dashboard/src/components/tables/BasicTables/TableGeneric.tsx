@@ -10,6 +10,9 @@ import { FiBox } from "react-icons/fi";
 import Pagination from "../../pagination/Pagination";
 import { FaFileExcel } from "react-icons/fa";
 import { BiSolidFilePdf } from "react-icons/bi";
+import { RxDividerHorizontal } from "react-icons/rx";
+import DatePicker from "../../form/date-picker";
+import { Hook } from "flatpickr/dist/types/options";
 
 interface Record {
   [key: string]: any;
@@ -32,6 +35,8 @@ interface TableGenericProps {
   onExportPDF?: () => void;
   onExportSheet?: () => void;
   setPerPage?: (value: number) => void;
+  onStartDate?: (value: string) => void;
+  onEndDate?: (value: string) => void;
 }
 
 const TableGeneric: React.FC<TableGenericProps> = ({
@@ -51,6 +56,8 @@ const TableGeneric: React.FC<TableGenericProps> = ({
   onExportPDF,
   onExportSheet,
   setPerPage,
+  onStartDate,
+  onEndDate,
 }) => {
   const allIds = records.map((record) => record.id);
   const isAllSelected =
@@ -85,6 +92,19 @@ const TableGeneric: React.FC<TableGenericProps> = ({
   // Handle per page
   const handlePerPage = (e: ChangeEvent<HTMLSelectElement>) => {
     setPerPage!(parseInt(e.currentTarget.value));
+  };
+
+  const handleStartDateChange: Hook = (
+    dates,
+    currentDateString,
+    self,
+    data
+  ) => {
+    onStartDate!(currentDateString);
+  };
+
+  const handleEndDateChange: Hook = (dates, currentDateString, self, data) => {
+    onEndDate!(currentDateString);
   };
 
   return (
@@ -132,7 +152,7 @@ const TableGeneric: React.FC<TableGenericProps> = ({
               </span>
             </div>
             <span className="text-gray-500 dark:text-gray-400"> entries </span>
-            <div className="feature-delete pl-5 flex md:flex-row">
+            <div className="feature-delete pl-5 flex md:flex-row flex-col">
               <button
                 className="p-3 bg-pink-400 hover:bg-pink-600 text-white font-semibold rounded-lg"
                 onClick={onDeleteRequest}
@@ -155,6 +175,25 @@ const TableGeneric: React.FC<TableGenericProps> = ({
                   <BiSolidFilePdf className="size-6" />
                 </button>
               )}
+            </div>
+            <div className="feature-date pl-5 flex md:flex-row flex-col items-center">
+              <div>
+                <DatePicker
+                  id="start-date"
+                  placeholder="Start date"
+                  onChange={handleStartDateChange}
+                />
+              </div>
+              <div>
+                <RxDividerHorizontal />
+              </div>
+              <div>
+                <DatePicker
+                  id="end-date"
+                  placeholder="End date"
+                  onChange={handleEndDateChange}
+                />
+              </div>
             </div>
           </div>
           <div className="relative">
