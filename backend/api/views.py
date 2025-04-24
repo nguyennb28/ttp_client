@@ -138,12 +138,12 @@ class AgencyViewSet(viewsets.ModelViewSet):
 
 
 class CFSViewSet(viewsets.ModelViewSet):
-    queryset = CFS.objects.all().order_by("-eta")
+    queryset = CFS.objects.all().order_by("-id")
     serializer_class = CFSSerizalier
     permission_classes = [IsRoleAdminOrEmployee]
 
     def get_queryset(self):
-        queryset = CFS.objects.all().order_by("-eta")
+        queryset = CFS.objects.all().order_by("-id")
         param = self.request.query_params.get("q")
         if param:
             queryset = queryset.filter(
