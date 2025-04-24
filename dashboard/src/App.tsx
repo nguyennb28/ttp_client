@@ -20,6 +20,7 @@ import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
 import CFS from "./pages/CFS/CFS";
+import Tracking from "./pages/Tracking/Tracking";
 
 export default function App() {
   return (
@@ -57,6 +58,9 @@ export default function App() {
 
               {/* CFS */}
               <Route path="/cfs" element={<CFS />}/>
+
+              {/* Tracking */}
+              <Route path="/tracking" element={<Tracking />}/>
             </Route>
 
             {/* Auth Layout */}
