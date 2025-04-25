@@ -15,8 +15,8 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L, { LatLngExpression } from "leaflet";
-import EndIcon from "../../assets/icons/start.png";
-import StartIcon from "../../assets/icons/end.png";
+import StartIcon from "../../assets/icons/start.png";
+import EndIcon from "../../assets/icons/end.png";
 
 // Declare type of Coordinates for geometry
 type LatLngTuple = [number, number];
