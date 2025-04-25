@@ -388,7 +388,6 @@ const CFS = () => {
       try {
         showLoading();
         const query = `startDate=${startDate}&endDate=${endDate}`;
-        console.log(query);
         await getList(query);
       } catch (err) {
         console.error(err);
