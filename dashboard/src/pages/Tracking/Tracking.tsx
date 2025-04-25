@@ -15,6 +15,8 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L, { LatLngExpression } from "leaflet";
+import EndIcon from "../../assets/icons/start.png";
+import StartIcon from "../../assets/icons/end.png";
 
 // Declare type of Coordinates for geometry
 type LatLngTuple = [number, number];
@@ -40,6 +42,20 @@ const MapClickHandler: React.FC<{
   });
   return null;
 };
+
+const customMarkerStartPointIcon = new L.Icon({
+  iconUrl: StartIcon,
+  iconAnchor: [17, 51],
+  popupAnchor: [1, -40],
+  iconSize: [35, 40],
+});
+
+const customMarkerEndPointIcon = new L.Icon({
+  iconUrl: EndIcon,
+  iconAnchor: [17, 51],
+  popupAnchor: [1, -40],
+  iconSize: [35, 40],
+});
 
 const Tracking: React.FC = () => {
   const [startPoint, setStartPoint] = useState<L.LatLng | null>(null);
@@ -171,7 +187,10 @@ const Tracking: React.FC = () => {
         <div>
           <p>Distance: {(distance / 1000).toFixed(2)} km</p>
           {duration !== null && (
-            <p>Estimated time: <span className="math-line">{formatDuration(duration)}</span></p>
+            <p>
+              Estimated time:{" "}
+              <span className="math-line">{formatDuration(duration)}</span>
+            </p>
           )}
           {/* Thêm tính toán 40km/h nếu muốn */}
         </div>
@@ -189,12 +208,12 @@ const Tracking: React.FC = () => {
         />
         <MapClickHandler onMapClick={handleMapClick} />
         {startPoint && (
-          <Marker position={startPoint}>
+          <Marker position={startPoint} icon={customMarkerStartPointIcon}>
             <Popup>Điểm Bắt Đầu</Popup>
           </Marker>
         )}
         {endPoint && (
-          <Marker position={endPoint}>
+          <Marker position={endPoint} icon={customMarkerEndPointIcon}>
             <Popup>Điểm Kết Thúc</Popup>
           </Marker>
         )}
