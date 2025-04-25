@@ -39,7 +39,7 @@ const CFS = () => {
 
   // Context
   const { loading, showLoading, hideLoading } = useLoading();
-  const { checkRole } = useAuth();
+  const { checkRole, checkAuth } = useAuth();
 
   // Constant
   const NEXT = "next";
@@ -510,7 +510,22 @@ const CFS = () => {
 
   useEffect(() => {
     checkRole();
-    getList();
+    const refreshToken = async () => {
+      try {
+        await checkAuth();
+      } catch(err) {
+        console.error(err)
+      }
+    }
+    const makeGetList = async() => {
+      try {
+        await getList();
+      } catch(err) {
+        console.error(err);
+      }
+    }
+    refreshToken();
+    makeGetList();
   }, []);
 
   useEffect(() => {

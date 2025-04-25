@@ -89,6 +89,8 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
     const access = localStorage.getItem("access");
     if (!access) {
       logout();
+      const navigate = useNavigate();
+      navigate("/signin", { replace: true });
       return;
     }
     try {

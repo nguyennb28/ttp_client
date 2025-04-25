@@ -15,8 +15,8 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L, { LatLngExpression } from "leaflet";
-import EndIcon from "../../assets/icons/start.png";
-import StartIcon from "../../assets/icons/end.png";
+import StartIcon from "../../assets/icons/start.png";
+import EndIcon from "../../assets/icons/end.png";
 
 // Declare type of Coordinates for geometry
 type LatLngTuple = [number, number];
@@ -66,6 +66,9 @@ const Tracking: React.FC = () => {
   const [duration, setDuration] = useState<number | null>(null);
   const [loadingRoute, setLoadingRoute] = useState<boolean>(false);
   const [routeError, setRouteError] = useState<string | null>(null);
+
+  // auth
+  const { checkAuth, checkRole } = useAuth();
 
   // process map click
   const handleMapClick = (latlng: L.LatLng) => {
@@ -127,6 +130,18 @@ const Tracking: React.FC = () => {
     }
     // Dependency: chạy lại khi startPoint hoặc endPoint thay đổi
   }, [startPoint, endPoint]);
+
+  useEffect(() => {
+    checkRole();
+    const refreshToken = async () => {
+      try {
+        await checkAuth();
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    refreshToken();
+  }, []);
 
   const clearPoints = () => {
     setStartPoint(null);
