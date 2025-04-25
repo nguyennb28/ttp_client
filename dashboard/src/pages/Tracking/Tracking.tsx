@@ -169,9 +169,9 @@ const Tracking: React.FC = () => {
       {/* Hiển thị thông tin kết quả (Sẽ thêm ở Bước 4) */}
       {distance !== null && (
         <div>
-          <p>Khoảng cách: {(distance / 1000).toFixed(2)} km</p>
+          <p>Distance: {(distance / 1000).toFixed(2)} km</p>
           {duration !== null && (
-            <p>Thời gian dự kiến: <span className="math-line">{formatDuration(duration)}</span></p>
+            <p>Estimated time: <span className="math-line">{formatDuration(duration)}</span></p>
           )}
           {/* Thêm tính toán 40km/h nếu muốn */}
         </div>
