@@ -67,6 +67,9 @@ const Tracking: React.FC = () => {
   const [loadingRoute, setLoadingRoute] = useState<boolean>(false);
   const [routeError, setRouteError] = useState<string | null>(null);
 
+  // auth
+  const { checkAuth, checkRole } = useAuth();
+
   // process map click
   const handleMapClick = (latlng: L.LatLng) => {
     setRouteGeometry([]);
@@ -127,6 +130,18 @@ const Tracking: React.FC = () => {
     }
     // Dependency: chạy lại khi startPoint hoặc endPoint thay đổi
   }, [startPoint, endPoint]);
+
+  useEffect(() => {
+    checkRole();
+    const refreshToken = async () => {
+      try {
+        await checkAuth();
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    refreshToken();
+  }, []);
 
   const clearPoints = () => {
     setStartPoint(null);
