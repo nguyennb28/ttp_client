@@ -60,7 +60,7 @@ export default function UserDropdown() {
                 {user.username}
               </span>
               <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
-                MST: {user.mst}
+                Tax code: {user.tax_code}
               </span>
               <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
                 Role: {user.role}

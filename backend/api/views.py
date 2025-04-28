@@ -6,6 +6,7 @@ from .serializers import (
     VatInfoSerializer,
     AgencySerializer,
     CFSSerizalier,
+    CustomLoginSerializer,
 )
 
 from django.db.models import Q
@@ -20,6 +21,7 @@ from .permissions import (
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status, viewsets
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -205,3 +207,7 @@ class CFSViewSet(viewsets.ModelViewSet):
                 {"error": f"Error deleting books: {str(e)}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
+
+
+class CustomLoginView(TokenObtainPairView):
+    serializer_class = CustomLoginSerializer
