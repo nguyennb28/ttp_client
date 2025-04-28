@@ -14,7 +14,7 @@ class User(AbstractUser):
         max_length=10, choices=ROLE_CHOICES, default="user", verbose_name="Vai trò"
     )
     phone = models.CharField(max_length=10, verbose_name="Số điện thoại")
-    mst = models.CharField(max_length=13, verbose_name="Mã số thuế")
+    tax_code = models.CharField(max_length=13, verbose_name="Mã số thuế")
     full_name = models.CharField(max_length=150)
     groups = models.ManyToManyField(
         Group,
