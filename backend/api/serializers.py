@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import User, Port, VAT_INFO, ContainerSize, Agency, CFS
 import re
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.contrib.auth import get_user_model
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -10,7 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["id", "username", "phone", "mst", "role", "password"]
+        fields = ["id", "username", "phone", "tax_code", "role", "password"]
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
@@ -101,3 +103,50 @@ class CFSSerizalier(serializers.ModelSerializer):
             "size",
             "port_name",
         ]
+
+
+UserModel = get_user_model()
+
+
+class CustomLoginSerializer(TokenObtainPairSerializer):
+    tax_code = serializers.CharField(max_length=20, required=True, write_only=True)
+    default_error_messages = {
+        "no_active_account": "Incorrect username, password or tax code or account not activated"
+    }
+
+    def validate(self, attrs):
+        username = attrs.get(self.username_field)
+        password = attrs.get("password")
+        tax_code = attrs.get("tax_code")
+
+        user_obj = None
+
+        if username and password and tax_code:
+            try:
+                user_lookup = {self.username_field: username}
+                user_obj = UserModel._default_manager.get(**user_lookup)
+
+                if not user_obj.check_password(password):
+                    print(f"Login failed for {username}: Incorrect password")
+                    user_obj = None
+                elif user_obj.tax_code != tax_code:
+                    print(
+                        f"Login failed for {username}: Incorrect tax_code (Excepted: {user_obj.tax_code}, Got: {tax_code})"
+                    )
+                    user_obj = None
+                elif not user_obj.is_active:
+                    print(f"Login failed for {username}: User inactive")
+                    user_obj = None
+            except UserModel.DoesNotExist:
+                print(f"Login failed: User {username} not found")
+        if user_obj is None:
+            raise serializers.ValidationError(
+                self.error_messages["no_active_account"], code="authentication"
+            )
+
+        self.user = user_obj
+        print(f"Authentication successful for user: {self.user.username}")
+
+        data = super().validate(attrs)
+
+        return data

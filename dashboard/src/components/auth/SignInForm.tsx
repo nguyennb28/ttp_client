@@ -7,14 +7,15 @@ import Checkbox from "../form/input/Checkbox";
 import Button from "../ui/button/Button";
 
 interface SignInFormProps {
-  onSubmit: (username: string, password: string) => void;
+  onSubmit: (tax_code: string, username: string, password: string) => void;
 }
 
 const SignInForm: FC<SignInFormProps> = ({ onSubmit }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
-  const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [taxCode, setTaxCode] = useState<string>("");
 
   const handleUser = (value: string) => {
     setUsername(value);
@@ -24,13 +25,17 @@ const SignInForm: FC<SignInFormProps> = ({ onSubmit }) => {
     setPassword(value);
   };
 
+  const handleTaxCode = (value: string) => {
+    setTaxCode(value);
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!username || !password) {
       alert(`Missing signin information`);
       return;
     }
-    onSubmit(username, password);
+    onSubmit(taxCode, username, password);
   };
 
   return (
@@ -111,12 +116,26 @@ const SignInForm: FC<SignInFormProps> = ({ onSubmit }) => {
               <div className="space-y-6">
                 <div>
                   <Label>
+                    Tax code <span className="text-error-500">*</span>{" "}
+                  </Label>
+                  <Input
+                    placeholder="Enter your tax code"
+                    value={taxCode}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      handleTaxCode(e.target.value)
+                    }
+                  />
+                </div>
+                <div>
+                  <Label>
                     Username <span className="text-error-500">*</span>{" "}
                   </Label>
                   <Input
                     placeholder="Enter your username"
                     value={username}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleUser(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      handleUser(e.target.value)
+                    }
                   />
                 </div>
                 <div>
@@ -128,7 +147,9 @@ const SignInForm: FC<SignInFormProps> = ({ onSubmit }) => {
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter your password"
                       value={password}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handlePassword(e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        handlePassword(e.target.value)
+                      }
                     />
                     <span
                       onClick={() => setShowPassword(!showPassword)}

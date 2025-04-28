@@ -9,14 +9,19 @@ export default function SignIn() {
   const { login, checkAuth } = useAuth();
   const navigate = useNavigate();
 
-  const onSubmit = async (username: string, password: string) => {
+  const onSubmit = async (
+    tax_code: string,
+    username: string,
+    password: string
+  ) => {
     try {
-      const response = await login(username, password);
+      const response = await login(tax_code, username, password);
       if (response) {
         navigate("/", { replace: true });
       }
     } catch (err: any) {
       console.error(err);
+      alert("Login failed");
     }
   };
 
@@ -30,10 +35,7 @@ export default function SignIn() {
 
   return (
     <>
-      <PageMeta
-        title="Sign In"
-        description="Sign In"
-      />
+      <PageMeta title="Sign In" description="Sign In" />
       <AuthLayout>
         <SignInForm onSubmit={onSubmit} />
       </AuthLayout>
