@@ -21,6 +21,7 @@ export default function SignIn() {
       }
     } catch (err: any) {
       console.error(err);
+      alert("Login failed");
     }
   };
 
