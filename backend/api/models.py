@@ -32,7 +32,7 @@ class User(AbstractUser):
         related_name="api_user_permissions",  # Đặt tên khác với mặc định
         related_query_name="user",
     )
-    
+
     tenant_db = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
