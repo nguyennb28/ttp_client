@@ -14,8 +14,8 @@ class User(AbstractUser):
         max_length=10, choices=ROLE_CHOICES, default="user", verbose_name="Vai trò"
     )
     phone = models.CharField(max_length=10, verbose_name="Số điện thoại")
-    tax_code = models.CharField(max_length=13, verbose_name="Mã số thuế")
-    full_name = models.CharField(max_length=150)
+    tax_code = models.CharField(max_length=13, null=True, verbose_name="Mã số thuế")
+    full_name = models.CharField(max_length=150, null=True)
     groups = models.ManyToManyField(
         Group,
         verbose_name="groups",
@@ -32,6 +32,8 @@ class User(AbstractUser):
         related_name="api_user_permissions",  # Đặt tên khác với mặc định
         related_query_name="user",
     )
+    
+    tenant_db = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
         verbose_name = "Người dùng"
