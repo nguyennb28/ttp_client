@@ -16,6 +16,7 @@ import {
   UserCircleIcon,
 } from "../icons";
 import { PiShippingContainerDuotone } from "react-icons/pi";
+import { BiBowlHot } from "react-icons/bi";
 import { FaMapMarkedAlt } from "react-icons/fa";
 import { useSidebar } from "../context/SidebarContext";
 import SidebarWidget from "./SidebarWidget";
@@ -52,6 +53,15 @@ const navItems: NavItem[] = [
     icon: <UserCircleIcon />,
     name: "User Profile",
     path: "/profile",
+  },
+  {
+    name: "Saas",
+    icon: <BiBowlHot />,
+    subItems: [
+      { name: "Introduction", path: "/introducion-saas", pro: true },
+      { name: "Product", path: "/product-saas", pro: true },
+      { name: "Account", path: "/account-saas", pro: true },
+    ],
   },
   {
     name: "Forms",
