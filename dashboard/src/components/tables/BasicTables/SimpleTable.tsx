@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../ui/table";
+import Pagination from "../../pagination/Pagination";
 
 interface SimpleTableProps {
   records: Record<string, any>[];
@@ -13,12 +14,12 @@ interface SimpleTableProps {
   headers: string[];
   // Fields to access object from API response
   fields: string[];
-  previous?: string | null;
-  next?: string | null;
+  previous: string | null;
+  next: string | null;
   quantity?: number;
   ids?: string[];
   perPage?: number | null;
-  changePage?: (e: string | null) => void;
+  changePage: (e: string | null) => void;
 }
 
 const SimpleTable: FC<SimpleTableProps> = ({
@@ -80,6 +81,16 @@ const SimpleTable: FC<SimpleTableProps> = ({
               ))}
             </TableBody>
           </Table>
+        </div>
+        <div className="flex items-center justify-between boorder-t-1">
+          {/* Quantity */}
+          <div className="p-5">
+            <p className="text-gray-500">
+              Number of records: <span>{quantity}</span>
+            </p>
+          </div>
+          {/* Pagination */}
+          <Pagination previous={previous} next={next} changePage={changePage} />
         </div>
       </div>
     </>

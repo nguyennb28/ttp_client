@@ -20,6 +20,7 @@ const AccountSaas = () => {
   const [previous, setPrevious] = useState<string | null>(null);
   const [count, setCount] = useState<number | null>(null);
   const [perPage, setPerPage] = useState<number>(10);
+  const[changePage, setChangePage] = useState<string | null>(null);
 
   const NEXT = "next";
   const PREVIOUS = "previous";
@@ -88,6 +89,11 @@ const AccountSaas = () => {
     }
   };
 
+  const onChangePage = (value: string | null) => {
+    console.log(value);
+    setChangePage(value);
+  }
+
   useEffect(() => {
     const refreshToken = async () => {
       try {
@@ -128,7 +134,15 @@ const AccountSaas = () => {
       <div className="space-y-6">
         <ComponentCardExtend title="Account Table" features={features}>
           {/* <TableGeneric records={[]} headers={header} /> */}
-          <SimpleTable records={users} headers={headers} fields={fields} />
+          <SimpleTable
+            records={users}
+            headers={headers}
+            fields={fields}
+            previous={previous}
+            next={next}
+            quantity={count!}
+            changePage={onChangePage}
+          />
         </ComponentCardExtend>
       </div>
     </>
