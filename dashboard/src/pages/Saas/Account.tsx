@@ -7,6 +7,10 @@ import { useModal } from "../../hooks/useModal";
 import { useState, useEffect } from "react";
 import axiosInstance from "../../instance/axiosInstance";
 import { useAuth } from "../../context/AuthContext";
+import { IFormField } from "../../interfaces/interfaces";
+import { ROLES } from "../../variables/roles";
+import { Modal } from "../../components/ui/modal";
+import GenericForm from "../Forms/GenericForm";
 
 const AccountSaas = () => {
   // Context
@@ -20,7 +24,7 @@ const AccountSaas = () => {
   const [previous, setPrevious] = useState<string | null>(null);
   const [count, setCount] = useState<number | null>(null);
   const [perPage, setPerPage] = useState<number>(10);
-  const[changePage, setChangePage] = useState<string | null>(null);
+  const [changePage, setChangePage] = useState<string | null>(null);
 
   const NEXT = "next";
   const PREVIOUS = "previous";
@@ -45,6 +49,40 @@ const AccountSaas = () => {
     "phone",
     "tax_code",
     "tenant_db",
+  ];
+
+  const formField: IFormField[] = [
+    {
+      name: "username",
+      label: "Username",
+      type: "text",
+    },
+    {
+      name: "password",
+      label: "Password",
+      type: "password",
+    },
+    {
+      name: "full_name",
+      label: "Fullname",
+      type: "text",
+    },
+    {
+      name: "role",
+      label: "Role",
+      type: "select",
+      options: ROLES,
+    },
+    {
+      name: "phone",
+      label: "Phone",
+      type: "text",
+    },
+    {
+      name: "tax_code",
+      label: "Tax code",
+      type: "text",
+    },
   ];
 
   const features = async (e: string) => {
@@ -90,10 +128,17 @@ const AccountSaas = () => {
   };
 
   const onChangePage = (value: string | null) => {
-    console.log(value);
     setChangePage(value);
-  }
+  };
 
+  const handleFormSubmit = () => {
+    alert("Submit");
+  };
+
+  const handleValidation = (formData: Record<string, any>) => {
+    const errors: Record<string, any> = {};
+    return errors;
+  };
   useEffect(() => {
     const refreshToken = async () => {
       try {
@@ -131,9 +176,28 @@ const AccountSaas = () => {
         description="This is Saas for logistics companies"
       />
       <PageBreadcrumb pageTitle="Account" />
+      <Modal
+        isOpen={isOpen}
+        onClose={closeModal}
+        className="h-screen max-w-[700px] m-4"
+      >
+        <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
+          <div className="px-2 pr-14">
+            <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
+              Add account
+            </h4>
+          </div>
+          <div>
+            <GenericForm
+              fields={formField}
+              onSubmit={handleFormSubmit}
+              validationForm={handleValidation}
+            />
+          </div>
+        </div>
+      </Modal>
       <div className="space-y-6">
         <ComponentCardExtend title="Account Table" features={features}>
-          {/* <TableGeneric records={[]} headers={header} /> */}
           <SimpleTable
             records={users}
             headers={headers}
