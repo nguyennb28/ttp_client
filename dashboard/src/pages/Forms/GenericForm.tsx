@@ -114,7 +114,7 @@ const GenericForm: React.FC<GenericFormProps> = ({
           </>
         );
       case "select":
-        if (field.apiSearch !== null) {
+        if (field.apiSearch) {
           return (
             <>
               <input
@@ -160,6 +160,7 @@ const GenericForm: React.FC<GenericFormProps> = ({
               className={inputClasses}
               onChange={handleChange}
             >
+              <div>1</div>
               <option value="">---- Select an option ----</option>
               {field.options &&
                 field.options.map((option) => (

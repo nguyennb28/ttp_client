@@ -9,9 +9,10 @@ class User(AbstractUser):
         ("user", "Người dùng"),
         ("employee", "Nhân viên"),
         ("admin", "Quản trị viên"),
+        ("client-saas", "Khách hàng saas"),
     ]
     role = models.CharField(
-        max_length=10, choices=ROLE_CHOICES, default="user", verbose_name="Vai trò"
+        max_length=50, choices=ROLE_CHOICES, default="user", verbose_name="Vai trò"
     )
     phone = models.CharField(max_length=10, verbose_name="Số điện thoại")
     tax_code = models.CharField(max_length=13, null=True, verbose_name="Mã số thuế")
