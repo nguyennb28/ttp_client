@@ -63,9 +63,11 @@ class UserViewSet(viewsets.ModelViewSet):
         param = request.query_params.get("q")
         if param:
             qs = qs.filter(tenant_db__icontains=param)
-        list_db = qs.values("id", "tenant_db").distinct("tenant_db")
+        list_db = qs.values("tenant_db").distinct("tenant_db")
 
-        result = [{"id": item["id"], "name": item["tenant_db"]} for item in list_db]
+        result = [
+            {"id": item["tenant_db"], "name": item["tenant_db"]} for item in list_db
+        ]
         return Response({"results": result}, status=status.HTTP_200_OK)
 
 

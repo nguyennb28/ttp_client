@@ -41,4 +41,5 @@ export interface IFormField {
   placeholder?: string;
   options?: { value: string; label: string }[];
   apiSearch?: string;
+  required?: boolean;
 }

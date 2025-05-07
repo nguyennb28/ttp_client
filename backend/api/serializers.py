@@ -16,6 +16,8 @@ class UserSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "username",
+            "first_name",
+            "last_name",
             "full_name",
             "phone",
             "tax_code",
@@ -23,7 +25,9 @@ class UserSerializer(serializers.ModelSerializer):
             "tenant_db",
             "password",
         ]
-        extra_kwargs = {"password": {"write_only": True}}
+        extra_kwargs = {
+            "password": {"write_only": True},
+        }
 
     def get_full_name(self, obj):
         return obj.get_full_name().strip()
