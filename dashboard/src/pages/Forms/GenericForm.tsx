@@ -282,6 +282,9 @@ const GenericForm: React.FC<GenericFormProps> = ({
               ) : (
                 ""
               )}
+              {field.required == true ? (
+                <span className="text-red-500">*</span>
+              ) : null}
             </label>
             {renderFormField(field, formData, handleChange)}
           </div>
