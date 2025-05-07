@@ -34,6 +34,7 @@ const AccountSaas = () => {
     "options",
     "id",
     "username",
+    "full name",
     "role",
     "phone",
     "tax code",
@@ -45,6 +46,7 @@ const AccountSaas = () => {
     "options",
     "id",
     "username",
+    "full_name",
     "role",
     "phone",
     "tax_code",
@@ -56,38 +58,51 @@ const AccountSaas = () => {
       name: "username",
       label: "Username",
       type: "text",
+      required: true,
     },
     {
       name: "password",
       label: "Password",
       type: "password",
+      required: true,
     },
     {
-      name: "full_name",
-      label: "Fullname",
+      name: "first_name",
+      label: "First name",
       type: "text",
+      required: true,
+    },
+    {
+      name: "last_name",
+      label: "Last name",
+      type: "text",
+      required: true,
     },
     {
       name: "role",
       label: "Role",
       type: "select",
       options: ROLES,
+      required: true,
     },
     {
       name: "phone",
       label: "Phone",
       type: "text",
+      required: true,
     },
     {
       name: "tax_code",
       label: "Tax code",
       type: "text",
+      required: true,
     },
     {
       name: "tenant_db",
       label: "Tenant database",
       type: "select",
       apiSearch: "/users/get_tenant_db/?q=",
+      required: true,
     },
   ];
 
@@ -137,14 +152,69 @@ const AccountSaas = () => {
     setChangePage(value);
   };
 
-  const handleFormSubmit = () => {
-    alert("Submit");
+  const handleFormSubmit = async (formData: Record<string, any>) => {
+    const validate = handleValidation(formData);
+    if (Object.keys(validate).length === 0) {
+      try {
+        showLoading();
+        const response = await axiosInstance.post(`/users/`, formData);
+        if (response.status == 201) {
+          alert("Successfully");
+          await getUsers();
+          closeModal();
+        }
+      } catch (err: any) {
+        console.log(err);
+      } finally {
+        hideLoading();
+      }
+    }
   };
 
   const handleValidation = (formData: Record<string, any>) => {
     const errors: Record<string, any> = {};
+    if (!formData.username) {
+      errors.username = "Username is empty!";
+    }
+    if (!formData.password) {
+      errors.password = "Password is empty!";
+    }
+    if (formData.password) {
+      if (validatePassword(formData.password)) {
+        errors.password = validatePassword(formData.password);
+      }
+    }
+    if (!formData.first_name) {
+      errors.first_name = "Firstname is empty!";
+    }
+    if (!formData.last_name) {
+      errors.last_name = "Lastname is empty!";
+    }
+    if (!formData.role) {
+      errors.role = "Select a role!";
+    }
+    if (!formData.phone) {
+      errors.phone = "Phone number is empty!";
+    }
+    if (!formData.tax_code) {
+      errors.tax_code = "Tax code is empty!";
+    }
+    if (!formData.tenant_db) {
+      errors.tenant_db = "Select a tenant database!";
+    }
     return errors;
   };
+
+  function validatePassword(password: string) {
+    let msg = "";
+    if (password.length < 8) {
+      msg += `\nPassword must be at least 8 characters.`;
+    }
+    if (/^\d+$/.test(password)) {
+      msg += `\nPassword cannot be entirely numeric.\n`;
+    }
+    return msg.length > 0 ? msg : null;
+  }
   useEffect(() => {
     const refreshToken = async () => {
       try {
