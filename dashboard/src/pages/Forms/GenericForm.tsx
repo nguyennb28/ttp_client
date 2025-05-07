@@ -114,7 +114,7 @@ const GenericForm: React.FC<GenericFormProps> = ({
           </>
         );
       case "select":
-        if (field.apiSearch) {
+        if (field.apiSearch !== null && field.apiSearch !== undefined) {
           return (
             <>
               <input
@@ -139,7 +139,7 @@ const GenericForm: React.FC<GenericFormProps> = ({
                 </option>
                 {searchResults[field.name]?.map(
                   (result: any, index: number) => (
-                    <option key={result.id} value={result.id}>
+                    <option key={index} value={result.id}>
                       {result.name}
                     </option>
                   )
@@ -160,7 +160,6 @@ const GenericForm: React.FC<GenericFormProps> = ({
               className={inputClasses}
               onChange={handleChange}
             >
-              <div>1</div>
               <option value="">---- Select an option ----</option>
               {field.options &&
                 field.options.map((option) => (
@@ -215,6 +214,7 @@ const GenericForm: React.FC<GenericFormProps> = ({
               name={field.name}
               value={formData[field.name] || ""}
               onChange={handleChange}
+              className={inputClasses}
             />
             {errors && (
               <p className="text-red-600 text-xs">{errors[field.name]}</p>

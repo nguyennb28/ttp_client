@@ -83,6 +83,12 @@ const AccountSaas = () => {
       label: "Tax code",
       type: "text",
     },
+    {
+      name: "tenant_db",
+      label: "Tenant database",
+      type: "select",
+      apiSearch: "/users/get_tenant_db/?q=",
+    },
   ];
 
   const features = async (e: string) => {
