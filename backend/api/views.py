@@ -37,11 +37,36 @@ class UserViewSet(viewsets.ModelViewSet):
             permission_classes = [IsRoleAdmin]  # fallback
         return [permission() for permission in permission_classes]
 
+    def get_queryset(self):
+        queryset = User.objects.all()
+        param = self.request.query_params.get("q")
+        if param:
+            queryset = queryset.filter(
+                Q(username__icontains=param)
+                | Q(full_name__icontains=param)
+                | Q(phone__icontains=param)
+                | Q(role__icontains=param)
+                | Q(tenant_db__icontains=param)
+            )
+        return queryset
+
     @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated])
     def me(self, request):
         print(request)
         serializer = self.get_serializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=["get"], permission_classes=[IsRoleAdmin])
+    def get_tenant_db(self, request):
+        qs = User.objects.all().exclude(tenant_db__isnull=True)
+
+        param = request.query_params.get("q")
+        if param:
+            qs = qs.filter(tenant_db__icontains=param)
+        list_db = qs.values("id", "tenant_db").distinct("tenant_db")
+
+        result = [{"id": item["id"], "name": item["tenant_db"]} for item in list_db]
+        return Response({"results": result}, status=status.HTTP_200_OK)
 
 
 class PortViewSet(viewsets.ModelViewSet):
