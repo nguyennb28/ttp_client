@@ -16,7 +16,6 @@ class User(AbstractUser):
     )
     phone = models.CharField(max_length=10, verbose_name="Số điện thoại")
     tax_code = models.CharField(max_length=13, null=True, verbose_name="Mã số thuế")
-    full_name = models.CharField(max_length=150, null=True)
     groups = models.ManyToManyField(
         Group,
         verbose_name="groups",
@@ -41,7 +40,7 @@ class User(AbstractUser):
         verbose_name_plural = "Người dùng"
 
     def __str__(self):
-        return f"{self.full_name}"
+        return f"{self.username}"
 
 
 class Port(models.Model):

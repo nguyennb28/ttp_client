@@ -9,6 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     # remove validator default
     phone = serializers.CharField(validators=[], max_length=10)
+    full_name = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
@@ -23,6 +24,9 @@ class UserSerializer(serializers.ModelSerializer):
             "password",
         ]
         extra_kwargs = {"password": {"write_only": True}}
+
+    def get_full_name(self, obj):
+        return obj.get_full_name().strip()
 
     def create(self, validated_data):
         user_currently = self.context.get("request").user
