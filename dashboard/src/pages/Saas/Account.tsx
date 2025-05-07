@@ -25,6 +25,7 @@ const AccountSaas = () => {
   const [count, setCount] = useState<number | null>(null);
   const [perPage, setPerPage] = useState<number>(10);
   const [changePage, setChangePage] = useState<string | null>(null);
+  const [ids, setIds] = useState<string[]>([]);
 
   const NEXT = "next";
   const PREVIOUS = "previous";
@@ -108,11 +109,13 @@ const AccountSaas = () => {
 
   const features = async (e: string) => {
     if (e == "refresh") {
+      cleanStates();
       try {
         showLoading();
         await getUsers();
       } catch (err: any) {
         console.error(err);
+        cleanStates();
       } finally {
         hideLoading();
       }
@@ -128,6 +131,8 @@ const AccountSaas = () => {
     setCount(0);
     setUsers([]);
     setPerPage(10);
+    setChangePage(null);
+    setIds([]);
   };
 
   const getUsers = async () => {
@@ -205,7 +210,7 @@ const AccountSaas = () => {
     return errors;
   };
 
-  function validatePassword(password: string) {
+  const validatePassword = (password: string) => {
     let msg = "";
     if (password.length < 8) {
       msg += `\nPassword must be at least 8 characters.`;
@@ -214,7 +219,13 @@ const AccountSaas = () => {
       msg += `\nPassword cannot be entirely numeric.\n`;
     }
     return msg.length > 0 ? msg : null;
-  }
+  };
+
+  const handleCheckbox = (value: string[]) => {
+    const list = [...new Set(value)];
+    setIds(list);
+  };
+
   useEffect(() => {
     const refreshToken = async () => {
       try {
@@ -281,7 +292,9 @@ const AccountSaas = () => {
             previous={previous}
             next={next}
             quantity={count!}
+            ids={ids}
             changePage={onChangePage}
+            handleCheckbox={handleCheckbox}
           />
         </ComponentCardExtend>
       </div>

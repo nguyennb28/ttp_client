@@ -20,6 +20,7 @@ interface SimpleTableProps {
   ids?: string[];
   perPage?: number | null;
   changePage: (e: string | null) => void;
+  handleCheckbox?: (e: string[]) => void;
 }
 
 const SimpleTable: FC<SimpleTableProps> = ({
@@ -32,14 +33,60 @@ const SimpleTable: FC<SimpleTableProps> = ({
   ids,
   perPage,
   changePage,
+  handleCheckbox,
 }) => {
+  const allIds = records.map((record) => record.id);
+
+  const handleSelectAllChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      handleCheckbox!(allIds);
+    } else {
+      handleCheckbox!([]);
+    }
+  };
+
+  const arraysEqualIgnoreOrder = (arr1: string[], arr2: string[]) => {
+    if (arr1.length !== arr2.length) {
+      return false;
+    }
+    const sorted1 = [...arr1].sort();
+    const sorted2 = [...arr2].sort();
+    for (let i = 0; i < sorted1.length; i++) {
+      if (sorted1[i] !== sorted2[i]) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const handleRecordCheckboxChange = (id: string) => {
+    const checkboxAll = document.getElementById(
+      "checkbox-all"
+    ) as HTMLInputElement | null;
+
+    let newIds: string[];
+
+    if (ids?.includes(id)) {
+      newIds = ids.filter((item) => item != id);
+    } else {
+      newIds = [...(ids ?? []), id];
+    }
+    handleCheckbox!(newIds);
+    if (arraysEqualIgnoreOrder(allIds, newIds)) {
+      if (checkboxAll) {
+        checkboxAll.checked = true;
+      }
+    } else {
+      if (checkboxAll) {
+        checkboxAll.checked = false;
+      }
+    }
+  };
+
   return (
     <>
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
         <div className="max-w-full overflow-x-auto">
-          {/* <div className="py-3 border-b-1 flex flex-col gap-2 px-4 sm:flex-row sm:items-center sm:justify-between">
-            <div></div>
-          </div> */}
           <Table>
             <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
               <TableRow>
@@ -55,6 +102,7 @@ const SimpleTable: FC<SimpleTableProps> = ({
                         type="checkbox"
                         id="checkbox-all"
                         aria-label="Select All"
+                        onChange={handleSelectAllChange}
                       />
                     ) : (
                       item
@@ -72,7 +120,14 @@ const SimpleTable: FC<SimpleTableProps> = ({
                       className="px-5, py-4 sm:px-6 text-start"
                     >
                       {field == "options" ? (
-                        <input type="checkbox" value={item["id"]} />
+                        <input
+                          type="checkbox"
+                          value={item["id"]}
+                          checked={ids?.includes(item.id)}
+                          onChange={() => handleRecordCheckboxChange(item.id)}
+                          className="checkbox-cell"
+                          aria-label={`Select ${item.id}`}
+                        />
                       ) : null}
                       {item[field]}
                     </TableCell>
