@@ -80,6 +80,7 @@ const CFS = () => {
         if (response.status == 201) {
           alert("Successfully");
           await getList();
+          closeModal();
         }
       } catch (err: any) {
         console.error(err);
@@ -512,17 +513,17 @@ const CFS = () => {
     const refreshToken = async () => {
       try {
         await checkAuth();
-      } catch(err) {
-        console.error(err)
-      }
-    }
-    const makeGetList = async() => {
-      try {
-        await getList();
-      } catch(err) {
+      } catch (err) {
         console.error(err);
       }
-    }
+    };
+    const makeGetList = async () => {
+      try {
+        await getList();
+      } catch (err) {
+        console.error(err);
+      }
+    };
     refreshToken();
     makeGetList();
   }, []);
