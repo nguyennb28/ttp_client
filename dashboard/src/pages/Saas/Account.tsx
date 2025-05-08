@@ -123,6 +123,9 @@ const AccountSaas = () => {
     if (e == "create") {
       openModal();
     }
+    if (e == "delete") {
+      handleDelete();
+    }
   };
 
   const cleanStates = () => {
@@ -224,6 +227,26 @@ const AccountSaas = () => {
   const handleCheckbox = (value: string[]) => {
     const list = [...new Set(value)];
     setIds(list);
+  };
+
+  const handleDelete = async () => {
+    if (ids.length > 0) {
+      // Proccessing delete ids
+      try {
+        const response = await axiosInstance.post("/users/bulk_delete/", {
+          ids: ids,
+        });
+        if (response.status == 200) {
+          alert(`Succes`);
+          cleanStates();
+          await getUsers();
+        }
+      } catch (err: any) {
+        alert("Delete failed");
+      }
+    } else {
+      alert("Please select the specified id to delete.");
+    }
   };
 
   useEffect(() => {

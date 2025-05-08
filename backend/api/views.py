@@ -70,6 +70,33 @@ class UserViewSet(viewsets.ModelViewSet):
         ]
         return Response({"results": result}, status=status.HTTP_200_OK)
 
+    @action(detail=False, methods=["post"])
+    def bulk_delete(self, request):
+        ids = request.data.get("ids")
+        if not ids:
+            return Response({"msg": "Ids is empty"}, status=status.HTTP_400_BAD_REQUEST)
+        if not isinstance(ids, list):
+            return Response(
+                {"msg": "Ids list is required"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        existing_objs = User.objects.filter(id__in=ids)
+        # filter ids is exist
+        existing_ids = set(existing_objs.values_list("id", flat=True))
+        # not found ids
+        not_found_ids = [i for i in ids if i not in existing_ids]
+
+        # delete
+        deleted_count, _ = existing_objs.delete()
+        return Response(
+            {
+                "deleted_count": existing_ids,
+                "not_found_ids": not_found_ids,
+                "msg": f"Delete {deleted_count} records. {len(not_found_ids)} ids not found.",
+            },
+            status=status.HTTP_200_OK,
+        )
+
 
 class PortViewSet(viewsets.ModelViewSet):
     queryset = Port.objects.all().order_by("country")
