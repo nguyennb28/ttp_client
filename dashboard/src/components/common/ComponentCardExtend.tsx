@@ -1,5 +1,5 @@
-import { MdOutlineRefresh } from "react-icons/md";
-import { MdAddCircleOutline } from "react-icons/md";
+import React from "react";
+import { MdAddCircleOutline, MdOutlineRefresh, MdDelete } from "react-icons/md";
 
 interface ComponentCardProps {
   title: string;
@@ -16,10 +16,7 @@ const ComponentCardExtend: React.FC<ComponentCardProps> = ({
   desc = "",
   features,
 }) => {
-  const refresh = (e: React.MouseEvent<HTMLButtonElement>) => {
-    features(e.currentTarget.value);
-  };
-  const create = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleFeature = (e: React.MouseEvent<HTMLButtonElement>) => {
     features(e.currentTarget.value);
   };
 
@@ -39,14 +36,23 @@ const ComponentCardExtend: React.FC<ComponentCardProps> = ({
             </p>
           )}
         </div>
-        {/* Features: CREATE & REFRESH */}
+        {/* Features: CREATE, REFRESH, DELETE & UPDATE */}
         <div className="features flex">
+          {/* delete */}
+          <button
+            className="block rounded-lg bg-red-500 mr-5 p-3"
+            type="button"
+            value="delete"
+            onClick={handleFeature}
+          >
+            <MdDelete className="size-6 text-white" />
+          </button>
           {/* create */}
           <button
             className="block rounded-lg bg-cyan-500 mr-5 p-3"
             type="button"
             value="create"
-            onClick={create}
+            onClick={handleFeature}
           >
             <MdAddCircleOutline className="size-6 text-white" />
           </button>
@@ -55,7 +61,7 @@ const ComponentCardExtend: React.FC<ComponentCardProps> = ({
             className="block rounded-lg bg-gray-700 p-3"
             type="button"
             value="refresh"
-            onClick={refresh}
+            onClick={handleFeature}
           >
             <MdOutlineRefresh className="size-6 text-white" />
           </button>
