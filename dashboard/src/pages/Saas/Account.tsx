@@ -27,6 +27,8 @@ const AccountSaas = () => {
   const [changePage, setChangePage] = useState<string | null>(null);
   const [ids, setIds] = useState<string[]>([]);
   const [isUpdate, setIsUpdate] = useState<boolean>(false);
+  //
+  const [user, setUser] = useState<any>({});
 
   const NEXT = "next";
   const PREVIOUS = "previous";
@@ -56,6 +58,59 @@ const AccountSaas = () => {
   ];
 
   const formField: IFormField[] = [
+    {
+      name: "username",
+      label: "Username",
+      type: "text",
+      required: true,
+    },
+    {
+      name: "password",
+      label: "Password",
+      type: "password",
+      required: true,
+    },
+    {
+      name: "first_name",
+      label: "First name",
+      type: "text",
+      required: true,
+    },
+    {
+      name: "last_name",
+      label: "Last name",
+      type: "text",
+      required: true,
+    },
+    {
+      name: "role",
+      label: "Role",
+      type: "select",
+      options: ROLES,
+      required: true,
+    },
+    {
+      name: "phone",
+      label: "Phone",
+      type: "text",
+      required: true,
+    },
+    {
+      name: "tax_code",
+      label: "Tax code",
+      type: "text",
+      required: true,
+    },
+    {
+      name: "tenant_db",
+      label: "Tenant database",
+      type: "select",
+      apiSearch: "/users/get_tenant_db/?q=",
+      required: true,
+    },
+  ];
+
+  const formFieldUser: IFormField[] = [
     {
       name: "username",
       label: "Username",
@@ -252,9 +307,8 @@ const AccountSaas = () => {
 
   const onUpdate = (value: boolean, id: string) => {
     setIsUpdate(value);
-    console.log(value);
-    console.log(id);
-    console.log(users);
+    const result = users.find((obj) => obj.id === id);
+    setUser(result);
   };
 
   const handleFormUpdateSubmit = async (formData: Record<string, any>) => {
