@@ -26,6 +26,7 @@ const AccountSaas = () => {
   const [perPage, setPerPage] = useState<number>(10);
   const [changePage, setChangePage] = useState<string | null>(null);
   const [ids, setIds] = useState<string[]>([]);
+  const [isUpdate, setIsUpdate] = useState<boolean>(false);
 
   const NEXT = "next";
   const PREVIOUS = "previous";
@@ -249,6 +250,20 @@ const AccountSaas = () => {
     }
   };
 
+  const onUpdate = (value: boolean, id: string) => {
+    setIsUpdate(value);
+    console.log(value);
+    console.log(id);
+    console.log(users);
+  };
+
+  const handleFormUpdateSubmit = async (formData: Record<string, any>) => {
+    if (isUpdate) {
+      // try {
+      // }
+    }
+  };
+
   useEffect(() => {
     const refreshToken = async () => {
       try {
@@ -318,9 +333,33 @@ const AccountSaas = () => {
             ids={ids}
             changePage={onChangePage}
             handleCheckbox={handleCheckbox}
+            handleUpdate={onUpdate}
           />
         </ComponentCardExtend>
       </div>
+      <Modal
+        className="h-screen max-w-[700px] m-4"
+        isOpen={isUpdate}
+        onClose={() => {
+          closeModal();
+          setIsUpdate(false);
+        }}
+      >
+        <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
+          <div className="px-2 pr-14">
+            <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
+              Update account
+            </h4>
+          </div>
+          <div>
+            <GenericForm
+              fields={formField}
+              onSubmit={handleFormUpdateSubmit}
+              validationForm={handleValidation}
+            />
+          </div>
+        </div>
+      </Modal>
     </>
   );
 };

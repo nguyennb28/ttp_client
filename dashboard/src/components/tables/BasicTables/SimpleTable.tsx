@@ -21,6 +21,7 @@ interface SimpleTableProps {
   perPage?: number | null;
   changePage: (e: string | null) => void;
   handleCheckbox?: (e: string[]) => void;
+  handleUpdate: (e: boolean, id: string) => void;
 }
 
 const SimpleTable: FC<SimpleTableProps> = ({
@@ -34,6 +35,7 @@ const SimpleTable: FC<SimpleTableProps> = ({
   perPage,
   changePage,
   handleCheckbox,
+  handleUpdate,
 }) => {
   const allIds = records.map((record) => record.id);
 
@@ -128,8 +130,17 @@ const SimpleTable: FC<SimpleTableProps> = ({
                           className="checkbox-cell"
                           aria-label={`Select ${item.id}`}
                         />
-                      ) : null}
-                      {item[field]}
+                      ) : field == "id" ? (
+                        // Open model update when click id field
+                        <a
+                          className="text-sky-500 underline cursor-pointer hover:text-pink-300"
+                          onClick={() => handleUpdate(true, item["id"])}
+                        >
+                          {item[field]}
+                        </a>
+                      ) : (
+                        item[field]
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
