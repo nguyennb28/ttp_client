@@ -13,14 +13,6 @@ const GenericForm: React.FC<GenericFormProps> = ({
   onSubmit,
   validationForm,
 }) => {
-  // const initialValues = fields.reduce(
-  //   (acc: { [key: string]: string | boolean }, field: IFormField) => {
-  //     acc[field.name] = field.type === "checkbox" ? false : "";
-  //     return acc;
-  //   },
-  //   {}
-  // );
-
   const initialValues = fields.reduce(
     (acc: { [key: string]: string | boolean }, field: IFormField) => {
       acc[field.name] =
@@ -137,6 +129,11 @@ const GenericForm: React.FC<GenericFormProps> = ({
                     ? field.tempValue
                     : `--- Select an option ----`}
                 </option>
+                {formData[field.name] ? (
+                  <option value={formData[field.name]} selected>
+                    {formData[field.name]}
+                  </option>
+                ) : null}
                 {searchResults[field.name]?.map(
                   (result: any, index: number) => (
                     <option key={index} value={result.id}>

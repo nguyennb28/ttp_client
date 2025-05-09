@@ -28,8 +28,7 @@ const AccountSaas = () => {
   const [ids, setIds] = useState<string[]>([]);
   const [isUpdate, setIsUpdate] = useState<boolean>(false);
   //
-  const [user, setUser] = useState<any>({});
-
+  const [formValuesUpdate, setFormValuesUpdate] = useState<IFormField[]>([]);
   const NEXT = "next";
   const PREVIOUS = "previous";
 
@@ -308,7 +307,12 @@ const AccountSaas = () => {
   const onUpdate = (value: boolean, id: string) => {
     setIsUpdate(value);
     const result = users.find((obj) => obj.id === id);
-    setUser(result);
+
+    const newFormUpdates: IFormField[] = formFieldUser.map((field) => ({
+      ...field,
+      value: result ? result[field.name] : "",
+    }));
+    setFormValuesUpdate(newFormUpdates);
   };
 
   const handleFormUpdateSubmit = async (formData: Record<string, any>) => {
@@ -407,7 +411,8 @@ const AccountSaas = () => {
           </div>
           <div>
             <GenericForm
-              fields={formField}
+              // fields={formField}
+              fields={formValuesUpdate}
               onSubmit={handleFormUpdateSubmit}
               validationForm={handleValidation}
             />
