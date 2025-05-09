@@ -37,11 +37,65 @@ class UserViewSet(viewsets.ModelViewSet):
             permission_classes = [IsRoleAdmin]  # fallback
         return [permission() for permission in permission_classes]
 
+    def get_queryset(self):
+        queryset = User.objects.all()
+        param = self.request.query_params.get("q")
+        if param:
+            queryset = queryset.filter(
+                Q(username__icontains=param)
+                | Q(full_name__icontains=param)
+                | Q(phone__icontains=param)
+                | Q(role__icontains=param)
+                | Q(tenant_db__icontains=param)
+            )
+        return queryset
+
     @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated])
     def me(self, request):
         print(request)
         serializer = self.get_serializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=["get"], permission_classes=[IsRoleAdmin])
+    def get_tenant_db(self, request):
+        qs = User.objects.all().exclude(tenant_db__isnull=True)
+
+        param = request.query_params.get("q")
+        if param:
+            qs = qs.filter(tenant_db__icontains=param)
+        list_db = qs.values("tenant_db").distinct("tenant_db")
+
+        result = [
+            {"id": item["tenant_db"], "name": item["tenant_db"]} for item in list_db
+        ]
+        return Response({"results": result}, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=["post"])
+    def bulk_delete(self, request):
+        ids = request.data.get("ids")
+        if not ids:
+            return Response({"msg": "Ids is empty"}, status=status.HTTP_400_BAD_REQUEST)
+        if not isinstance(ids, list):
+            return Response(
+                {"msg": "Ids list is required"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        existing_objs = User.objects.filter(id__in=ids)
+        # filter ids is exist
+        existing_ids = set(existing_objs.values_list("id", flat=True))
+        # not found ids
+        not_found_ids = [i for i in ids if i not in existing_ids]
+
+        # delete
+        deleted_count, _ = existing_objs.delete()
+        return Response(
+            {
+                "deleted_count": existing_ids,
+                "not_found_ids": not_found_ids,
+                "msg": f"Delete {deleted_count} records. {len(not_found_ids)} ids not found.",
+            },
+            status=status.HTTP_200_OK,
+        )
 
 
 class PortViewSet(viewsets.ModelViewSet):

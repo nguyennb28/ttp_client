@@ -21,6 +21,9 @@ import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
 import CFS from "./pages/CFS/CFS";
 import Tracking from "./pages/Tracking/Tracking";
+import IntroductionSaas from "./pages/Saas/Intro";
+import ProductSaas from "./pages/Saas/Product";
+import AccountSaas from "./pages/Saas/Account";
 
 export default function App() {
   return (
@@ -57,10 +60,15 @@ export default function App() {
               <Route path="/bar-chart" element={<BarChart />} />
 
               {/* CFS */}
-              <Route path="/cfs" element={<CFS />}/>
+              <Route path="/cfs" element={<CFS />} />
 
               {/* Tracking */}
-              <Route path="/tracking" element={<Tracking />}/>
+              <Route path="/tracking" element={<Tracking />} />
+
+              {/* Saas */}
+              <Route path="/introducion-saas" element={<IntroductionSaas />} />
+              <Route path="/product-saas" element={<ProductSaas />} />
+              <Route path="/account-saas" element={<AccountSaas />} />
             </Route>
 
             {/* Auth Layout */}

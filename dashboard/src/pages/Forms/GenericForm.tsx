@@ -13,14 +13,6 @@ const GenericForm: React.FC<GenericFormProps> = ({
   onSubmit,
   validationForm,
 }) => {
-  // const initialValues = fields.reduce(
-  //   (acc: { [key: string]: string | boolean }, field: IFormField) => {
-  //     acc[field.name] = field.type === "checkbox" ? false : "";
-  //     return acc;
-  //   },
-  //   {}
-  // );
-
   const initialValues = fields.reduce(
     (acc: { [key: string]: string | boolean }, field: IFormField) => {
       acc[field.name] =
@@ -61,12 +53,17 @@ const GenericForm: React.FC<GenericFormProps> = ({
       const response = await axiosInstance.get(`${endPoint}`);
       if (response.status == 200) {
         const { results } = response.data;
-        setSearchResults((prev) => ({
-          ...prev,
-          [fieldName]: results,
-        }));
+        if (results.length > 0) {
+          setSearchResults((prev) => ({
+            ...prev,
+            [fieldName]: results,
+          }));
+        } else {
+          setSearchResults({});
+        }
       }
     } catch (err: any) {
+      setSearchResults({});
       console.error(err);
     }
   };
@@ -114,7 +111,7 @@ const GenericForm: React.FC<GenericFormProps> = ({
           </>
         );
       case "select":
-        if (field.apiSearch !== null) {
+        if (field.apiSearch !== null && field.apiSearch !== undefined) {
           return (
             <>
               <input
@@ -131,19 +128,21 @@ const GenericForm: React.FC<GenericFormProps> = ({
                 id={field.name}
                 className={inputClasses}
                 onChange={handleChange}
+                value={formData[field.name] || ""}
               >
-                <option value={field.value ? field.value : ""}>
-                  {field.tempValue
-                    ? field.tempValue
-                    : `--- Select an option ----`}
+                <option value={formData[field.name] || ""}>
+                  {formData[field.name] || "--- Select an option ---"}
                 </option>
-                {searchResults[field.name]?.map(
-                  (result: any, index: number) => (
-                    <option key={result.id} value={result.id}>
+                {/* Result from search tenant database */}
+                {searchResults[field.name]
+                  ?.filter(
+                    (result: any) => formData[field.name] !== result.name
+                  )
+                  .map((result: any, index: number) => (
+                    <option key={index} value={result.id}>
                       {result.name}
                     </option>
-                  )
-                )}
+                  ))}
               </select>
               {errors && (
                 <p className="text-red-600 text-xs">{errors[field.name]}</p>
@@ -214,6 +213,7 @@ const GenericForm: React.FC<GenericFormProps> = ({
               name={field.name}
               value={formData[field.name] || ""}
               onChange={handleChange}
+              className={inputClasses}
             />
             {errors && (
               <p className="text-red-600 text-xs">{errors[field.name]}</p>
@@ -281,6 +281,9 @@ const GenericForm: React.FC<GenericFormProps> = ({
               ) : (
                 ""
               )}
+              {field.required == true ? (
+                <span className="text-red-500">*</span>
+              ) : null}
             </label>
             {renderFormField(field, formData, handleChange)}
           </div>

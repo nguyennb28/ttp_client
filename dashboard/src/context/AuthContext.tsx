@@ -33,6 +33,7 @@ interface IAuthContext {
   checkAuth: () => Promise<void>;
   setUser: Dispatch<SetStateAction<IUser | null>>;
   checkRole: () => void;
+  checkAdmin: () => void;
 }
 
 interface IAuthProviderProps {
@@ -123,6 +124,17 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
     }
   };
 
+  const checkAdmin = () => {
+    const access = localStorage.getItem("access");
+    if (!access) {
+      navigate("/signin", { replace: true });
+    }
+    if (user && user.role !== "admin") {
+      logout();
+      navigate("/signin", { replace: true });
+    }
+  };
+
   useEffect(() => {
     const initializeAuth = async () => {
       try {
@@ -151,6 +163,7 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
     checkAuth,
     setUser,
     checkRole,
+    checkAdmin,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

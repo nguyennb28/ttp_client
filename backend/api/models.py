@@ -9,13 +9,13 @@ class User(AbstractUser):
         ("user", "Người dùng"),
         ("employee", "Nhân viên"),
         ("admin", "Quản trị viên"),
+        ("client-saas", "Khách hàng saas"),
     ]
     role = models.CharField(
-        max_length=10, choices=ROLE_CHOICES, default="user", verbose_name="Vai trò"
+        max_length=50, choices=ROLE_CHOICES, default="user", verbose_name="Vai trò"
     )
     phone = models.CharField(max_length=10, verbose_name="Số điện thoại")
-    tax_code = models.CharField(max_length=13, verbose_name="Mã số thuế")
-    full_name = models.CharField(max_length=150)
+    tax_code = models.CharField(max_length=13, null=True, verbose_name="Mã số thuế")
     groups = models.ManyToManyField(
         Group,
         verbose_name="groups",
@@ -33,12 +33,14 @@ class User(AbstractUser):
         related_query_name="user",
     )
 
+    tenant_db = models.CharField(max_length=100, blank=True, null=True)
+
     class Meta:
         verbose_name = "Người dùng"
         verbose_name_plural = "Người dùng"
 
     def __str__(self):
-        return f"{self.full_name}"
+        return f"{self.username}"
 
 
 class Port(models.Model):
