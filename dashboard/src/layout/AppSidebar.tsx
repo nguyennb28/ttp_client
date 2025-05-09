@@ -61,6 +61,7 @@ const navItems: NavItem[] = [
       { name: "Introduction", path: "/introducion-saas", pro: true },
       { name: "Product", path: "/product-saas", pro: true },
       { name: "Account", path: "/account-saas", pro: true },
+      { name: "Database", path: "/database-saas", pro: true },
     ],
   },
   {
