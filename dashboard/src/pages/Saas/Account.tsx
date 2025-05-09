@@ -27,8 +27,12 @@ const AccountSaas = () => {
   const [changePage, setChangePage] = useState<string | null>(null);
   const [ids, setIds] = useState<string[]>([]);
   const [isUpdate, setIsUpdate] = useState<boolean>(false);
-  //
   const [formValuesUpdate, setFormValuesUpdate] = useState<IFormField[]>([]);
+  const [idUserUpdate, setIdUserUpdate] = useState<string | number | null>(
+    null
+  );
+
+  // CONSTANT
   const NEXT = "next";
   const PREVIOUS = "previous";
 
@@ -170,7 +174,7 @@ const AccountSaas = () => {
         await getUsers();
       } catch (err: any) {
         console.error(err);
-        cleanStates();
+        // cleanStates();
       } finally {
         hideLoading();
       }
@@ -205,7 +209,7 @@ const AccountSaas = () => {
       }
     } catch (err: any) {
       console.error(err);
-      cleanStates();
+      // cleanStates();
     } finally {
       hideLoading();
     }
@@ -236,32 +240,47 @@ const AccountSaas = () => {
 
   const handleValidation = (formData: Record<string, any>) => {
     const errors: Record<string, any> = {};
+    // username
     if (!formData.username) {
       errors.username = "Username is empty!";
     }
-    if (!formData.password) {
-      errors.password = "Password is empty!";
-    }
-    if (formData.password) {
-      if (validatePassword(formData.password)) {
-        errors.password = validatePassword(formData.password);
+    // password
+    if (!isUpdate) {
+      if (!formData.password) {
+        errors.password = "Password is empty!";
+      } else {
+        const passwordError = validatePassword(formData.password);
+        if (passwordError) {
+          errors.password = passwordError;
+        }
+      }
+    } else if (formData.password) {
+      const passwordError = validatePassword(formData.password);
+      if (passwordError) {
+        errors.password = passwordError;
       }
     }
+    // first_name
     if (!formData.first_name) {
       errors.first_name = "Firstname is empty!";
     }
+    // last_name
     if (!formData.last_name) {
       errors.last_name = "Lastname is empty!";
     }
+    // role
     if (!formData.role) {
       errors.role = "Select a role!";
     }
+    // phone
     if (!formData.phone) {
       errors.phone = "Phone number is empty!";
     }
+    // tax_code
     if (!formData.tax_code) {
       errors.tax_code = "Tax code is empty!";
     }
+    // tenant_db
     if (!formData.tenant_db) {
       errors.tenant_db = "Select a tenant database!";
     }
@@ -306,6 +325,7 @@ const AccountSaas = () => {
 
   const onUpdate = (value: boolean, id: string) => {
     setIsUpdate(value);
+    setIdUserUpdate(id);
     const result = users.find((obj) => obj.id === id);
 
     const newFormUpdates: IFormField[] = formFieldUser.map((field) => ({
@@ -317,8 +337,31 @@ const AccountSaas = () => {
 
   const handleFormUpdateSubmit = async (formData: Record<string, any>) => {
     if (isUpdate) {
-      // try {
-      // }
+      const validate = handleValidation(formData);
+      if (Object.keys(validate).length === 0) {
+        try {
+          const payload = { ...formData };
+          if (!(payload.password.length > 0)) {
+            delete payload.password;
+          }
+          const response = await axiosInstance.patch(
+            `/users/${idUserUpdate!}/`,
+            payload
+          );
+          if (response.status == 200) {
+            alert("Updated successfully");
+            setIsUpdate(false); // isUpdate = false -> close modal
+            await getUsers();
+          }
+          // closeModal();
+        } catch (err: any) {
+          alert("Update failed");
+          console.error(err);
+        }
+      }
+    } else {
+      alert("Can't update due to error!!!");
+      return;
     }
   };
 
