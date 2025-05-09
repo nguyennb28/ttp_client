@@ -53,12 +53,17 @@ const GenericForm: React.FC<GenericFormProps> = ({
       const response = await axiosInstance.get(`${endPoint}`);
       if (response.status == 200) {
         const { results } = response.data;
-        setSearchResults((prev) => ({
-          ...prev,
-          [fieldName]: results,
-        }));
+        if (results.length > 0) {
+          setSearchResults((prev) => ({
+            ...prev,
+            [fieldName]: results,
+          }));
+        } else {
+          setSearchResults({});
+        }
       }
     } catch (err: any) {
+      setSearchResults({});
       console.error(err);
     }
   };
@@ -123,24 +128,21 @@ const GenericForm: React.FC<GenericFormProps> = ({
                 id={field.name}
                 className={inputClasses}
                 onChange={handleChange}
+                value={formData[field.name] || ""}
               >
-                <option value={field.value ? field.value : ""}>
-                  {field.tempValue
-                    ? field.tempValue
-                    : `--- Select an option ----`}
+                <option value={formData[field.name] || ""}>
+                  {formData[field.name] || "--- Select an option ---"}
                 </option>
-                {formData[field.name] ? (
-                  <option value={formData[field.name]} selected>
-                    {formData[field.name]}
-                  </option>
-                ) : null}
-                {searchResults[field.name]?.map(
-                  (result: any, index: number) => (
+                {/* Result from search tenant database */}
+                {searchResults[field.name]
+                  ?.filter(
+                    (result: any) => formData[field.name] !== result.name
+                  )
+                  .map((result: any, index: number) => (
                     <option key={index} value={result.id}>
                       {result.name}
                     </option>
-                  )
-                )}
+                  ))}
               </select>
               {errors && (
                 <p className="text-red-600 text-xs">{errors[field.name]}</p>
