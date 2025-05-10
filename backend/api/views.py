@@ -21,7 +21,10 @@ from .permissions import (
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status, viewsets
+from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
+import psycopg2
+from django.conf import settings
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -265,3 +268,35 @@ class CFSViewSet(viewsets.ModelViewSet):
 
 class CustomLoginView(TokenObtainPairView):
     serializer_class = CustomLoginSerializer
+
+
+class DatabaseViewSet(viewsets.ViewSet):
+    def list(self, request):
+        # Tương đương với phương thức get() trong APIView
+        conn = None
+        try:
+            conn = psycopg2.connect(
+                dbname="postgres",
+                user=settings.DATABASES["default"]["USER"],
+                password=settings.DATABASES["default"]["PASSWORD"],
+                host=settings.DATABASES["default"]["HOST"],
+                port=settings.DATABASES["default"][
+                    "PORT"
+                ],  # Sửa lỗi dấu phẩy thành dấu chấm
+            )
+            conn.autocommit = True
+            cursor = conn.cursor()
+
+            cursor.execute(
+                "SELECT datname FROM pg_database WHERE datistemplate = false AND datname NOT IN ('postgres', 'template0', 'template1')"
+            )
+            databases = [row for row in cursor.fetchall()]
+
+            return Response({"databases": databases}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        finally:
+            if conn:
+                conn.close()
