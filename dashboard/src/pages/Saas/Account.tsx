@@ -368,12 +368,9 @@ const AccountSaas = () => {
   useEffect(() => {
     const refreshToken = async () => {
       try {
-        showLoading();
         await checkAuth();
       } catch (err) {
         console.error(err);
-      } finally {
-        hideLoading();
       }
     };
     const activeGetUsers = async () => {
