@@ -7,6 +7,14 @@ import { useState, useEffect } from "react";
 import axiosInstance from "../../instance/axiosInstance";
 import { useAuth } from "../../context/AuthContext";
 import { Modal } from "../../components/ui/modal";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from "../../components/ui/table";
+import SimpleTable from "../../components/tables/BasicTables/SimpleTable";
 
 const DatabaseSaas = () => {
   // Context
@@ -14,15 +22,26 @@ const DatabaseSaas = () => {
   const { isOpen, openModal, closeModal } = useModal();
   const { checkAdmin, checkAuth } = useAuth();
 
+  // State
+  const [databases, setDatabases] = useState<Record<string, any>[]>([]);
+  const [previous, setPrevious] = useState<string | null>(null);
+  const [next, setNext] = useState<string | null>(null);
+  const [changePage, setChangePage] = useState<string | null>(null);
+
+  // Variable
+  const headers = ["options", "id", "database name"];
+  const fields = ["options", "id", "database_name"];
+
+  // Methods
   const cleanStates = () => {};
 
   const features = async (e: string) => {
     if (e == "refresh") {
       cleanStates();
       try {
-        // make something
+        await getDatabases();
       } catch (err) {
-        // make something
+        console.error(err);
       }
     }
     if (e == "create") {
@@ -31,6 +50,26 @@ const DatabaseSaas = () => {
     if (e == "delete") {
       // make handle delete
     }
+  };
+
+  const getDatabases = async () => {
+    showLoading();
+    try {
+      const response = await axiosInstance.get("/databases/");
+      if (response.status == 200) {
+        console.table(response.data);
+        setDatabases(response.data.results);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Can't fetch database");
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const onChangePage = (value: string | null) => {
+    setChangePage(value);
   };
 
   useEffect(() => {
@@ -44,8 +83,12 @@ const DatabaseSaas = () => {
         hideLoading();
       }
     };
+    const fetchData = async () => {
+      await getDatabases();
+    };
     refreshToken();
     checkAdmin();
+    fetchData();
   }, []);
 
   if (loading) {
@@ -76,6 +119,14 @@ const DatabaseSaas = () => {
       <div className="space-y-6">
         <ComponentCardExtend title="Database table" features={features}>
           <></>
+          <SimpleTable
+            records={databases}
+            headers={headers}
+            fields={fields}
+            previous={previous}
+            next={next}
+            changePage={onChangePage}
+          />
         </ComponentCardExtend>
       </div>
     </>
