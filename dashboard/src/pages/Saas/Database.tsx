@@ -67,7 +67,6 @@ const DatabaseSaas = () => {
     try {
       const response = await axiosInstance.get("/databases/");
       if (response.status == 200) {
-        console.table(response.data);
         setDatabases(response.data.results);
       }
     } catch (err) {
