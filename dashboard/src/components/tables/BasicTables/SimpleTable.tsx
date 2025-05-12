@@ -21,7 +21,7 @@ interface SimpleTableProps {
   perPage?: number | null;
   changePage: (e: string | null) => void;
   handleCheckbox?: (e: string[]) => void;
-  handleUpdate: (e: boolean, id: string) => void;
+  handleUpdate?: (e: boolean, id: string) => void;
 }
 
 const SimpleTable: FC<SimpleTableProps> = ({
@@ -134,7 +134,12 @@ const SimpleTable: FC<SimpleTableProps> = ({
                         // Open model update when click id field
                         <a
                           className="text-sky-500 underline cursor-pointer hover:text-pink-300"
-                          onClick={() => handleUpdate(true, item["id"])}
+                          // onClick={() => handleUpdate(true, item["id"])}
+                          onClick={() => {
+                            if (handleUpdate) {
+                              handleUpdate(true, item["id"]);
+                            }
+                          }}
                         >
                           {item[field]}
                         </a>
