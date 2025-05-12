@@ -28,7 +28,10 @@ const DatabaseSaas = () => {
   const [databases, setDatabases] = useState<Record<string, any>[]>([]);
   const [previous, setPrevious] = useState<string | null>(null);
   const [next, setNext] = useState<string | null>(null);
+  const [count, setCount] = useState<number | null>(null);
+  const [perPage, setPerPage] = useState<number>(10);
   const [changePage, setChangePage] = useState<string | null>(null);
+  const [databaseSelected, setDatabaseSelected] = useState<string[]>([]); //use for checkbox (bulk_delete)
 
   // Variable
   const headers = ["options", "id", "database name"];
@@ -43,7 +46,15 @@ const DatabaseSaas = () => {
   ];
 
   // Methods
-  const cleanStates = () => {};
+  const cleanStates = () => {
+    setDatabases([]);
+    setPrevious(null);
+    setNext(null);
+    setCount(0);
+    setPerPage(10);
+    setChangePage(null);
+    setDatabaseSelected([]);
+  };
 
   const features = async (e: string) => {
     if (e == "refresh") {
@@ -59,6 +70,7 @@ const DatabaseSaas = () => {
     }
     if (e == "delete") {
       // make handle delete
+      handleDelete();
     }
   };
 
@@ -68,6 +80,9 @@ const DatabaseSaas = () => {
       const response = await axiosInstance.get("/databases/");
       if (response.status == 200) {
         setDatabases(response.data.results);
+        setPrevious(response.data.previous);
+        setNext(response.data.next);
+        setCount(response.data.count);
       }
     } catch (err) {
       console.error(err);
@@ -106,6 +121,23 @@ const DatabaseSaas = () => {
       } finally {
         hideLoading();
       }
+    }
+  };
+
+  const handleCheckbox = (value: string[]) => {
+    const list = [...new Set(value)];
+    const dbNames = list
+      .map((id) => databases.find((database) => database.id == id))
+      .filter((database) => database)
+      .map((database) => database!.database_name);
+    setDatabaseSelected(dbNames);
+  };
+
+  const handleDelete = async () => {
+    if (databaseSelected.length > 0) {
+      console.log(databaseSelected);
+    } else {
+      alert("Please select the specified database to delete.");
     }
   };
 
@@ -168,7 +200,10 @@ const DatabaseSaas = () => {
             fields={fields}
             previous={previous}
             next={next}
+            quantity={count!}
+            ids={databaseSelected}
             changePage={onChangePage}
+            handleCheckbox={handleCheckbox}
           />
         </ComponentCardExtend>
       </div>
