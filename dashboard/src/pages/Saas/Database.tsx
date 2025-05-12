@@ -15,6 +15,8 @@ import {
   TableRow,
 } from "../../components/ui/table";
 import SimpleTable from "../../components/tables/BasicTables/SimpleTable";
+import { IFormField } from "../../interfaces/interfaces";
+import GenericForm from "../Forms/GenericForm";
 
 const DatabaseSaas = () => {
   // Context
@@ -31,6 +33,14 @@ const DatabaseSaas = () => {
   // Variable
   const headers = ["options", "id", "database name"];
   const fields = ["options", "id", "database_name"];
+  const formField: IFormField[] = [
+    {
+      name: "db_name",
+      label: "Database name",
+      type: "text",
+      required: true,
+    },
+  ];
 
   // Methods
   const cleanStates = () => {};
@@ -70,6 +80,34 @@ const DatabaseSaas = () => {
 
   const onChangePage = (value: string | null) => {
     setChangePage(value);
+  };
+
+  const handleValidation = (formData: Record<string, any>) => {
+    const errors: Record<string, any> = {};
+    if (!formData.db_name) {
+      errors.db_name = "Database name is empty";
+    }
+    return errors;
+  };
+
+  const handleFormSubmit = async (formData: Record<string, any>) => {
+    const validate = handleValidation(formData);
+    if (Object.keys(validate).length === 0) {
+      try {
+        showLoading();
+        const response = await axiosInstance.post("/databases/", formData);
+        if (response.status == 201) {
+          closeModal();
+          alert("Successfully");
+          await getDatabases();
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Create Failed");
+      } finally {
+        hideLoading();
+      }
+    }
   };
 
   useEffect(() => {
@@ -114,11 +152,17 @@ const DatabaseSaas = () => {
               Add database
             </h4>
           </div>
+          <div>
+            <GenericForm
+              fields={formField}
+              onSubmit={handleFormSubmit}
+              validationForm={handleValidation}
+            />
+          </div>
         </div>
       </Modal>
       <div className="space-y-6">
         <ComponentCardExtend title="Database table" features={features}>
-          <></>
           <SimpleTable
             records={databases}
             headers={headers}

@@ -348,8 +348,6 @@ class DatabaseViewSet(viewsets.ViewSet):
                 status=status.HTTP_201_CREATED,
             )
         except DuplicateDatabase:
-            # print(f"\033Error: Duplicate '{}'")
-            # print(Fore.RED + f"ERROR: Duplicate {db_name}")
             print(f"{AnsiColors.FAIL_RED}{AnsiColors.BOLD} Error: Duplicate {db_name}")
             return Response(
                 {"error": f"{db_name} existed, try again ?"},
