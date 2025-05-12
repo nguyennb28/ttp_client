@@ -78,7 +78,7 @@ class UserViewSet(viewsets.ModelViewSet):
         ]
         return Response({"results": result}, status=status.HTTP_200_OK)
 
-    @action(detail=False, methods=["post"])
+    @action(detail=False, methods=["post"], permission_classes=[IsRoleAdmin])
     def bulk_delete(self, request):
         ids = request.data.get("ids")
         if not ids:
@@ -402,3 +402,7 @@ class DatabaseViewSet(viewsets.ViewSet):
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+            
+    # @action(detail=False, methods=["post"], permission_classes=[IsRoleAdmin])
+    # def bulk_delete(self, request):
+        # db_names = request.data.get("db_names")
