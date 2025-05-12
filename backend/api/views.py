@@ -305,11 +305,18 @@ def get_postgres_connection(dbname="postgres", autocommit=True):
 class DatabaseViewSet(viewsets.ViewSet):
     def list(self, request):
         try:
+            search_db_name = request.query_params.get("q")
             with connection.cursor() as cursor:
                 cursor.execute(
                     "SELECT datname FROM pg_database WHERE datistemplate = false AND datname NOT IN ('postgres', 'template0', 'template1')"
                 )
                 databases = [row[0] for row in cursor.fetchall()]
+                if search_db_name:
+                    databases = [
+                        name
+                        for name in databases
+                        if search_db_name.lower() in name.lower()
+                    ]
                 results = [
                     {"id": idx + 1, "database_name": name}
                     for idx, name in enumerate(databases)
