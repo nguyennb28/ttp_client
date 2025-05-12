@@ -335,6 +335,38 @@ class DatabaseViewSet(viewsets.ViewSet):
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+
+    # Make different response for search tenant database
+    @action(detail=False, methods=["get"], permission_classes=[IsRoleAdmin])
+    def get_tenant_db(self, request):
+        try:
+            search_db_name = request.query_params.get("q")
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT datname FROM pg_database WHERE datistemplate = false AND datname NOT IN ('postgres', 'template0', 'template1')"
+                )
+                databases = [row[0] for row in cursor.fetchall()]
+                if search_db_name:
+                    databases = [
+                        name
+                        for name in databases
+                        if search_db_name.lower() in name.lower()
+                    ]
+                    print(databases)
+                results = [
+                    {"id": name, "name": name} for idx, name in enumerate(databases)
+                ]
+            return Response(
+                {
+                    "results": results,
+                },
+                status=status.HTTP_200_OK,
+            )
+        except Exception as e:
+            return Response(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
     def create(self, request):
         db_name = request.data.get("db_name")
         if not db_name:
