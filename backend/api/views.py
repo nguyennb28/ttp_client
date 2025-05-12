@@ -24,7 +24,12 @@ from rest_framework import status, viewsets
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 import psycopg2
+from psycopg2.errors import DuplicateDatabase
+from psycopg2 import sql
 from django.conf import settings
+from django.db import connection
+from contextlib import contextmanager
+from .color import AnsiColors
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -270,33 +275,93 @@ class CustomLoginView(TokenObtainPairView):
     serializer_class = CustomLoginSerializer
 
 
+@contextmanager
+def get_postgres_connection(dbname="postgres", autocommit=True):
+    conn = None
+    try:
+        print(f"Connecting: {dbname}")
+        conn = psycopg2.connect(
+            dbname=dbname,
+            user=settings.DATABASES["default"]["USER"],
+            password=settings.DATABASES["default"]["PASSWORD"],
+            host=settings.DATABASES["default"]["HOST"],
+            port=settings.DATABASES["default"]["PORT"] or "5432",
+        )
+        conn.autocommit = autocommit
+        print("Connect successfully")
+        yield conn
+    except psycopg2.Error as e:
+        print(f"Connect failed: {e}")
+        raise
+    except Exception as e:
+        print(f"Exception: {e}")
+        raise
+    finally:
+        if conn:
+            print("Close connection")
+            conn.close()
+
+
 class DatabaseViewSet(viewsets.ViewSet):
     def list(self, request):
-        # Tương đương với phương thức get() trong APIView
-        conn = None
         try:
-            conn = psycopg2.connect(
-                dbname="postgres",
-                user=settings.DATABASES["default"]["USER"],
-                password=settings.DATABASES["default"]["PASSWORD"],
-                host=settings.DATABASES["default"]["HOST"],
-                port=settings.DATABASES["default"][
-                    "PORT"
-                ],  # Sửa lỗi dấu phẩy thành dấu chấm
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT datname FROM pg_database WHERE datistemplate = false AND datname NOT IN ('postgres', 'template0', 'template1')"
+                )
+                databases = [row[0] for row in cursor.fetchall()]
+                results = [
+                    {"id": idx + 1, "database_name": name}
+                    for idx, name in enumerate(databases)
+                ]
+            return Response(
+                {
+                    "count": len(results),
+                    "previous": None,
+                    "next": None,
+                    "results": results,
+                },
+                status=status.HTTP_200_OK,
             )
-            conn.autocommit = True
-            cursor = conn.cursor()
-
-            cursor.execute(
-                "SELECT datname FROM pg_database WHERE datistemplate = false AND datname NOT IN ('postgres', 'template0', 'template1')"
-            )
-            databases = [row for row in cursor.fetchall()]
-
-            return Response({"databases": databases}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-        finally:
-            if conn:
-                conn.close()
+
+    def create(self, request):
+        db_name = request.data.get("db_name")
+        if not db_name:
+            return Response(
+                {"error": "You must provide a database name"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        try:
+            with get_postgres_connection(autocommit=True) as conn:
+                cursor = conn.cursor()
+                safe_db_name = sql.Identifier(db_name)
+                create_cmd = sql.SQL("CREATE DATABASE {}").format(safe_db_name)
+
+                # Execution
+                cursor.execute(create_cmd)
+            return Response(
+                {"results": f"Create {db_name} successfully"},
+                status=status.HTTP_201_CREATED,
+            )
+        except DuplicateDatabase:
+            # print(f"\033Error: Duplicate '{}'")
+            # print(Fore.RED + f"ERROR: Duplicate {db_name}")
+            print(f"{AnsiColors.FAIL_RED}{AnsiColors.BOLD} Error: Duplicate {db_name}")
+            return Response(
+                {"error": f"{db_name} existed, try again ?"},
+                status=status.HTTP_409_CONFLICT,
+            )
+        except psycopg2.Error as e:
+            print(f"{AnsiColors.FAIL_RED}{AnsiColors.BOLD}Error psycopg2 : {str(e)}")
+            return Response(
+                {"error": f"{str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        except Exception as e:
+            print(f"{AnsiColors.FAIL_RED}{AnsiColors.BOLD}Exception error: {str(e)}")
+            return Response(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
