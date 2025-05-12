@@ -108,7 +108,7 @@ const AccountSaas = () => {
       name: "tenant_db",
       label: "Tenant database",
       type: "select",
-      apiSearch: "/users/get_tenant_db/?q=",
+      apiSearch: "/databases/get_tenant_db/?q=",
       required: true,
     },
   ];
