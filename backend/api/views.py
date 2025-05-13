@@ -30,6 +30,8 @@ from django.conf import settings
 from django.db import connection
 from contextlib import contextmanager
 from .color import AnsiColors
+import re
+import logging
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -288,7 +290,7 @@ def get_postgres_connection(dbname="postgres", autocommit=True):
             port=settings.DATABASES["default"]["PORT"] or "5432",
         )
         conn.autocommit = autocommit
-        print("Connect successfully")
+        # print("Connect successfully")
         yield conn
     except psycopg2.Error as e:
         print(f"Connect failed: {e}")
@@ -334,7 +336,6 @@ class DatabaseViewSet(viewsets.ViewSet):
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
 
     # Make different response for search tenant database
     @action(detail=False, methods=["get"], permission_classes=[IsRoleAdmin])
@@ -402,7 +403,55 @@ class DatabaseViewSet(viewsets.ViewSet):
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-            
-    # @action(detail=False, methods=["post"], permission_classes=[IsRoleAdmin])
-    # def bulk_delete(self, request):
-        # db_names = request.data.get("db_names")
+
+    # drop database
+    # def drop_database(self, db_name):
+    #     with get_postgres_connection(autocommit=True) as conn:
+    #         cursor = conn.cursor()
+    #         try:
+    #             cursor.execute(f'DROP DATABASE IF EXISTS "{db_name}"')
+    #         finally:
+    #             cursor.close()
+    def drop_database(self, db_name):
+        if not re.match(r"^[a-zA-Z0-9_]+$", db_name):
+            raise ValueError(f"Database name is not valid: {db_name}")
+        try:
+            with get_postgres_connection(autocommit=True) as conn:
+                with conn.cursor() as cursor:
+                    cursor.execute(f'DROP DATABASE IF EXISTS "{db_name}"')
+                    logging.info(f"Database deleted: {db_name}")
+        except Exception as e:
+            logging.error(f"Error when deleting database {db_name}: {e}")
+            raise
+
+    @action(detail=False, methods=["post"], permission_classes=[IsRoleAdmin])
+    def bulk_delete(self, request):
+        db_names = request.data.get("db_names")
+        if not db_names or not isinstance(db_names, list):
+            return Response(
+                {"error": "db_names is not list"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        forbidden_names = {
+            "postgres",
+            "template0",
+            "template1",
+            settings.DATABASES["default"]["NAME"],
+        }
+        print(f"Forbidden names: {forbidden_names}")
+
+        results = {}
+        for db_name in db_names:
+            if not re.match(r"^[a-zA-Z0-9_]+$", db_name):
+                results[db_name] = "Database name invalid"
+                continue
+            if db_name in forbidden_names:
+                results[db_name] = "Can't delete"
+                continue
+            try:
+                self.drop_database(db_name)
+                results[db_name] = "Deleted"
+            except Exception as e:
+                results[db_name] = f"Error: {str(e)}"
+
+        return Response({"results": results}, status=status.HTTP_207_MULTI_STATUS)

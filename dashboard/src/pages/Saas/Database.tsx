@@ -31,6 +31,7 @@ const DatabaseSaas = () => {
   const [count, setCount] = useState<number | null>(null);
   const [perPage, setPerPage] = useState<number>(10);
   const [changePage, setChangePage] = useState<string | null>(null);
+  const [ids, setIds] = useState<string[]>([]);
   const [databaseSelected, setDatabaseSelected] = useState<string[]>([]); //use for checkbox (bulk_delete)
 
   // Variable
@@ -53,6 +54,7 @@ const DatabaseSaas = () => {
     setCount(0);
     setPerPage(10);
     setChangePage(null);
+    setIds([]);
     setDatabaseSelected([]);
   };
 
@@ -126,6 +128,7 @@ const DatabaseSaas = () => {
 
   const handleCheckbox = (value: string[]) => {
     const list = [...new Set(value)];
+    setIds(list);
     const dbNames = list
       .map((id) => databases.find((database) => database.id == id))
       .filter((database) => database)
@@ -135,7 +138,20 @@ const DatabaseSaas = () => {
 
   const handleDelete = async () => {
     if (databaseSelected.length > 0) {
-      console.log(databaseSelected);
+      try {
+        const response = await axiosInstance.post(`/databases/bulk_delete/`, {
+          db_names: databaseSelected,
+        });
+        if (response.status == 207) {
+          console.log(response.data.results);
+          alert("Finish");
+          cleanStates();
+          await getDatabases();
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Delete Failed");
+      }
     } else {
       alert("Please select the specified database to delete.");
     }
@@ -201,7 +217,7 @@ const DatabaseSaas = () => {
             previous={previous}
             next={next}
             quantity={count!}
-            ids={databaseSelected}
+            ids={ids}
             changePage={onChangePage}
             handleCheckbox={handleCheckbox}
           />
