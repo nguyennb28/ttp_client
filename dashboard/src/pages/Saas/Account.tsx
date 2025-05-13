@@ -108,7 +108,7 @@ const AccountSaas = () => {
       name: "tenant_db",
       label: "Tenant database",
       type: "select",
-      apiSearch: "/users/get_tenant_db/?q=",
+      apiSearch: "/databases/get_tenant_db/?q=",
       required: true,
     },
   ];
@@ -368,12 +368,9 @@ const AccountSaas = () => {
   useEffect(() => {
     const refreshToken = async () => {
       try {
-        showLoading();
         await checkAuth();
       } catch (err) {
         console.error(err);
-      } finally {
-        hideLoading();
       }
     };
     const activeGetUsers = async () => {

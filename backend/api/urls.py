@@ -9,4 +9,5 @@ router.register(r"container-sizes", views.ContainerSizeViewSet)
 router.register(r"vat-infos", views.VatInfoViewSet)
 router.register(r"agencies", views.AgencyViewSet)
 router.register(r"cfss", views.CFSViewSet)
+router.register('databases', views.DatabaseViewSet, basename='database')  # Phải chỉ định basename
 urlpatterns = [path("", include(router.urls))]
