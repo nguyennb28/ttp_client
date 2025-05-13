@@ -7,13 +7,6 @@ import { useState, useEffect } from "react";
 import axiosInstance from "../../instance/axiosInstance";
 import { useAuth } from "../../context/AuthContext";
 import { Modal } from "../../components/ui/modal";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-} from "../../components/ui/table";
 import SimpleTable from "../../components/tables/BasicTables/SimpleTable";
 import { IFormField } from "../../interfaces/interfaces";
 import GenericForm from "../Forms/GenericForm";
