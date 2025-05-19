@@ -15,7 +15,8 @@ const DatabaseSaas = () => {
   // Context
   const { loading, showLoading, hideLoading } = useLoading();
   const { isOpen, openModal, closeModal } = useModal();
-  const { checkAdmin, checkAuth } = useAuth();
+  const { checkAdmin, checkAuth, countTimeToRefresh, callRefreshToken } =
+    useAuth();
 
   // State
   const [databases, setDatabases] = useState<Record<string, any>[]>([]);
@@ -167,6 +168,13 @@ const DatabaseSaas = () => {
     refreshToken();
     checkAdmin();
     fetchData();
+
+    // refresh token when access token is expired
+    const tokenTimeout = setTimeout(() => {
+      callRefreshToken();
+    }, countTimeToRefresh());
+
+    return () => clearTimeout(tokenTimeout);
   }, []);
 
   if (loading) {
