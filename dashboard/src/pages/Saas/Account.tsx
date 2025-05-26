@@ -16,7 +16,8 @@ const AccountSaas = () => {
   // Context
   const { loading, showLoading, hideLoading } = useLoading();
   const { isOpen, openModal, closeModal } = useModal();
-  const { checkAdmin, checkAuth } = useAuth();
+  const { checkAdmin, checkAuth, countTimeToRefresh, callRefreshToken } =
+    useAuth();
 
   //   Manage state
   const [users, setUsers] = useState<Record<string, any>[]>([]);
@@ -386,6 +387,12 @@ const AccountSaas = () => {
     refreshToken();
     checkAdmin();
     activeGetUsers();
+
+    const tokenTimeout = setTimeout(() => {
+      callRefreshToken();
+    }, countTimeToRefresh());
+
+    return () => clearTimeout(tokenTimeout);
   }, []);
 
   if (loading) {

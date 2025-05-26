@@ -39,7 +39,8 @@ const CFS = () => {
 
   // Context
   const { loading, showLoading, hideLoading } = useLoading();
-  const { checkRole, checkAuth } = useAuth();
+  const { checkRole, checkAuth, countTimeToRefresh, callRefreshToken } =
+    useAuth();
 
   // Constant
   const NEXT = "next";
@@ -526,6 +527,12 @@ const CFS = () => {
     };
     refreshToken();
     makeGetList();
+
+    const tokenTimeout = setTimeout(() => {
+      callRefreshToken();
+    }, countTimeToRefresh());
+
+    return () => clearTimeout(tokenTimeout);
   }, []);
 
   useEffect(() => {
