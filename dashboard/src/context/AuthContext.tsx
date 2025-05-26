@@ -34,6 +34,8 @@ interface IAuthContext {
   setUser: Dispatch<SetStateAction<IUser | null>>;
   checkRole: () => void;
   checkAdmin: () => void;
+  countTimeToRefresh: () => number;
+  callRefreshToken: () => void;
 }
 
 interface IAuthProviderProps {
@@ -89,6 +91,25 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
         `Không lấy được refresh token hoặc có thể không call được api ${err}`
       );
       throw err;
+    }
+  };
+
+  const countTimeToRefresh = () => {
+    const accessToken = localStorage.getItem("access");
+    if (!accessToken) {
+      logout();
+      const navigate = useNavigate();
+      navigate("/signin", { replace: true });
+      return 0;
+    } else {
+      const decoded: ITokenPayload = jwtDecode(accessToken);
+      const tokenExpiration = decoded.exp * 1000; //convert to milliseconds
+      const now = Date.now();
+      const timeUntilExpiration = tokenExpiration - now;
+      const timeToRefresh = timeUntilExpiration - 60000;
+      const refreshTime = timeUntilExpiration > 0 ? timeToRefresh : 0;
+
+      return refreshTime;
     }
   };
 
@@ -164,6 +185,8 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
     setUser,
     checkRole,
     checkAdmin,
+    countTimeToRefresh,
+    callRefreshToken,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

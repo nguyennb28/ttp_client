@@ -68,7 +68,8 @@ const Tracking: React.FC = () => {
   const [routeError, setRouteError] = useState<string | null>(null);
 
   // auth
-  const { checkAuth, checkRole } = useAuth();
+  const { checkAuth, checkRole, countTimeToRefresh, callRefreshToken } =
+    useAuth();
 
   // process map click
   const handleMapClick = (latlng: L.LatLng) => {
@@ -141,6 +142,12 @@ const Tracking: React.FC = () => {
       }
     };
     refreshToken();
+
+    const tokenTimeout = setTimeout(() => {
+      callRefreshToken();
+    }, countTimeToRefresh());
+
+    return () => clearTimeout(tokenTimeout);
   }, []);
 
   const clearPoints = () => {
