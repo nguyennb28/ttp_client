@@ -153,6 +153,7 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
     if (user && user.role !== "admin") {
       logout();
       navigate("/signin", { replace: true });
+      window.location.reload();
     }
   };
 
