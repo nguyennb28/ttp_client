@@ -13,7 +13,6 @@ const UserInfoCardRenew: React.FC<UserInfoCardProps> = ({ data }) => {
   const handleSave = () => {
     // Handle save logic here
     console.log("Saving changes...");
-    11;
     closeModal();
   };
   return (

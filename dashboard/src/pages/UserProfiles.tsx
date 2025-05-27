@@ -3,6 +3,8 @@ import UserInfoCardRenew from "../components/UserProfile/UserInfoCardRenew";
 import PageMeta from "../components/common/PageMeta";
 import useProfile from "../hooks/useProfile";
 import UserMetaCardRenew from "../components/UserProfile/UserMetaCardRenew";
+import { useAuth } from "../context/AuthContext";
+import { useEffect } from "react";
 
 type ProfileProps = {
   id: string;
@@ -17,7 +19,21 @@ type ProfileProps = {
 };
 
 export default function UserProfiles() {
+  // Hook
   const profile = useProfile() as ProfileProps | null | undefined;
+
+  // Context
+  const { checkAuth, countTimeToRefresh, callRefreshToken } = useAuth();
+
+  useEffect(() => {
+    checkAuth();
+
+    const tokenTimeout = setTimeout(() => {
+      callRefreshToken();
+    }, countTimeToRefresh());
+
+    return () => clearTimeout(tokenTimeout);
+  }, []);
 
   return (
     <>
