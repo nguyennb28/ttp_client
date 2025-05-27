@@ -1,10 +1,14 @@
 import PageBreadcrumb from "../components/common/PageBreadCrumb";
 import UserMetaCard from "../components/UserProfile/UserMetaCard";
-import UserInfoCard from "../components/UserProfile/UserInfoCard";
+// import UserInfoCard from "../components/UserProfile/UserInfoCard";
+import UserInfoCardRenew from "../components/UserProfile/UserInfoCardRenew";
 import UserAddressCard from "../components/UserProfile/UserAddressCard";
 import PageMeta from "../components/common/PageMeta";
+import useProfile from "../hooks/useProfile";
 
 export default function UserProfiles() {
+  const profile = useProfile();
+
   return (
     <>
       <PageMeta
@@ -18,8 +22,9 @@ export default function UserProfiles() {
         </h3>
         <div className="space-y-6">
           <UserMetaCard />
-          <UserInfoCard />
-          <UserAddressCard />
+          {/* <UserInfoCard /> */}
+          <UserInfoCardRenew data={profile} />
+          {/* <UserAddressCard /> */}
         </div>
       </div>
     </>
