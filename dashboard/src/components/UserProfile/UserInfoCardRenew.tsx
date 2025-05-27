@@ -8,8 +8,7 @@ interface UserInfoCardProps {
   data: any;
 }
 
-const UserInfoCardRenew: React.FC<UserInfoCardProps> = (data) => {
-  console.log(data);
+const UserInfoCardRenew: React.FC<UserInfoCardProps> = ({ data }) => {
   const { isOpen, openModal, closeModal } = useModal();
   const handleSave = () => {
     // Handle save logic here
@@ -31,7 +30,7 @@ const UserInfoCardRenew: React.FC<UserInfoCardProps> = (data) => {
                 ID
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                {data && data.data.id}
+                {data && data.id}
               </p>
             </div>
 
@@ -40,7 +39,7 @@ const UserInfoCardRenew: React.FC<UserInfoCardProps> = (data) => {
                 Username
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                {data && data.data.username}
+                {data && data.username}
               </p>
             </div>
 
@@ -49,7 +48,7 @@ const UserInfoCardRenew: React.FC<UserInfoCardProps> = (data) => {
                 First Name
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                {data && data.data.first_name}
+                {data && data.first_name}
               </p>
             </div>
 
@@ -58,7 +57,7 @@ const UserInfoCardRenew: React.FC<UserInfoCardProps> = (data) => {
                 Last Name
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                {data && data.data.last_name}
+                {data && data.last_name}
               </p>
             </div>
 
@@ -67,7 +66,7 @@ const UserInfoCardRenew: React.FC<UserInfoCardProps> = (data) => {
                 Role
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                {data && data.data.role}
+                {data && data.role}
               </p>
             </div>
 
@@ -76,7 +75,7 @@ const UserInfoCardRenew: React.FC<UserInfoCardProps> = (data) => {
                 Tenant database
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                {data && data.data.tenant_db}
+                {data && data.tenant_db}
               </p>
             </div>
 
@@ -85,7 +84,7 @@ const UserInfoCardRenew: React.FC<UserInfoCardProps> = (data) => {
                 Phone
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                {data && data.data.phone}
+                {data && data.phone}
               </p>
             </div>
 
@@ -94,7 +93,7 @@ const UserInfoCardRenew: React.FC<UserInfoCardProps> = (data) => {
                 Tax code
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                {data && data.data.tax_code}
+                {data && data.tax_code}
               </p>
             </div>
           </div>

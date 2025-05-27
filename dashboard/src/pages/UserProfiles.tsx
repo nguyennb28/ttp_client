@@ -1,13 +1,23 @@
 import PageBreadcrumb from "../components/common/PageBreadCrumb";
-import UserMetaCard from "../components/UserProfile/UserMetaCard";
-// import UserInfoCard from "../components/UserProfile/UserInfoCard";
 import UserInfoCardRenew from "../components/UserProfile/UserInfoCardRenew";
-import UserAddressCard from "../components/UserProfile/UserAddressCard";
 import PageMeta from "../components/common/PageMeta";
 import useProfile from "../hooks/useProfile";
+import UserMetaCardRenew from "../components/UserProfile/UserMetaCardRenew";
+
+type ProfileProps = {
+  id: string;
+  username: string;
+  first_name: string;
+  last_name: string;
+  full_name: string;
+  phone: string;
+  tax_code: string;
+  role: string;
+  tenant_db: string;
+};
 
 export default function UserProfiles() {
-  const profile = useProfile();
+  const profile = useProfile() as ProfileProps | null | undefined;
 
   return (
     <>
@@ -21,10 +31,14 @@ export default function UserProfiles() {
           Profile
         </h3>
         <div className="space-y-6">
-          <UserMetaCard />
-          {/* <UserInfoCard /> */}
+          {profile && (
+            <UserMetaCardRenew
+              first_name={profile.first_name}
+              last_name={profile.last_name}
+              role={profile.role}
+            />
+          )}
           <UserInfoCardRenew data={profile} />
-          {/* <UserAddressCard /> */}
         </div>
       </div>
     </>
