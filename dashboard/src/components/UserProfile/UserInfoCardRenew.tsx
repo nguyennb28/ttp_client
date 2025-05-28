@@ -132,41 +132,8 @@ const UserInfoCardRenew: React.FC<UserInfoCardProps> = ({ data }) => {
             </p>
           </div>
           <form className="flex flex-col">
-            <div className="custom-scrollbar h-[450px] overflow-y-auto px-2 pb-3">
-              <div>
-                <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
-                  Social Links
-                </h5>
-
-                <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
-                  <div>
-                    <Label>Facebook</Label>
-                    <Input
-                      type="text"
-                      value="https://www.facebook.com/PimjoHQ"
-                    />
-                  </div>
-
-                  <div>
-                    <Label>X.com</Label>
-                    <Input type="text" value="https://x.com/PimjoHQ" />
-                  </div>
-
-                  <div>
-                    <Label>Linkedin</Label>
-                    <Input
-                      type="text"
-                      value="https://www.linkedin.com/company/pimjo"
-                    />
-                  </div>
-
-                  <div>
-                    <Label>Instagram</Label>
-                    <Input type="text" value="https://instagram.com/PimjoHQ" />
-                  </div>
-                </div>
-              </div>
-              <div className="mt-7">
+            <div className="custom-scrollbar overflow-y-auto px-2 pb-1">
+              <div className="">
                 <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
                   Personal Information
                 </h5>
@@ -174,27 +141,34 @@ const UserInfoCardRenew: React.FC<UserInfoCardProps> = ({ data }) => {
                 <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
                   <div className="col-span-2 lg:col-span-1">
                     <Label>First Name</Label>
-                    <Input type="text" value="Musharof" />
+                    {/* <Input type="text" value="Musharof" /> */}
+                    <Input type="text" value={data.first_name} />
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
                     <Label>Last Name</Label>
-                    <Input type="text" value="Chowdhury" />
+                    {/* <Input type="text" value="Chowdhury" /> */}
+                    <Input type="text" value={data.last_name} />
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
-                    <Label>Email Address</Label>
-                    <Input type="text" value="randomuser@pimjo.com" />
+                    <Label>Username</Label>
+                    <Input type="text" value={data.username} disabled />
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
                     <Label>Phone</Label>
-                    <Input type="text" value="+09 363 398 46" />
+                    <Input type="text" value={data.phone} />
                   </div>
 
-                  <div className="col-span-2">
-                    <Label>Bio</Label>
-                    <Input type="text" value="Team Manager" />
+                  <div className="col-span-2 lg:col-span-1">
+                    <Label>Role</Label>
+                    <Input type="text" value={data.role} />
+                  </div>
+
+                  <div className="col-span-2 lg:col-span-1">
+                    <Label>Tenant database</Label>
+                    <Input type="text" value={data.tenant_db} disabled />
                   </div>
                 </div>
               </div>
