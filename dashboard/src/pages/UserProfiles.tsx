@@ -4,7 +4,7 @@ import PageMeta from "../components/common/PageMeta";
 import useProfile from "../hooks/useProfile";
 import UserMetaCardRenew from "../components/UserProfile/UserMetaCardRenew";
 import { useAuth } from "../context/AuthContext";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 type ProfileProps = {
   id: string;
@@ -25,6 +25,22 @@ export default function UserProfiles() {
   // Context
   const { checkAuth, countTimeToRefresh, callRefreshToken } = useAuth();
 
+  // State
+  const [info, setInfo] = useState({});
+
+  // hidden array
+  const hiddeArr = ["id", "full_name"];
+
+  // disable array
+  const disabledArr = ["username", "role", "tenant_db"];
+
+  const handleUser = (value: any) => {
+    setInfo((prev) => ({
+      ...prev,
+      value,
+    }));
+  };
+
   useEffect(() => {
     checkAuth();
 
@@ -34,6 +50,10 @@ export default function UserProfiles() {
 
     return () => clearTimeout(tokenTimeout);
   }, []);
+
+  useEffect(() => { 
+    // console.log(info);
+  }, [info]);
 
   return (
     <>
@@ -54,7 +74,12 @@ export default function UserProfiles() {
               role={profile.role}
             />
           )}
-          <UserInfoCardRenew data={profile} />
+          <UserInfoCardRenew
+            data={profile}
+            hiddenArr={hiddeArr}
+            disabledArr={disabledArr}
+            handle={handleUser}
+          />
         </div>
       </div>
     </>

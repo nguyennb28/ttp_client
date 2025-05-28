@@ -3,18 +3,54 @@ import { Modal } from "../ui/modal";
 import Button from "../ui/button/Button";
 import Input from "../form/input/InputField";
 import Label from "../form/Label";
+import { useState, useEffect } from "react";
 
 interface UserInfoCardProps {
   data: any;
+  hiddenArr?: string[];
+  disabledArr?: string[];
+  handle: (value: any) => void;
 }
 
-const UserInfoCardRenew: React.FC<UserInfoCardProps> = ({ data }) => {
+const UserInfoCardRenew: React.FC<UserInfoCardProps> = ({
+  data,
+  hiddenArr,
+  disabledArr,
+  handle,
+}) => {
   const { isOpen, openModal, closeModal } = useModal();
-  const handleSave = () => {
-    // Handle save logic here
-    console.log("Saving changes...");
-    closeModal();
+
+  // State
+  const [infoUser, setInfoUser] = useState(data);
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+
+    setInfoUser((prev: any) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
+
+  // const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // console.log(
+    //   Object.values(infoUser).reduce((item) => {
+    //     if (item) {
+    //       console.log(item);
+    //     }
+    //   })
+    // );
+  };
+
+  // side effect
+  useEffect(() => {
+    if (data && hiddenArr) {
+      setInfoUser(data);
+    }
+  }, [data]);
   return (
     <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
@@ -24,78 +60,19 @@ const UserInfoCardRenew: React.FC<UserInfoCardProps> = ({ data }) => {
           </h4>
 
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-7 2xl:gap-x-32">
-            <div>
-              <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                ID
-              </p>
-              <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                {data && data.id}
-              </p>
-            </div>
-
-            <div>
-              <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Username
-              </p>
-              <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                {data && data.username}
-              </p>
-            </div>
-
-            <div>
-              <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                First Name
-              </p>
-              <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                {data && data.first_name}
-              </p>
-            </div>
-
-            <div>
-              <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Last Name
-              </p>
-              <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                {data && data.last_name}
-              </p>
-            </div>
-
-            <div>
-              <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Role
-              </p>
-              <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                {data && data.role}
-              </p>
-            </div>
-
-            <div>
-              <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Tenant database
-              </p>
-              <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                {data && data.tenant_db}
-              </p>
-            </div>
-
-            <div>
-              <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Phone
-              </p>
-              <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                {data && data.phone}
-              </p>
-            </div>
-
-            <div>
-              <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Tax code
-              </p>
-              <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                {data && data.tax_code}
-              </p>
-            </div>
+            {infoUser &&
+              Object.keys(infoUser).map((item, index) => (
+                <div key={index}>
+                  <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
+                    {item}
+                  </p>
+                  <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+                    {infoUser && infoUser[item]}
+                  </p>
+                </div>
+              ))}
           </div>
+          {/*  */}
         </div>
 
         <button
@@ -131,7 +108,7 @@ const UserInfoCardRenew: React.FC<UserInfoCardProps> = ({ data }) => {
               Update your details to keep your profile up-to-date.
             </p>
           </div>
-          <form className="flex flex-col">
+          <form className="flex flex-col" onSubmit={handleSave}>
             <div className="custom-scrollbar overflow-y-auto px-2 pb-1">
               <div className="">
                 <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
@@ -139,37 +116,31 @@ const UserInfoCardRenew: React.FC<UserInfoCardProps> = ({ data }) => {
                 </h5>
 
                 <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
-                  <div className="col-span-2 lg:col-span-1">
-                    <Label>First Name</Label>
-                    {/* <Input type="text" value="Musharof" /> */}
-                    <Input type="text" value={data.first_name} />
-                  </div>
-
-                  <div className="col-span-2 lg:col-span-1">
-                    <Label>Last Name</Label>
-                    {/* <Input type="text" value="Chowdhury" /> */}
-                    <Input type="text" value={data.last_name} />
-                  </div>
-
-                  <div className="col-span-2 lg:col-span-1">
-                    <Label>Username</Label>
-                    <Input type="text" value={data.username} disabled />
-                  </div>
-
-                  <div className="col-span-2 lg:col-span-1">
-                    <Label>Phone</Label>
-                    <Input type="text" value={data.phone} />
-                  </div>
-
-                  <div className="col-span-2 lg:col-span-1">
-                    <Label>Role</Label>
-                    <Input type="text" value={data.role} />
-                  </div>
-
-                  <div className="col-span-2 lg:col-span-1">
-                    <Label>Tenant database</Label>
-                    <Input type="text" value={data.tenant_db} disabled />
-                  </div>
+                  {infoUser &&
+                    hiddenArr &&
+                    disabledArr &&
+                    Object.keys(infoUser)
+                      .filter((item) => !hiddenArr.includes(item))
+                      .map((item, index) => (
+                        <div key={index} className="col-span-2 lg:col-span-1">
+                          <Label>{item}</Label>
+                          {disabledArr.includes(item) ? (
+                            <Input
+                              type="text"
+                              name={item}
+                              value={infoUser[item]}
+                              disabled
+                            />
+                          ) : (
+                            <Input
+                              type="text"
+                              name={item}
+                              value={infoUser[item]}
+                              onChange={handleChange}
+                            />
+                          )}
+                        </div>
+                      ))}
                 </div>
               </div>
             </div>
@@ -177,9 +148,8 @@ const UserInfoCardRenew: React.FC<UserInfoCardProps> = ({ data }) => {
               <Button size="sm" variant="outline" onClick={closeModal}>
                 Close
               </Button>
-              <Button size="sm" onClick={handleSave}>
-                Save Changes
-              </Button>
+              {/* <Button size="sm" onClick={handleSave}> */}
+              <Button size="sm">Save Changes</Button>
             </div>
           </form>
         </div>
