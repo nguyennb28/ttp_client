@@ -9,20 +9,27 @@ interface UserInfoCardProps {
   data: any;
   hiddenArr?: string[];
   disabledArr?: string[];
-  handle: (value: any) => void;
+  submit: (value: any) => void;
 }
 
 const UserInfoCardRenew: React.FC<UserInfoCardProps> = ({
   data,
   hiddenArr,
   disabledArr,
-  handle,
+  submit,
 }) => {
   const { isOpen, openModal, closeModal } = useModal();
 
   // State
   const [infoUser, setInfoUser] = useState(data);
   const [errors, setErrors] = useState<any>({});
+
+  // Features
+
+  const refreshState = () => {
+    setInfoUser(data);
+    setErrors({});
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -62,7 +69,18 @@ const UserInfoCardRenew: React.FC<UserInfoCardProps> = ({
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const isValid = validateForm();
-    console.log(isValid);
+    if (!isValid) {
+      alert("Unable to update profile");
+    } else {
+      if (JSON.stringify(infoUser) === JSON.stringify(data)) {
+        alert("There is nothing to update");
+        closeModal();
+        return;
+      } else {
+        submit(infoUser);
+        closeModal();
+      }
+    }
   };
 
   // side effect
@@ -118,7 +136,14 @@ const UserInfoCardRenew: React.FC<UserInfoCardProps> = ({
         </button>
       </div>
 
-      <Modal isOpen={isOpen} onClose={closeModal} className="max-w-[700px] m-4">
+      <Modal
+        isOpen={isOpen}
+        onClose={() => {
+          closeModal();
+          refreshState();
+        }}
+        className="max-w-[700px] m-4"
+      >
         <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
           <div className="px-2 pr-14">
             <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
@@ -170,7 +195,14 @@ const UserInfoCardRenew: React.FC<UserInfoCardProps> = ({
               </div>
             </div>
             <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
-              <Button size="sm" variant="outline" onClick={closeModal}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  closeModal();
+                  refreshState();
+                }}
+              >
                 Close
               </Button>
               <Button size="sm">Save Changes</Button>

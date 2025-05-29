@@ -4,7 +4,9 @@ import PageMeta from "../components/common/PageMeta";
 import useProfile from "../hooks/useProfile";
 import UserMetaCardRenew from "../components/UserProfile/UserMetaCardRenew";
 import { useAuth } from "../context/AuthContext";
+import { useLoading } from "../context/LoadingContext";
 import { useState, useEffect } from "react";
+import axiosInstance from "../instance/axiosInstance";
 
 type ProfileProps = {
   id: string;
@@ -24,9 +26,10 @@ export default function UserProfiles() {
 
   // Context
   const { checkAuth, countTimeToRefresh, callRefreshToken } = useAuth();
+  const { loading, showLoading, hideLoading } = useLoading();
 
   // State
-  const [info, setInfo] = useState({});
+  // const [info, setInfo] = useState({});
 
   // hidden array
   const hiddeArr = ["id", "full_name"];
@@ -34,11 +37,23 @@ export default function UserProfiles() {
   // disable array
   const disabledArr = ["username", "role", "tenant_db"];
 
-  const handleUser = (value: any) => {
-    setInfo((prev) => ({
-      ...prev,
-      value,
-    }));
+  const handleSubmit = async (value: any) => {
+    console.log(value);
+    try {
+      showLoading();
+      const response = await axiosInstance.patch(`/users/${value.id}/`, {
+        ...value,
+      });
+      if (response.status == 200) {
+        alert("Updated");
+        window.location.reload();
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Update Failed");
+    } finally {
+      hideLoading();
+    }
   };
 
   useEffect(() => {
@@ -51,9 +66,9 @@ export default function UserProfiles() {
     return () => clearTimeout(tokenTimeout);
   }, []);
 
-  useEffect(() => { 
-    // console.log(info);
-  }, [info]);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -78,7 +93,7 @@ export default function UserProfiles() {
             data={profile}
             hiddenArr={hiddeArr}
             disabledArr={disabledArr}
-            handle={handleUser}
+            submit={handleSubmit}
           />
         </div>
       </div>
