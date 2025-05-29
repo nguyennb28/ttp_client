@@ -59,7 +59,7 @@ const UserInfoCardRenew: React.FC<UserInfoCardProps> = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const isValid = validateForm();
     console.log(isValid);
@@ -128,7 +128,7 @@ const UserInfoCardRenew: React.FC<UserInfoCardProps> = ({
               Update your details to keep your profile up-to-date.
             </p>
           </div>
-          <form className="flex flex-col" onSubmit={handleSave}>
+          <form className="flex flex-col" onSubmit={handleSubmit}>
             <div className="custom-scrollbar overflow-y-auto px-2 pb-1">
               <div className="">
                 <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
@@ -173,7 +173,6 @@ const UserInfoCardRenew: React.FC<UserInfoCardProps> = ({
               <Button size="sm" variant="outline" onClick={closeModal}>
                 Close
               </Button>
-              {/* <Button size="sm" onClick={handleSave}> */}
               <Button size="sm">Save Changes</Button>
             </div>
           </form>
