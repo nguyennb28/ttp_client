@@ -22,7 +22,7 @@ const UserInfoCardRenew: React.FC<UserInfoCardProps> = ({
 
   // State
   const [infoUser, setInfoUser] = useState(data);
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<any>({});
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -31,18 +31,38 @@ const UserInfoCardRenew: React.FC<UserInfoCardProps> = ({
       ...prev,
       [name]: value,
     }));
+    //
+    if (errors[name]) {
+      setErrors((prev: any) => ({
+        ...prev,
+        [name]: null, // Hoặc undefined
+      }));
+    }
   };
 
-  // const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
+  const validateForm = () => {
+    const newErrors: any = {};
+    const regexPhone = /^(0|\+84)(3|5|7|8|9)[0-9]{8}$/;
+    const regexTaxCode = /^(\d{10}|\d{13})$/;
+    Object.keys(infoUser).forEach((item, index) => {
+      if (!infoUser[item].toString().trim()) {
+        newErrors[item] = `Vui lòng nhập ${item}`;
+      }
+      if (item == "phone" && !regexPhone.test(infoUser[item])) {
+        newErrors[item] = `${item} không hợp lệ !!`;
+      }
+      if (item == "tax_code" && !regexTaxCode.test(infoUser[item])) {
+        newErrors[item] = `${item} không hợp lệ !!`;
+      }
+    });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // console.log(
-    //   Object.values(infoUser).reduce((item) => {
-    //     if (item) {
-    //       console.log(item);
-    //     }
-    //   })
-    // );
+    const isValid = validateForm();
+    console.log(isValid);
   };
 
   // side effect
@@ -132,12 +152,17 @@ const UserInfoCardRenew: React.FC<UserInfoCardProps> = ({
                               disabled
                             />
                           ) : (
-                            <Input
-                              type="text"
-                              name={item}
-                              value={infoUser[item]}
-                              onChange={handleChange}
-                            />
+                            <>
+                              <Input
+                                type="text"
+                                name={item}
+                                value={infoUser[item]}
+                                onChange={handleChange}
+                              />
+                              <p className="text-red-500 mt-2">
+                                {errors[item]}
+                              </p>
+                            </>
                           )}
                         </div>
                       ))}
