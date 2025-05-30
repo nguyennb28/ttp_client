@@ -28,9 +28,6 @@ export default function UserProfiles() {
   const { checkAuth, countTimeToRefresh, callRefreshToken } = useAuth();
   const { loading, showLoading, hideLoading } = useLoading();
 
-  // State
-  // const [info, setInfo] = useState({});
-
   // hidden array
   const hiddeArr = ["id", "full_name"];
 
@@ -38,7 +35,6 @@ export default function UserProfiles() {
   const disabledArr = ["username", "role", "tenant_db"];
 
   const handleSubmit = async (value: any) => {
-    console.log(value);
     try {
       showLoading();
       const response = await axiosInstance.patch(`/users/${value.id}/`, {
