@@ -36,22 +36,16 @@ class UserSerializer(serializers.ModelSerializer):
         user_currently = self.context.get("request").user
         password = validated_data.pop("password", None)
         tax_code = validated_data.pop("tax_code", None)
-        full_name = validated_data.pop("full_name", None)
         tenant_db = validated_data.pop("tenant_db", None)
         user = User(**validated_data)
         if password:
             user.set_password(password)
 
-        # Custom field for [tax_code, full_name, tenant_db] when value null
+        # Custom field for [tax_code, tenant_db] when value null
         if tax_code:
             user.tax_code = tax_code
         else:
             user.tax_code = user_currently.tax_code
-
-        if full_name:
-            user.full_name = full_name
-        else:
-            user.full_name = user.username.upper()
 
         if tenant_db:
             user.tenant_db = tenant_db
@@ -65,7 +59,6 @@ class UserSerializer(serializers.ModelSerializer):
         user_currently = self.context.get("request").user
         password = validated_data.pop("password", None)
         tax_code = validated_data.pop("tax_code", None)
-        full_name = validated_data.pop("full_name", None)
         tenant_db = validated_data.pop("tenant_db", None)
         instance = super().update(instance, validated_data)
         if password:
@@ -75,11 +68,6 @@ class UserSerializer(serializers.ModelSerializer):
             instance.tax_code = tax_code
         else:
             instance.tax_code = user_currently.tax_code
-
-        if full_name:
-            instance.full_name = full_name
-        else:
-            instance.full_name = instance.username.upper()
 
         if tenant_db:
             instance.tenant_db = tenant_db
