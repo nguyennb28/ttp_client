@@ -140,3 +140,71 @@ class CFS(models.Model):
 
     def __str__(self):
         return f"{self.mbl} - {self.ship_name}"
+
+
+class PaymentDocument(models.Model):
+    spc = models.CharField(max_length=100, unique=True)
+    settlement_date = models.DateField(
+        verbose_name="Ngày quyết toán", null=True, blank=True
+    )
+    company_name = models.TextField(verbose_name="Tên công ty vận chuyển")
+    employee_name = models.CharField(
+        max_length=255, verbose_name="Tên nhân viên (Họ tên)"
+    )
+    product_name = models.CharField(max_length=255, verbose_name="Tên hàng")
+    declaration = models.CharField(max_length=25, verbose_name="Tờ khai")
+    bln = models.TextField(verbose_name="Bill of Lading number / Số vận đơn")
+    product_detail = models.TextField(verbose_name="Chi tiết hàng")
+    agent = models.TextField(verbose_name="Chủ hàng/Đại lý")
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    def __str__(self):
+        return f"{self.spc}"
+
+
+class PaymentDocumentFeeDetail(models.Model):
+    payment_document = models.ForeignKey(
+        PaymentDocument, on_delete=models.CASCADE, related_name="detail_fees"
+    )
+    cost_name = models.TextField(verbose_name="Tên chi phí")
+    contract_fee = models.DecimalField(
+        max_digits=15,
+        decimal_places=0,
+        verbose_name="Số tiền có hợp đồng",
+        null=True,
+        blank=True,
+    )
+    non_contract_fee = models.DecimalField(
+        max_digits=15,
+        decimal_places=0,
+        verbose_name="Số tiền không hợp đồng",
+        null=True,
+        blank=True,
+    )
+    note = models.TextField(verbose_name="Ghi chú", null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    def __str__(self):
+        return f"{self.cost_name}"
+
+
+class PaymentDocumentDeliveryFee(models.Model):
+    payment_document = models.ForeignKey(
+        PaymentDocument, on_delete=models.CASCADE, related_name="ship_fees"
+    )
+    cost_name = models.TextField(verbose_name="Phí vận chuyển")
+    fee = models.DecimalField(
+        max_digits=15,
+        decimal_places=0,
+        verbose_name="Số tiền",
+        null=True,
+        blank=True,
+    )
+    note = models.TextField(verbose_name="Ghi chú", null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    def __str__(self):
+        return f"{self.cost_name}"

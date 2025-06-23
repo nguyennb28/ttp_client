@@ -1,5 +1,15 @@
 from rest_framework import serializers
-from .models import User, Port, VAT_INFO, ContainerSize, Agency, CFS
+from .models import (
+    User,
+    Port,
+    VAT_INFO,
+    ContainerSize,
+    Agency,
+    CFS,
+    PaymentDocument,
+    PaymentDocumentFeeDetail,
+    PaymentDocumentDeliveryFee,
+)
 import re
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import get_user_model
@@ -196,3 +206,38 @@ class CustomLoginSerializer(TokenObtainPairSerializer):
         data = super().validate(attrs)
 
         return data
+
+
+class PaymentDocumentFeeDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PaymentDocumentFeeDetail
+        fields = ["id", "cost_name", "contract_fee", "non_contract_fee", "note"]
+
+
+class PaymentDocumentDeliveryFeeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PaymentDocumentDeliveryFee
+        fields = ["id", "cost_name", "fee", "note"]
+
+
+class PaymentDocumentSerializer(serializers.ModelSerializer):
+
+    detail_fees = PaymentDocumentFeeDetailSerializer(many=True, read_only=True)
+    ship_fees = PaymentDocumentDeliveryFeeSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = PaymentDocument
+        fields = [
+            "id",
+            "spc",
+            "settlement_date",
+            "company_name",
+            "employee_name",
+            "product_name",
+            "declaration",
+            "bln",
+            "product_detail",
+            "agent",
+            "detail_fees",
+            "ship_fees",
+        ]

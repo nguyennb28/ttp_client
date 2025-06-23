@@ -1,4 +1,14 @@
-from .models import User, Port, ContainerSize, VAT_INFO, Agency, CFS
+from .models import (
+    User,
+    Port,
+    ContainerSize,
+    VAT_INFO,
+    Agency,
+    CFS,
+    PaymentDocument,
+    PaymentDocumentFeeDetail,
+    PaymentDocumentDeliveryFee,
+)
 from .serializers import (
     UserSerializer,
     PortSerializer,
@@ -7,6 +17,9 @@ from .serializers import (
     AgencySerializer,
     CFSSerizalier,
     CustomLoginSerializer,
+    PaymentDocumentFeeDetailSerializer,
+    PaymentDocumentDeliveryFeeSerializer,
+    PaymentDocumentSerializer,
 )
 
 from django.db.models import Q
@@ -455,3 +468,26 @@ class DatabaseViewSet(viewsets.ViewSet):
                 results[db_name] = f"Error: {str(e)}"
 
         return Response({"results": results}, status=status.HTTP_207_MULTI_STATUS)
+
+
+class PaymentDocumentViewSet(viewsets.ModelViewSet):
+    queryset = PaymentDocument.objects.all().order_by("-created_at")
+    serializer_class = PaymentDocumentSerializer
+    permission_classes = [IsRoleAdmin]
+
+    def get_queryset(self):
+        queryset = PaymentDocument.objects.all().order_by("-created_at")
+        param = self.request.query_params.get("q")
+        if param:
+            queryset = queryset.filter(
+                Q(spc__icontains=param)
+                | Q(settlement_date__icontains=param)
+                | Q(company_name__icontains=param)
+                | Q(employee_name__icontains=param)
+                | Q(product_name__icontains=param)
+                | Q(declaration__icontains=param)
+                | Q(bln__icontains=param)
+                | Q(product_detail__icontains=param)
+                | Q(agent__icontains=param)
+            )
+        return queryset
