@@ -507,6 +507,7 @@ class PaymentDocumentFeeDetailViewSet(viewsets.ModelViewSet):
                 Q(cost_name__icontains=param)
                 | Q(contract_fee__icontains=param)
                 | Q(non_contract_fee__icontains=param)
+                | Q(contract_number__icontains=param)
                 | Q(note__icontains=param)
             )
 

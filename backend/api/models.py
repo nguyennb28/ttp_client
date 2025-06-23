@@ -182,6 +182,7 @@ class PaymentDocumentFeeDetail(models.Model):
         null=True,
         blank=True,
     )
+    contract_number = models.CharField(max_length=10, null=True)
     note = models.TextField(verbose_name="Ghi chú", null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)

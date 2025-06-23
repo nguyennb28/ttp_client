@@ -211,7 +211,14 @@ class CustomLoginSerializer(TokenObtainPairSerializer):
 class PaymentDocumentFeeDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = PaymentDocumentFeeDetail
-        fields = ["id", "cost_name", "contract_fee", "non_contract_fee", "note"]
+        fields = [
+            "id",
+            "cost_name",
+            "contract_fee",
+            "non_contract_fee",
+            "contract_number",
+            "note",
+        ]
 
 
 class PaymentDocumentDeliveryFeeSerializer(serializers.ModelSerializer):
