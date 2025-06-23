@@ -13,4 +13,8 @@ router.register(
     "databases", views.DatabaseViewSet, basename="database"
 )  # Phải chỉ định basename
 router.register(r"payment-document", views.PaymentDocumentViewSet)
+router.register(r"payment-document-fee-detail", views.PaymentDocumentFeeDetailViewSet)
+router.register(
+    r"payment-document-delivery-fee", views.PaymentDocumentDeliveryFeeViewSet
+)
 urlpatterns = [path("", include(router.urls))]

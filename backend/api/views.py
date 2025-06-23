@@ -491,3 +491,42 @@ class PaymentDocumentViewSet(viewsets.ModelViewSet):
                 | Q(agent__icontains=param)
             )
         return queryset
+
+
+class PaymentDocumentFeeDetailViewSet(viewsets.ModelViewSet):
+    queryset = PaymentDocumentFeeDetail.objects.all().order_by("-created_at")
+    serializer_class = PaymentDocumentFeeDetailSerializer
+    permission_classes = [IsRoleAdmin]
+
+    def get_queryset(self):
+        queryset = PaymentDocumentFeeDetail.objects.all().order_by("-created_at")
+        param = self.request.query_params.get("q")
+
+        if param:
+            queryset = queryset.filter(
+                Q(cost_name__icontains=param)
+                | Q(contract_fee__icontains=param)
+                | Q(non_contract_fee__icontains=param)
+                | Q(note__icontains=param)
+            )
+
+        return queryset
+
+
+class PaymentDocumentDeliveryFeeViewSet(viewsets.ModelViewSet):
+    queryset = PaymentDocumentDeliveryFee.objects.all().order_by("-created_at")
+    serializer_class = PaymentDocumentDeliveryFeeSerializer
+    permission_classes = [IsRoleAdmin]
+
+    def get_queryset(self):
+        queryset = PaymentDocumentDeliveryFee.objects.all().order_by("-created_at")
+        param = self.request.query_params.get("q")
+
+        if param:
+            queryset = queryset.filter(
+                Q(cost_name__icontains=param)
+                | Q(fee__icontains=param)
+                | Q(note__icontains=param)
+            )
+
+        return queryset
