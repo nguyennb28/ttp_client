@@ -17,7 +17,7 @@ import {
 } from "../icons";
 import { PiShippingContainerDuotone } from "react-icons/pi";
 import { BiBowlHot } from "react-icons/bi";
-import { FaMapMarkedAlt } from "react-icons/fa";
+import { FaMapMarkedAlt, FaMoneyBillWave } from "react-icons/fa";
 import { useSidebar } from "../context/SidebarContext";
 import SidebarWidget from "./SidebarWidget";
 
@@ -43,6 +43,11 @@ const navItems: NavItem[] = [
     icon: <PiShippingContainerDuotone />,
     name: "CFS",
     path: "/cfs",
+  },
+  {
+    name: "Payment",
+    icon: <FaMoneyBillWave />,
+    subItems: [{ name: "Payment", path: "/payment", pro: false }],
   },
   {
     icon: <FaMapMarkedAlt />,
