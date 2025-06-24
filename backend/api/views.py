@@ -473,7 +473,7 @@ class DatabaseViewSet(viewsets.ViewSet):
 class PaymentDocumentViewSet(viewsets.ModelViewSet):
     queryset = PaymentDocument.objects.all().order_by("-created_at")
     serializer_class = PaymentDocumentSerializer
-    permission_classes = [IsRoleAdmin]
+    permission_classes = [IsRoleAdminOrEmployee]
 
     def get_queryset(self):
         queryset = PaymentDocument.objects.all().order_by("-created_at")
@@ -517,7 +517,7 @@ class PaymentDocumentFeeDetailViewSet(viewsets.ModelViewSet):
 class PaymentDocumentDeliveryFeeViewSet(viewsets.ModelViewSet):
     queryset = PaymentDocumentDeliveryFee.objects.all().order_by("-created_at")
     serializer_class = PaymentDocumentDeliveryFeeSerializer
-    permission_classes = [IsRoleAdmin]
+    permission_classes = [IsRoleAdminOrEmployee]
 
     def get_queryset(self):
         queryset = PaymentDocumentDeliveryFee.objects.all().order_by("-created_at")
