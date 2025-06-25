@@ -8,12 +8,11 @@ import { useAuth } from "../../context/AuthContext";
 import { useLoading } from "../../context/LoadingContext";
 import { useModal } from "../../hooks/useModal";
 import { Modal } from "../../components/ui/modal";
-import GenericForm from "../Forms/GenericForm";
-import { IFormField } from "../../interfaces/interfaces";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { RobotoRegular } from "../../assets/fonts/RobotoRegular";
+import PaymentDocumentForm from "./PaymentDocumentForm";
 
 interface IRecord {
   [key: string]: any;
@@ -247,24 +246,21 @@ const Payment = () => {
           />
         </ComponentCardExtend>
       </div>
-      {/* <Modal isOpen={isCreate} onClose={() => {}}></Modal> */}
       <Modal
         isOpen={isCreate}
         onClose={closeCreateModal}
-        className="h-screen max-w-[700px] m-4"
+        // className="h-screen max-w-[700px] m-4"
+        className="h-screen max-w-[1000px] m-4 block"
       >
-        <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
+        {/* <div className="no-scrollbar relative w-full max-w-[900px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11"> */}
+        <div className="no-scrollbar relative w-full overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
           <div className="px-2 pr-14">
             <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-              Add CFS
+              Add Payment Document
             </h4>
           </div>
           <div>
-            {/* <GenericForm
-              fields={formField}
-              onSubmit={handleFormSubmit}
-              validationForm={handleValidation}
-            /> */}
+            <PaymentDocumentForm />
           </div>
         </div>
       </Modal>

@@ -152,9 +152,9 @@ class PaymentDocument(models.Model):
         max_length=255, verbose_name="Tên nhân viên (Họ tên)"
     )
     product_name = models.CharField(max_length=255, verbose_name="Tên hàng")
-    declaration = models.CharField(max_length=25, verbose_name="Tờ khai")
-    bln = models.TextField(verbose_name="Bill of Lading number / Số vận đơn")
-    product_detail = models.TextField(verbose_name="Chi tiết hàng")
+    declaration = models.CharField(max_length=25, verbose_name="Tờ khai", unique=True)
+    bln = models.TextField(verbose_name="Bill of Lading number / Số vận đơn", unique=True)
+    product_detail = models.TextField(verbose_name="Chi tiết hàng", unique=True)
     agent = models.TextField(verbose_name="Chủ hàng/Đại lý")
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
