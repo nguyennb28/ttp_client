@@ -259,7 +259,7 @@ const Payment = () => {
               Add Payment Document
             </h4>
           </div>
-          <div>
+          <div className="overflow-auto">
             <PaymentDocumentForm />
           </div>
         </div>

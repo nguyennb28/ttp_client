@@ -40,8 +40,8 @@ const PaymentDocumentForm = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="grid grid-cols-2 gap-2 justify-around items-center">
+      <form onSubmit={handleSubmit(onSubmit)} className="overflow-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           {/* SPC */}
           <div className="mt-3">
             <p>SPC</p>
@@ -226,15 +226,19 @@ const PaymentDocumentForm = () => {
               </p>
             )}
           </div>
-          {/* Submit */}
-          <div className="mt-5 text-center">
-            <button
-              type="submit"
-              className="p-3 rounded-xl cursor-pointer w-80 bg-sky-300 hover:bg-sky-700 uppercase font-semibold"
-            >
-              {isSubmitting ? "Đang xử lý" : "Lưu"}
-            </button>
-          </div>
+        </div>
+        {/* Extend Form */}
+        <div className="grid grid-cols-1 md:grid-cols-2">
+          <div></div>
+        </div>
+        {/* Submit */}
+        <div className="mt-5 text-center">
+          <button
+            type="submit"
+            className="p-3 rounded-xl cursor-pointer w-80 bg-sky-300 hover:bg-sky-700 uppercase font-semibold"
+          >
+            {isSubmitting ? "Đang xử lý" : "Lưu"}
+          </button>
         </div>
       </form>
     </>
