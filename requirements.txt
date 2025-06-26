@@ -13,4 +13,4 @@ python-dotenv==1.0.1
 pytz==2025.1
 sqlparse==0.5.3
 tzdata==2025.1
-pandas==2.2.3
+uvicorn==0.34.3
