@@ -157,6 +157,7 @@ class PaymentDocument(models.Model):
         verbose_name="Bill of Lading number / Số vận đơn", unique=True
     )
     product_detail = models.TextField(verbose_name="Chi tiết hàng", unique=True)
+    tax_code = models.CharField(max_length=13, null=True, verbose_name="Mã số thuế")
     agent = models.TextField(verbose_name="Chủ hàng/Đại lý")
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
