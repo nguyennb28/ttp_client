@@ -1,5 +1,7 @@
+import React, { useEffect } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { useNavigate } from "react-router";
+import { useAuth } from "../../context/AuthContext";
+import useVatInfo from "../../hooks/useVatInfo";
 
 type PaymentDocumentValuesForm = {
   // 1
@@ -22,7 +24,21 @@ type PaymentDocumentValuesForm = {
   agent: string;
 };
 
-const PaymentDocumentForm = () => {
+interface PaymentDocumentProps {
+  paymentDocument: any;
+  onSetPaymentDocument: (value: any) => void;
+}
+
+const PaymentDocumentForm: React.FC<PaymentDocumentProps> = ({
+  paymentDocument,
+  onSetPaymentDocument,
+}) => {
+  // Auth context
+  const { user } = useAuth();
+
+  // Hook
+  const { vatInfo } = useVatInfo(user?.tax_code);
+
   // Form
   const {
     register,
@@ -31,12 +47,17 @@ const PaymentDocumentForm = () => {
   } = useForm<PaymentDocumentValuesForm>();
   const onSubmit: SubmitHandler<PaymentDocumentValuesForm> = async (data) => {
     try {
-      console.log(data);
+      onSetPaymentDocument(data);
     } catch (err) {
       console.error(err);
       throw err;
     }
   };
+
+  useEffect(() => {
+    console.log(user);
+    console.log(vatInfo);
+  }, []);
 
   return (
     <>

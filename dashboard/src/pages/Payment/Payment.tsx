@@ -21,6 +21,7 @@ interface IRecord {
 const Payment = () => {
   // State
   const [payments, setPayments] = useState<IRecord[]>([]);
+  const [paymentDocument, setPaymentDocument] = useState(null);
   const [isNext, setIsNext] = useState<string | null>(null);
   const [isPrevious, setIsPrevious] = useState<string | null>(null);
   const [perPage, setPerPage] = useState<number>(10);
@@ -252,7 +253,6 @@ const Payment = () => {
         // className="h-screen max-w-[700px] m-4"
         className="h-screen max-w-[1000px] m-4 block"
       >
-        {/* <div className="no-scrollbar relative w-full max-w-[900px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11"> */}
         <div className="no-scrollbar relative w-full overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
           <div className="px-2 pr-14">
             <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
@@ -260,7 +260,10 @@ const Payment = () => {
             </h4>
           </div>
           <div className="overflow-auto">
-            <PaymentDocumentForm />
+            <PaymentDocumentForm
+              paymentDocument={paymentDocument}
+              onSetPaymentDocument={setPaymentDocument}
+            />
           </div>
         </div>
       </Modal>

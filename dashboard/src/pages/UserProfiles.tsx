@@ -22,7 +22,8 @@ type ProfileProps = {
 
 export default function UserProfiles() {
   // Hook
-  const profile = useProfile() as ProfileProps | null | undefined;
+  // const profile = useProfile() as ProfileProps | null | undefined;
+  const { profile, loader, error } = useProfile();
 
   // Context
   const { checkAuth, countTimeToRefresh, callRefreshToken } = useAuth();
