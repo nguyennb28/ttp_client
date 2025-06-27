@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
+from django.conf import settings
 
 
 class User(AbstractUser):
@@ -40,7 +41,7 @@ class User(AbstractUser):
         verbose_name_plural = "Người dùng"
 
     def __str__(self):
-        return f"{self.username}"
+        return f"{self.get_full_name()}"
 
 
 class Port(models.Model):
@@ -159,6 +160,14 @@ class PaymentDocument(models.Model):
     product_detail = models.TextField(verbose_name="Chi tiết hàng", unique=True)
     tax_code = models.CharField(max_length=13, null=True, verbose_name="Mã số thuế")
     agent = models.TextField(verbose_name="Chủ hàng/Đại lý")
+    seller = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="sold_documents",
+        verbose_name="Nhân viên bán hàng",
+    )
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
