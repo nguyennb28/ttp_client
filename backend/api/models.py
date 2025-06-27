@@ -153,7 +153,9 @@ class PaymentDocument(models.Model):
     )
     product_name = models.CharField(max_length=255, verbose_name="Tên hàng")
     declaration = models.CharField(max_length=25, verbose_name="Tờ khai", unique=True)
-    bln = models.TextField(verbose_name="Bill of Lading number / Số vận đơn", unique=True)
+    bln = models.TextField(
+        verbose_name="Bill of Lading number / Số vận đơn", unique=True
+    )
     product_detail = models.TextField(verbose_name="Chi tiết hàng", unique=True)
     agent = models.TextField(verbose_name="Chủ hàng/Đại lý")
     created_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -168,21 +170,23 @@ class PaymentDocumentFeeDetail(models.Model):
         PaymentDocument, on_delete=models.CASCADE, related_name="detail_fees"
     )
     cost_name = models.TextField(verbose_name="Tên chi phí")
-    contract_fee = models.DecimalField(
+    bill_fee = models.DecimalField(
         max_digits=15,
         decimal_places=0,
         verbose_name="Số tiền có hợp đồng",
         null=True,
         blank=True,
     )
-    non_contract_fee = models.DecimalField(
+    non_bill_fee = models.DecimalField(
         max_digits=15,
         decimal_places=0,
         verbose_name="Số tiền không hợp đồng",
         null=True,
         blank=True,
     )
-    contract_number = models.CharField(max_length=10, null=True, verbose_name="Số hợp đồng")
+    bill_number = models.CharField(
+        max_length=100, null=True, verbose_name="Số hợp đồng"
+    )
     note = models.TextField(verbose_name="Ghi chú", null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
