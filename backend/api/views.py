@@ -558,7 +558,7 @@ class UploadXMLView(APIView):
     permission_classes = [IsRoleAdminOrEmployee]
 
     def post(self, request, format=None):
-        files = request.FILES.getList("file")
+        files = request.FILES.getlist("file")
         results = []
         namespace = {"inv": "http://laphoadon.gdt.gov.vn/2014/09/invoicexml/v1"}
         for xml_file in files:
@@ -573,6 +573,7 @@ class UploadXMLView(APIView):
                     if invoice_number_elem is not None
                     else None
                 )
+                print(shdon_value)
                 if not shdon_value:
                     for elem in root.iter():
                         if elem.tag.startswith("SHDon") and elem.text:
@@ -597,6 +598,8 @@ class UploadXMLView(APIView):
                             "total": total_value,
                         }
                     )
+                print(shdon_value)
+                print(total_value)
             except Exception as e:
                 results.append(
                     {
@@ -604,4 +607,5 @@ class UploadXMLView(APIView):
                         "error": str(e),
                     }
                 )
+        print(results)
         return Response(results)

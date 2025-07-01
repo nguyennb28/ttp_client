@@ -27,5 +27,5 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='refresh'),
     path('api-auth/', include('rest_framework.urls')),
     path('api/', include('api.urls')),
-    path('upload-bill-xml/', UploadXMLView.as_view(), name='upload-bill-xml'),
+    path('api/upload-bill-xml/', UploadXMLView.as_view(), name='upload-bill-xml'),
 ]

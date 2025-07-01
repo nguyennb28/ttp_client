@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { useAuth } from "../../context/AuthContext";
 import useVatInfo from "../../hooks/useVatInfo";
+import axiosInstance from "../../instance/axiosInstance";
 
 type PaymentDocumentValuesForm = {
   // 1
@@ -33,11 +34,19 @@ const PaymentDocumentForm: React.FC<PaymentDocumentProps> = ({
   paymentDocument,
   onSetPaymentDocument,
 }) => {
+  // State
+  const [xmlFiles, setXmlFiles] = useState<FileList | null>(null);
+
   // Auth context
   const { user } = useAuth();
 
   // Hook
   const { vatInfo } = useVatInfo(user?.tax_code);
+
+  // Feature
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setXmlFiles(e.target.files);
+  };
 
   // Form
   const {
@@ -48,6 +57,15 @@ const PaymentDocumentForm: React.FC<PaymentDocumentProps> = ({
   const onSubmit: SubmitHandler<PaymentDocumentValuesForm> = async (data) => {
     try {
       onSetPaymentDocument(data);
+      if (xmlFiles && xmlFiles.length > 0) {
+        const formData = new FormData();
+        Array.from(xmlFiles).forEach((file) => {
+          formData.append("file", file);
+        });
+
+        const response = await axiosInstance.post("/upload-bill-xml/");
+        console.table(response)
+      }
     } catch (err) {
       console.error(err);
       throw err;
@@ -251,6 +269,19 @@ const PaymentDocumentForm: React.FC<PaymentDocumentProps> = ({
         {/* Extend Form */}
         <div className="grid grid-cols-1 md:grid-cols-2">
           <div></div>
+        </div>
+        {/* Extend Form (XML FILE FOR BILL) */}
+        <div className="grid grid-cols-1 md:grid-cols-2">
+          <div>
+            <p>Chọn file hóa đơn XML</p>
+            <input
+              type="file"
+              accept=".xml"
+              multiple
+              onChange={handleFileChange}
+              className="border-2 rounded-xl w-full p-3 border-black shadow-md"
+            />
+          </div>
         </div>
         {/* Submit */}
         <div className="mt-5 text-center">
