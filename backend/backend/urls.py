@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from api.views import CustomLoginView
+from api.views import UploadXMLView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,5 +26,6 @@ urlpatterns = [
     path('api/token/', CustomLoginView.as_view(), name='get_token'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='refresh'),
     path('api-auth/', include('rest_framework.urls')),
-    path('api/', include('api.urls'))
+    path('api/', include('api.urls')),
+    path('upload-bill-xml/', UploadXMLView.as_view(), name='upload-bill-xml'),
 ]

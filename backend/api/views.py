@@ -45,6 +45,8 @@ from contextlib import contextmanager
 from .color import AnsiColors
 import re
 import logging
+from rest_framework.parsers import MultiPartParser
+import xml.etree.ElementTree as ET
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -503,7 +505,7 @@ class PaymentDocumentViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(**{end_date_lookup: end_date})
 
         return queryset
-    
+
     """
         Delete multiple
     """
@@ -548,3 +550,58 @@ class PaymentDocumentDeliveryFeeViewSet(viewsets.ModelViewSet):
             )
 
         return queryset
+
+
+# Upload Hoa Don
+class UploadXMLView(APIView):
+    parser_classes = [MultiPartParser]
+    permission_classes = [IsRoleAdminOrEmployee]
+
+    def post(self, request, format=None):
+        files = request.FILES.getList("file")
+        results = []
+        namespace = {"inv": "http://laphoadon.gdt.gov.vn/2014/09/invoicexml/v1"}
+        for xml_file in files:
+            try:
+                tree = ET.parse(xml_file)
+                root = tree.getroot()
+
+                # INVOICE NUMBER
+                invoice_number_elem = root.find(".//inv:invoiceNumber", namespace)
+                shdon_value = (
+                    invoice_number_elem.text
+                    if invoice_number_elem is not None
+                    else None
+                )
+                if not shdon_value:
+                    for elem in root.iter():
+                        if elem.tag.startswith("SHDon") and elem.text:
+                            shdon_value = elem.text
+                            break
+
+                # TOTAL AMOUNT
+                invoice_total_elem = root.find(".//inv:totalAmountWithVAT", namespace)
+                total_value = (
+                    invoice_total_elem.text if invoice_total_elem is not None else None
+                )
+                if not total_value:
+                    for elem in root.iter():
+                        if elem.tag.startswith("TgTTTBSo") and elem.text:
+                            total_value = elem.text
+                            break
+
+                if shdon_value and total_value:
+                    results.append(
+                        {
+                            "shdon": shdon_value,
+                            "total": total_value,
+                        }
+                    )
+            except Exception as e:
+                results.append(
+                    {
+                        "filename": xml_file.name,
+                        "error": str(e),
+                    }
+                )
+        return Response(results)
