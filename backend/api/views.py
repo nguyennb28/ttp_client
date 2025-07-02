@@ -561,6 +561,10 @@ class UploadXMLView(APIView):
         files = request.FILES.getlist("file")
         results = []
         namespace = {"inv": "http://laphoadon.gdt.gov.vn/2014/09/invoicexml/v1"}
+        if not files:
+            return Response({
+                "message": "Files are empty"
+            })
         for xml_file in files:
             try:
                 tree = ET.parse(xml_file)
@@ -573,7 +577,6 @@ class UploadXMLView(APIView):
                     if invoice_number_elem is not None
                     else None
                 )
-                print(shdon_value)
                 if not shdon_value:
                     for elem in root.iter():
                         if elem.tag.startswith("SHDon") and elem.text:
@@ -598,8 +601,6 @@ class UploadXMLView(APIView):
                             "total": total_value,
                         }
                     )
-                print(shdon_value)
-                print(total_value)
             except Exception as e:
                 results.append(
                     {
@@ -607,5 +608,4 @@ class UploadXMLView(APIView):
                         "error": str(e),
                     }
                 )
-        print(results)
         return Response(results)

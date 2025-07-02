@@ -59,12 +59,18 @@ const PaymentDocumentForm: React.FC<PaymentDocumentProps> = ({
       onSetPaymentDocument(data);
       if (xmlFiles && xmlFiles.length > 0) {
         const formData = new FormData();
-        Array.from(xmlFiles).forEach((file) => {
-          formData.append("file", file);
-        });
+        Array.from(xmlFiles).forEach((file) => formData.append("file", file));
 
-        const response = await axiosInstance.post("/upload-bill-xml/");
-        console.table(response)
+        const response = await axiosInstance.post(
+          "/upload-bill-xml/",
+          formData,
+          {
+            headers: {
+              "Content-Type": undefined,
+            },
+          }
+        );
+        console.table(response);
       }
     } catch (err) {
       console.error(err);
@@ -79,7 +85,11 @@ const PaymentDocumentForm: React.FC<PaymentDocumentProps> = ({
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)} className="overflow-auto">
+      <form
+        encType="multipart/form-data"
+        onSubmit={handleSubmit(onSubmit)}
+        className="overflow-auto"
+      >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           {/* SPC */}
           <div className="mt-3">
