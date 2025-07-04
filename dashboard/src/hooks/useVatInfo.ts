@@ -37,12 +37,6 @@ const useVatInfo = (tax_code: string | undefined | null) => {
     } finally {
       setLoader(false);
     }
-    // if (access) {
-    // const { data: response } = await axiosInstance.get(
-    // `/vat-infos/?q=${tax_code}`
-    // );
-    // setVatInfo(response);
-    // }
   }, []);
 
   useEffect(() => {
