@@ -6,9 +6,9 @@ from .models import (
     VAT_INFO,
     Agency,
     CFS,
-    PaymentDocument,
-    PaymentDocumentFeeDetail,
-    PaymentDocumentDeliveryFee,
+    Door,
+    DoorFeeDetail,
+    DoorDeliveryFee,
 )
 from django.contrib.auth.admin import UserAdmin
 
@@ -19,6 +19,6 @@ admin.site.register(ContainerSize)
 admin.site.register(VAT_INFO)
 admin.site.register(Agency)
 admin.site.register(CFS)
-admin.site.register(PaymentDocument)
-admin.site.register(PaymentDocumentFeeDetail)
-admin.site.register(PaymentDocumentDeliveryFee)
+admin.site.register(Door)
+admin.site.register(DoorFeeDetail)
+admin.site.register(DoorDeliveryFee)

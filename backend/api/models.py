@@ -143,7 +143,7 @@ class CFS(models.Model):
         return f"{self.mbl} - {self.ship_name}"
 
 
-class PaymentDocument(models.Model):
+class Door(models.Model):
     spc = models.CharField(max_length=100, unique=True)
     settlement_date = models.DateField(
         verbose_name="Ngày quyết toán", null=True, blank=True
@@ -175,9 +175,9 @@ class PaymentDocument(models.Model):
         return f"{self.spc}"
 
 
-class PaymentDocumentFeeDetail(models.Model):
+class DoorFeeDetail(models.Model):
     payment_document = models.ForeignKey(
-        PaymentDocument, on_delete=models.CASCADE, related_name="detail_fees"
+        Door, on_delete=models.CASCADE, related_name="detail_fees"
     )
     cost_name = models.TextField(verbose_name="Tên chi phí")
     bill_fee = models.DecimalField(
@@ -205,9 +205,9 @@ class PaymentDocumentFeeDetail(models.Model):
         return f"{self.cost_name}"
 
 
-class PaymentDocumentDeliveryFee(models.Model):
+class DoorDeliveryFee(models.Model):
     payment_document = models.ForeignKey(
-        PaymentDocument, on_delete=models.CASCADE, related_name="ship_fees"
+        Door, on_delete=models.CASCADE, related_name="ship_fees"
     )
     cost_name = models.TextField(verbose_name="Phí vận chuyển")
     fee = models.DecimalField(

@@ -12,9 +12,9 @@ router.register(r"cfss", views.CFSViewSet)
 router.register(
     "databases", views.DatabaseViewSet, basename="database"
 )  # Phải chỉ định basename
-router.register(r"payment-document", views.PaymentDocumentViewSet)
-router.register(r"payment-document-fee-detail", views.PaymentDocumentFeeDetailViewSet)
+router.register(r"payment-document", views.DoorViewSet)
+router.register(r"payment-document-fee-detail", views.DoorFeeDetailViewSet)
 router.register(
-    r"payment-document-delivery-fee", views.PaymentDocumentDeliveryFeeViewSet
+    r"payment-document-delivery-fee", views.DoorDeliveryFeeViewSet
 )
 urlpatterns = [path("", include(router.urls))]

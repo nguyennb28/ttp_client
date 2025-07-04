@@ -6,9 +6,9 @@ from .models import (
     ContainerSize,
     Agency,
     CFS,
-    PaymentDocument,
-    PaymentDocumentFeeDetail,
-    PaymentDocumentDeliveryFee,
+    Door,
+    DoorFeeDetail,
+    DoorDeliveryFee,
 )
 import re
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -208,9 +208,9 @@ class CustomLoginSerializer(TokenObtainPairSerializer):
         return data
 
 
-class PaymentDocumentFeeDetailSerializer(serializers.ModelSerializer):
+class DoorFeeDetailSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PaymentDocumentFeeDetail
+        model = DoorFeeDetail
         fields = [
             "id",
             "cost_name",
@@ -221,19 +221,19 @@ class PaymentDocumentFeeDetailSerializer(serializers.ModelSerializer):
         ]
 
 
-class PaymentDocumentDeliveryFeeSerializer(serializers.ModelSerializer):
+class DoorDeliveryFeeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PaymentDocumentDeliveryFee
+        model = DoorDeliveryFee
         fields = ["id", "cost_name", "fee", "note"]
 
 
-class PaymentDocumentSerializer(serializers.ModelSerializer):
+class DoorSerializer(serializers.ModelSerializer):
 
-    detail_fees = PaymentDocumentFeeDetailSerializer(many=True, read_only=True)
-    ship_fees = PaymentDocumentDeliveryFeeSerializer(many=True, read_only=True)
+    detail_fees = DoorFeeDetailSerializer(many=True, read_only=True)
+    ship_fees = DoorDeliveryFeeSerializer(many=True, read_only=True)
 
     class Meta:
-        model = PaymentDocument
+        model = Door
         fields = [
             "id",
             "spc",

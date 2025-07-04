@@ -5,9 +5,9 @@ from .models import (
     VAT_INFO,
     Agency,
     CFS,
-    PaymentDocument,
-    PaymentDocumentFeeDetail,
-    PaymentDocumentDeliveryFee,
+    Door,
+    DoorFeeDetail,
+    DoorDeliveryFee,
 )
 from .serializers import (
     UserSerializer,
@@ -17,9 +17,9 @@ from .serializers import (
     AgencySerializer,
     CFSSerizalier,
     CustomLoginSerializer,
-    PaymentDocumentFeeDetailSerializer,
-    PaymentDocumentDeliveryFeeSerializer,
-    PaymentDocumentSerializer,
+    DoorFeeDetailSerializer,
+    DoorDeliveryFeeSerializer,
+    DoorSerializer,
 )
 
 from django.db.models import Q
@@ -472,13 +472,13 @@ class DatabaseViewSet(viewsets.ViewSet):
         return Response({"results": results}, status=status.HTTP_207_MULTI_STATUS)
 
 
-class PaymentDocumentViewSet(viewsets.ModelViewSet):
-    queryset = PaymentDocument.objects.all().order_by("-created_at")
-    serializer_class = PaymentDocumentSerializer
+class DoorViewSet(viewsets.ModelViewSet):
+    queryset = Door.objects.all().order_by("-created_at")
+    serializer_class = DoorSerializer
     permission_classes = [IsRoleAdminOrEmployee]
 
     def get_queryset(self):
-        queryset = PaymentDocument.objects.all().order_by("-created_at")
+        queryset = Door.objects.all().order_by("-created_at")
         param = self.request.query_params.get("q")
         if param:
             queryset = queryset.filter(
@@ -512,13 +512,13 @@ class PaymentDocumentViewSet(viewsets.ModelViewSet):
     # @action(detail=false)
 
 
-class PaymentDocumentFeeDetailViewSet(viewsets.ModelViewSet):
-    queryset = PaymentDocumentFeeDetail.objects.all().order_by("-created_at")
-    serializer_class = PaymentDocumentFeeDetailSerializer
+class DoorFeeDetailViewSet(viewsets.ModelViewSet):
+    queryset = DoorFeeDetail.objects.all().order_by("-created_at")
+    serializer_class = DoorFeeDetailSerializer
     permission_classes = [IsRoleAdmin]
 
     def get_queryset(self):
-        queryset = PaymentDocumentFeeDetail.objects.all().order_by("-created_at")
+        queryset = DoorFeeDetail.objects.all().order_by("-created_at")
         param = self.request.query_params.get("q")
 
         if param:
@@ -533,13 +533,13 @@ class PaymentDocumentFeeDetailViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-class PaymentDocumentDeliveryFeeViewSet(viewsets.ModelViewSet):
-    queryset = PaymentDocumentDeliveryFee.objects.all().order_by("-created_at")
-    serializer_class = PaymentDocumentDeliveryFeeSerializer
+class DoorDeliveryFeeViewSet(viewsets.ModelViewSet):
+    queryset = DoorDeliveryFee.objects.all().order_by("-created_at")
+    serializer_class = DoorDeliveryFeeSerializer
     permission_classes = [IsRoleAdminOrEmployee]
 
     def get_queryset(self):
-        queryset = PaymentDocumentDeliveryFee.objects.all().order_by("-created_at")
+        queryset = DoorDeliveryFee.objects.all().order_by("-created_at")
         param = self.request.query_params.get("q")
 
         if param:
