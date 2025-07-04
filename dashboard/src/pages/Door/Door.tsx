@@ -12,16 +12,16 @@ import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { RobotoRegular } from "../../assets/fonts/RobotoRegular";
-import PaymentDocumentForm from "./PaymentDocumentForm";
+import DoorDocumentForm from "./DoorForm";
 
 interface IRecord {
   [key: string]: any;
 }
 
-const Payment = () => {
+const Door = () => {
   // State
-  const [payments, setPayments] = useState<IRecord[]>([]);
-  const [paymentDocument, setPaymentDocument] = useState(null);
+  const [payments, setDoors] = useState<IRecord[]>([]);
+  const [door, setDoorDocument] = useState(null);
   const [isNext, setIsNext] = useState<string | null>(null);
   const [isPrevious, setIsPrevious] = useState<string | null>(null);
   const [perPage, setPerPage] = useState<number>(10);
@@ -73,7 +73,7 @@ const Payment = () => {
         : `/payment-document/?page_size=${perPage}`;
       const response = await axiosInstance.get(url);
       if (response.status == 200) {
-        setPayments(response.data.results);
+        setDoors(response.data.results);
         setIsNext(response.data.next);
         setIsPrevious(response.data.previous);
         setQuantity(response.data.quantity);
@@ -224,12 +224,12 @@ const Payment = () => {
   return (
     <>
       <PageMeta
-        title="Payment Table"
-        description="This is Payment Table for T.T.P Logistics"
+        title="Door Table"
+        description="This is Door Table for T.T.P Logistics"
       />
-      <PageBreadcrumb pageTitle="Payment" />
+      <PageBreadcrumb pageTitle="Door" />
       <div className="space-y-6">
-        <ComponentCardExtend title="Payment Table" features={features}>
+        <ComponentCardExtend title="Door Table" features={features}>
           <TableGeneric
             records={payments}
             headers={headers}
@@ -256,13 +256,13 @@ const Payment = () => {
         <div className="no-scrollbar relative w-full overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
           <div className="px-2 pr-14">
             <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-              Add Payment Document
+              Add Door Document
             </h4>
           </div>
           <div className="overflow-auto">
-            <PaymentDocumentForm
-              paymentDocument={paymentDocument}
-              onSetPaymentDocument={setPaymentDocument}
+            <DoorDocumentForm
+              door={door}
+              onSetDoorDocument={setDoorDocument}
             />
           </div>
         </div>
@@ -271,4 +271,4 @@ const Payment = () => {
   );
 };
 
-export default Payment;
+export default Door;

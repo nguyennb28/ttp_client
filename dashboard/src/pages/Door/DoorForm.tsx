@@ -4,7 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import useVatInfo from "../../hooks/useVatInfo";
 import axiosInstance from "../../instance/axiosInstance";
 
-type PaymentDocumentValuesForm = {
+type DoorDocumentValuesForm = {
   // 1
   spc: string;
   // 2
@@ -25,14 +25,14 @@ type PaymentDocumentValuesForm = {
   agent: string;
 };
 
-interface PaymentDocumentProps {
-  paymentDocument: any;
-  onSetPaymentDocument: (value: any) => void;
+interface DoorDocumentProps {
+  door: any;
+  onSetDoorDocument: (value: any) => void;
 }
 
-const PaymentDocumentForm: React.FC<PaymentDocumentProps> = ({
-  paymentDocument,
-  onSetPaymentDocument,
+const DoorDocumentForm: React.FC<DoorDocumentProps> = ({
+  door,
+  onSetDoorDocument,
 }) => {
   // State
   const [xmlFiles, setXmlFiles] = useState<FileList | null>(null);
@@ -53,10 +53,10 @@ const PaymentDocumentForm: React.FC<PaymentDocumentProps> = ({
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<PaymentDocumentValuesForm>();
-  const onSubmit: SubmitHandler<PaymentDocumentValuesForm> = async (data) => {
+  } = useForm<DoorDocumentValuesForm>();
+  const onSubmit: SubmitHandler<DoorDocumentValuesForm> = async (data) => {
     try {
-      onSetPaymentDocument(data);
+      onSetDoorDocument(data);
       if (xmlFiles && xmlFiles.length > 0) {
         const formData = new FormData();
         Array.from(xmlFiles).forEach((file) => formData.append("file", file));
@@ -307,4 +307,4 @@ const PaymentDocumentForm: React.FC<PaymentDocumentProps> = ({
   );
 };
 
-export default PaymentDocumentForm;
+export default DoorDocumentForm;

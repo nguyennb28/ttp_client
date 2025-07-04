@@ -25,7 +25,7 @@ import IntroductionSaas from "./pages/Saas/Intro";
 import ProductSaas from "./pages/Saas/Product";
 import AccountSaas from "./pages/Saas/Account";
 import DatabaseSaas from "./pages/Saas/Database";
-import Payment from "./pages/Payment/Payment";
+import Door from "./pages/Door/Door";
 
 export default function App() {
   return (
@@ -65,7 +65,7 @@ export default function App() {
               <Route path="/cfs" element={<CFS />} />
 
               {/* Payment */}
-              <Route path="/payment" element={<Payment />}/>
+              <Route path="/door" element={<Door />}/>
 
               {/* Tracking */}
               <Route path="/tracking" element={<Tracking />} />
