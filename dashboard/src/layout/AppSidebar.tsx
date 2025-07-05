@@ -45,9 +45,9 @@ const navItems: NavItem[] = [
     path: "/cfs",
   },
   {
-    name: "Payment",
+    name: "Door",
     icon: <FaMoneyBillWave />,
-    subItems: [{ name: "Payment", path: "/payment", pro: false }],
+    subItems: [{ name: "Door", path: "/door", pro: true }],
   },
   {
     icon: <FaMapMarkedAlt />,
